@@ -1,0 +1,24 @@
+LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resources/db/data/Groups.csv'
+	INTO TABLE Groups
+	FIELDS
+		TERMINATED BY ','
+		OPTIONALLY ENCLOSED BY '"'
+	LINES
+		TERMINATED BY '\n'
+	IGNORE 1 LINES
+	(
+		IndNo,
+		Code,
+		Comments,
+		RecNo,
+		@DateFrom,
+		@DateTo,
+		@TransferDate,
+		TransferReason,
+		Role,
+		@AdvFlag
+	)
+	SET DateFrom = STR_TO_DATE(@DateFrom, '%m/%d/%y %h:%i %p'),
+		DateTo = STR_TO_DATE(@DateTo, '%m/%d/%y %h:%i %p'),
+		TransferDate = STR_TO_DATE(@TransferDate, '%m/%d/%y %h:%i %p'),
+		AdvFlag = CASE WHEN @AdvFlag = 'TRUE' THEN TRUE ELSE FALSE END
