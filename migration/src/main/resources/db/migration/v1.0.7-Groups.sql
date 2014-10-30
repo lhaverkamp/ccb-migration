@@ -21,4 +21,4 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 	SET DateFrom = STR_TO_DATE(@DateFrom, '%m/%d/%y %h:%i %p'),
 		DateTo = STR_TO_DATE(@DateTo, '%m/%d/%y %h:%i %p'),
 		TransferDate = STR_TO_DATE(@TransferDate, '%m/%d/%y %h:%i %p'),
-		AdvFlag = CASE WHEN @AdvFlag = 'TRUE' THEN TRUE ELSE FALSE END
+		AdvFlag = IF(@AdvFlag = 'TRUE', TRUE, FALSE)

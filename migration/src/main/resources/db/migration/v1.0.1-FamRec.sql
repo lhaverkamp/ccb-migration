@@ -34,8 +34,8 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		County,
 		UniqueID
 	)
-	SET Visitor = CASE WHEN @Visitor = 'TRUE' THEN TRUE ELSE FALSE END,
-		UnlistedHomePhone = CASE WHEN @UnlistedHomePhone = 'TRUE' THEN TRUE ELSE FALSE END,
+	SET Visitor = IF(@Visitor = 'TRUE', TRUE, FALSE),
+		UnlistedHomePhone = IF(@UnlistedHomePhone = 'TRUE', TRUE, FALSE),
 		LastUpdate = STR_TO_DATE(@LastUpdate, '%m%d%Y'),
 		AltAddrFromDate = STR_TO_DATE(NULLIF(@AltAddrFromDate, ''), '%m%d%Y'),
 		AltAddrToDate = STR_TO_DATE(NULLIF(@AltAddrToDate, ''), '%m%d%Y')

@@ -1,0 +1,35 @@
+LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resources/db/data/attendancedetail.csv'
+	INTO TABLE attendancedetail
+	FIELDS
+		TERMINATED BY ','
+		OPTIONALLY ENCLOSED BY '"'
+	LINES
+		TERMINATED BY '\n'
+	IGNORE 1 LINES
+	(
+		ATTENDANCEDETAILID,
+		PERSONID,
+		EVENTID,
+		DATE,
+		@TYPE1,
+		@TYPE2,
+		@TYPE3,
+		@TYPE4,
+		@TYPE5,
+		@NOTEID,
+		@CREATIONDATETIME,
+		@REVISIONDATETIME,
+		@VISITOR,
+		BATCHID,
+		BATCHENTEREDBY,
+		BATCHPOSTEDBY
+	)
+	SET TYPE1 = IF(@TYPE1 = 'true', TRUE, FALSE),
+		TYPE2 = IF(@TYPE2 = 'true', TRUE, FALSE),
+		TYPE3 = IF(@TYPE2 = 'true', TRUE, FALSE),
+		TYPE4 = IF(@TYPE2 = 'true', TRUE, FALSE),
+		TYPE5 = IF(@TYPE2 = 'true', TRUE, FALSE),
+		NOTEID = NULLIF(@NOTEID, 0),
+		CREATIONDATETIME = STR_TO_DATE(@CREATIONDATETIME, '%Y-%m-%d %H:%i:%S.%x'),
+		REVISIONDATETIME = STR_TO_DATE(@REVISIONDATETIME, '%Y-%m-%d %H:%i:%S.%x'),
+		VISITOR = IF(@VISITOR = 'true', TRUE, FALSE)

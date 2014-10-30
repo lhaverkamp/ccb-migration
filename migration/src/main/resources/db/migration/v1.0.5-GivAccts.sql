@@ -30,7 +30,7 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		DebitedAccountGuid,
 		CreditedAccountGuid
 	)
-	SET Restricted = CASE WHEN @Restricted = 'TRUE' THEN TRUE ELSE FALSE END,
+	SET Restricted = IF(@Restricted = 'TRUE', TRUE, FALSE),
 		Month1 = REPLACE(REPLACE(@Month1, '$', ''), ',', ''),
 		Month2 = REPLACE(REPLACE(@Month2, '$', ''), ',', ''),
 		Month3 = REPLACE(REPLACE(@Month3, '$', ''), ',', ''),
@@ -43,6 +43,6 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		Month10 = REPLACE(REPLACE(@Month10, '$', ''), ',', ''),
 		Month11 = REPLACE(REPLACE(@Month11, '$', ''), ',', ''),
 		Month12 = REPLACE(REPLACE(@Month12, '$', ''), ',', ''),
-		PrtOnStmt = CASE WHEN @PrtOnStmt = 'TRUE' THEN TRUE ELSE FALSE END
+		PrtOnStmt = IF(@PrtOnStmt = 'TRUE', TRUE, FALSE)
 	
 	

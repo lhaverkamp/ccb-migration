@@ -23,13 +23,13 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		@AttAddlInfo5,
 		@AttAddlInfo6
 	)
-	SET AttEvent = CASE WHEN @AttEvent = 'TRUE' THEN TRUE ELSE FALSE END,
-		AttCommunion = CASE WHEN @AttCommunion = 'TRUE' THEN TRUE ELSE FALSE END,
+	SET AttEvent = IF(@AttEvent = 'TRUE', TRUE, FALSE),
+		AttCommunion = IF(@AttCommunion = 'TRUE', TRUE, FALSE),
 		Date = STR_TO_DATE(@Date, '%m/%d/%y %h:%i %p'),
-		AttExcused = CASE WHEN @AttExcused = 'TRUE' THEN TRUE ELSE FALSE END,
-		AttAddlInfo1 = CASE WHEN @AttAddlInfo1 = 'TRUE' THEN TRUE ELSE FALSE END,
-		AttAddlInfo2 = CASE WHEN @AttAddlInfo2 = 'TRUE' THEN TRUE ELSE FALSE END,
-		AttAddlInfo3 = CASE WHEN @AttAddlInfo3 = 'TRUE' THEN TRUE ELSE FALSE END,
-		AttAddlInfo4 = CASE WHEN @AttAddlInfo4 = 'TRUE' THEN TRUE ELSE FALSE END,
-		AttAddlInfo5 = CASE WHEN @AttAddlInfo5 = 'TRUE' THEN TRUE ELSE FALSE END,
-		AttAddlInfo6 = CASE WHEN @AttAddlInfo6 = 'TRUE' THEN TRUE ELSE FALSE END
+		AttExcused = IF(@AttExcused = 'TRUE', TRUE, FALSE),
+		AttAddlInfo1 = IF(@AttAddlInfo1 = 'TRUE', TRUE, FALSE),
+		AttAddlInfo2 = IF(@AttAddlInfo2 = 'TRUE', TRUE, FALSE),
+		AttAddlInfo3 = IF(@AttAddlInfo3 = 'TRUE', TRUE, FALSE),
+		AttAddlInfo4 = IF(@AttAddlInfo4 = 'TRUE', TRUE, FALSE),
+		AttAddlInfo5 = IF(@AttAddlInfo5 = 'TRUE', TRUE, FALSE),
+		AttAddlInfo6 = IF(@AttAddlInfo6 = 'TRUE', TRUE, FALSE)

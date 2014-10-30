@@ -136,9 +136,9 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 	)
 	SET TerminationDate = CASE WHEN INSTR(@TerminationDate, '?') > 0 THEN NULL ELSE STR_TO_DATE(NULLIF(@TerminationDate, ''), '%m%d%Y') END,
 		ReasonForTermination = NULLIF(@ReasonForTermination, ''),
-		Visitor = CASE WHEN @Visitor = 'TRUE' THEN TRUE ELSE FALSE END,
-		UseIndName = CASE WHEN @UseIndName = 'TRUE' THEN TRUE ELSE FALSE END,
-		UsePrefName = CASE WHEN @UsePrefName = 'TRUE' THEN TRUE ELSE FALSE END,
+		Visitor = IF(@Visitor = 'TRUE', TRUE, FALSE),
+		UseIndName = IF(@UseIndName = 'TRUE', TRUE, FALSE),
+		UsePrefName = IF(@UsePrefName = 'TRUE', TRUE, FALSE),
 		LastUpdate = STR_TO_DATE(@LastUpdate, '%m%d%Y'),
 		IncludeOnDir = NULLIF(@IncludeOnDir, ''),
 		Birthdate = CASE WHEN INSTR(@Birthdate, '?') > 0 THEN NULL ELSE STR_TO_DATE(NULLIF(@Birthdate, ''), '%m%d%Y') END,
@@ -149,5 +149,5 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		Definable8 = CASE WHEN INSTR(@Definable8, '?') > 0 THEN NULL ELSE STR_TO_DATE(NULLIF(@Definable8, ''), '%m%d%Y') END,
 		Definable10 = CASE WHEN INSTR(@Definable10, '?') > 0 THEN NULL ELSE STR_TO_DATE(NULLIF(@Definable10, ''), '%m%d%Y') END,
 		Definable12 = CASE WHEN INSTR(@Definable12, '?') > 0 THEN NULL ELSE STR_TO_DATE(NULLIF(@Definable12, ''), '%m%d%Y') END,
-		ContJointly = CASE WHEN @ContJointly = 'TRUE' THEN TRUE ELSE FALSE END,
-		Sched_Include = CASE WHEN @Sched_Include = 'TRUE' THEN TRUE ELSE FALSE END
+		ContJointly = IF(@ContJointly = 'TRUE', TRUE, FALSE),
+		Sched_Include = IF(@Sched_Include = 'TRUE', TRUE, FALSE)

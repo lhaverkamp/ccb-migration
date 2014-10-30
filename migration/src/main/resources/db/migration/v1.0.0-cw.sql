@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS FamRec(
 	UnlistedHomePhone BOOLEAN,
 	MailingCode VARCHAR(50),
 	GeographicArea VARCHAR(50),
-	LastUpdate DATETIME NOT NULL,
+	LastUpdate TIMESTAMP NOT NULL,
 	AltAddrFromDate DATE,
 	AltAddrToDate DATE,
 	AltAddrAddress1 VARCHAR(50),
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS IndRec(
 	Suffix VARCHAR(50),
 	Title VARCHAR(50),
 	UsePrefName BOOLEAN NOT NULL DEFAULT FALSE,
-	LastUpdate DATETIME NOT NULL,
+	LastUpdate TIMESTAMP NOT NULL,
 	Status VARCHAR(1) NOT NULL,
 	FamilyRel VARCHAR(2),
 	IncludeOnDir SMALLINT(1),
@@ -65,30 +65,30 @@ CREATE TABLE IF NOT EXISTS IndRec(
 	MiddleName VARCHAR(50),
 	FamNo INT(10) NOT NULL,
 	PreferredName VARCHAR(50) NOT NULL,
-	Definable1 VARCHAR(50), -- Gender
-	Definable2 VARCHAR(50), -- Marital Status
-	Definable3 VARCHAR(50), -- Maiden Name
+	Definable1 VARCHAR(50) COMMENT 'Gender', -- Gender
+	Definable2 VARCHAR(50) COMMENT 'Marital Status', -- Marital Status
+	Definable3 VARCHAR(50) COMMENT 'Maiden Name', -- Maiden Name
 	Definable4 VARCHAR(50),
-	Definable5 VARCHAR(50), -- Occuptation
-	Definable6 VARCHAR(50), -- Employer
-	Definable7 DATE, -- Baptism Date
-	Definable8 DATE, -- Membership Date
-	Definable9 VARCHAR(50), -- Received By
-	Definable10 DATE, -- Anniversary
-	Definable11 VARCHAR(50), -- Spouse Termination Date
-	Definable12 DATE, -- Confirmation Date
-	Definable13 VARCHAR(50), -- Black Book #
-	Definable14 VARCHAR(50), -- LCMS Report Status
-	Definable15 VARCHAR(50), -- Baptism Type
-	Definable16 VARCHAR(50), -- Bulk Mail
-	Definable17 VARCHAR(50), -- Work Email
-	Definable18 VARCHAR(50), -- Home Email
-	Definable19 VARCHAR(50), -- Cell Phone Number
+	Definable5 VARCHAR(50) COMMENT 'Occupation', -- Occuptation
+	Definable6 VARCHAR(50) COMMENT 'Employer', -- Employer
+	Definable7 DATE COMMENT 'Baptism Date', -- Baptism Date
+	Definable8 DATE COMMENT 'Membership Date', -- Membership Date
+	Definable9 VARCHAR(50) COMMENT 'Received By', -- Received By
+	Definable10 DATE COMMENT 'Anniversary', -- Anniversary
+	Definable11 VARCHAR(50) COMMENT 'Spouse Termination Date', -- Spouse Termination Date
+	Definable12 DATE COMMENT 'Confirmation Date', -- Confirmation Date
+	Definable13 VARCHAR(50) COMMENT 'Black Book #', -- Black Book #
+	Definable14 VARCHAR(50) COMMENT 'LCMS Report Status', -- LCMS Report Status
+	Definable15 VARCHAR(50) COMMENT 'Baptism Type', -- Baptism Type
+	Definable16 VARCHAR(50) COMMENT 'Bulk Mail', -- Bulk Mail
+	Definable17 VARCHAR(50) COMMENT 'Work Email', -- Work Email
+	Definable18 VARCHAR(50) COMMENT 'Home Email', -- Home Email
+	Definable19 VARCHAR(50) COMMENT 'Mobile Phone Number', -- Cell Phone Number
 	Definable20 VARCHAR(50),
-	Definable21 VARCHAR(50), -- Confirmation Verse
-	Definable22 VARCHAR(50), -- Baptized
-	Definable23 VARCHAR(50), -- Special Mail
-	Definable24 VARCHAR(50), -- Confirmed
+	Definable21 VARCHAR(50) COMMENT 'Confirmation Verse', -- Confirmation Verse
+	Definable22 VARCHAR(50) COMMENT 'Baptized', -- Baptized
+	Definable23 VARCHAR(50) COMMENT 'Special Mail', -- Special Mail
+	Definable24 VARCHAR(50) COMMENT 'Confirmed', -- Confirmed
 	Definable25 VARCHAR(50),
 	Definable26 VARCHAR(50),
 	Definable27 VARCHAR(50),
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS EnvLookup(
 	ContYr VARCHAR(6) NOT NULL,
 	IndNo VARCHAR(10) NOT NULL,
 	CONSTRAINT pk_EnvLookup PRIMARY KEY (EnvNo, ContYr, IndNo)/*,
-	CONSTRAINT fk_EnvLookup_IndNo FOREIGN KEY (IndNo) REFERENCES IndRec(IndNo)*/
+	CONSTRAINT fk_EnvLookup_IndNo FOREIGN KEY (IndNo) REFERENCES IndRec(IndivNo)*/
 );
 
 CREATE TABLE IF NOT EXISTS GivAccts(
@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS Giving(
 	TransID INT(10) NOT NULL,
 	CheckNo INT(10),
 	BatchCode VARCHAR(10),
-	DateTimePosted DATETIME,
+	DateTimePosted TIMESTAMP,
 	User VARCHAR(10),
 	CONSTRAINT pk_Giving PRIMARY KEY (Date, IndNo, AccountNo, TransID)/*,
 	CONSTRAINT fk_Giving_IndNo FOREIGN KEY (IndNo) REFERENCES IndRec(IndivNo)*/
@@ -240,12 +240,12 @@ CREATE TABLE IF NOT EXISTS Groups(
 	Code VARCHAR(10) NOT NULL,
 	Comments VARCHAR(1000),
 	RecNo INT(10) NOT NULL,
-	DateFrom DATETIME,
-	DateTo DATETIME,
-	TransferDate DATETIME,
+	DateFrom TIMESTAMP,
+	DateTo TIMESTAMP,
+	TransferDate TIMESTAMP,
 	TransferReason VARCHAR(50),
 	Role VARCHAR(50),
 	AdvFlag BOOLEAN NOT NULL DEFAULT FALSE,
 	CONSTRAINT pk_Groups PRIMARY KEY (IndNo, Code)/*,
-	CONSTRAINT fk_Groups_IndNo FOREIGN KEY (IndNo) REFERENCES IndRec(IndNo)*/
+	CONSTRAINT fk_Groups_IndNo FOREIGN KEY (IndNo) REFERENCES IndRec(IndivNo)*/
 );
