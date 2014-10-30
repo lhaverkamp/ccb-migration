@@ -14,7 +14,7 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		MIDDLENAME,
 		MAIDENNAME,
 		LASTNAME,
-		NICKNAME,
+		@NICKNAME,
 		NAMESUFFIX,
 		SALUTATION,
 		TITLE,
@@ -92,6 +92,7 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		DEFAULTIMAGESIZE
 	)
 	SET HOUSEID = NULLIF(@HOUSEID, 0),
+		NICKNAME = NULLIF(@NICKNAME, ''),
 		BIRTHDATE = STR_TO_DATE(NULLIF(@BIRTHDATE, ''), '%Y-%m-%d %H:%i:%S.%x'),
 		ISMEMBER = IF(@ISMEMBER = 'true', TRUE, FALSE),
 		RECEIVEDDATE = STR_TO_DATE(NULLIF(@RECEIVEDDATE, ''), '%Y-%m-%d %H:%i:%S.%x'),

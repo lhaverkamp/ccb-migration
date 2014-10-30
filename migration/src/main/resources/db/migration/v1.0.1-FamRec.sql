@@ -26,7 +26,7 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		AltAddrCityState,
 		AltAddrZip,
 		AltAddrCarrierRoute,
-		Comments,
+		@Comments,
 		AltAddrPhone,
 		MailingLabel,
 		DelvPoint,
@@ -38,4 +38,5 @@ LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resou
 		UnlistedHomePhone = IF(@UnlistedHomePhone = 'TRUE', TRUE, FALSE),
 		LastUpdate = STR_TO_DATE(@LastUpdate, '%m%d%Y'),
 		AltAddrFromDate = STR_TO_DATE(NULLIF(@AltAddrFromDate, ''), '%m%d%Y'),
-		AltAddrToDate = STR_TO_DATE(NULLIF(@AltAddrToDate, ''), '%m%d%Y')
+		AltAddrToDate = STR_TO_DATE(NULLIF(@AltAddrToDate, ''), '%m%d%Y'),
+		Comments = NULLIF(@Comments, '')
