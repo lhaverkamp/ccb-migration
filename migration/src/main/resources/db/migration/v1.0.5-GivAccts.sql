@@ -1,4 +1,4 @@
-LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resources/db/data/GivAccts.csv'
+LOAD DATA INFILE '../csv/GivAccts.csv'
 	INTO TABLE GivAccts
 	FIELDS
 		TERMINATED BY ','

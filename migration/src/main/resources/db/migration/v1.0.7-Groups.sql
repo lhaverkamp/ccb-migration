@@ -1,4 +1,4 @@
-LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resources/db/data/Groups.csv'
+LOAD DATA INFILE '../csv/Groups.csv'
 	INTO TABLE Groups
 	FIELDS
 		TERMINATED BY ','

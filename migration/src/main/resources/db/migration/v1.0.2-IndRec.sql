@@ -1,4 +1,4 @@
-LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resources/db/data/IndRec.csv'
+LOAD DATA INFILE '../csv/IndRec.csv'
 	INTO TABLE IndRec
 	FIELDS
 		TERMINATED BY ','

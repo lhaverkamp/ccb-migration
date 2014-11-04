@@ -1,4 +1,4 @@
-LOAD DATA INFILE 'C:/Users/lhaverkamp/git/ccb-migration/migration/src/main/resources/db/data/EnvLookup.csv'
+LOAD DATA INFILE '../csv/EnvLookup.csv'
 	INTO TABLE EnvLookup
 	FIELDS
 		TERMINATED BY ','
