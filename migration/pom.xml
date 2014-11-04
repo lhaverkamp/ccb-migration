@@ -31,19 +31,19 @@
   			<version>3.0</version>
   			
   			<configuration>
-  				<!-- Yes this is totally hard-coded and not remotely secure; but
-  				     it's simply for deduping purposes of two separate DB 
-  				     instances.  It's a temporary DB that's used to combine
-  				     two MS Access DBs into 1 to generate the CSVs provided
-  				     to the CCB Data Migration Team
-  				  -->
   				<url>jdbc:mysql://localhost:3306/ccb</url>
   				<user>root</user>
   				
+  				<locations>
+  					<location>db/migration</location>
+  				</locations>
+  				
   				<sqlMigrationPrefix>v</sqlMigrationPrefix>
   				<sqlMigrationSeparator>-</sqlMigrationSeparator>
+  				
+  				<outOfOrder>false</outOfOrder>
   			</configuration>
-  			
+
   			<dependencies>
 				<dependency>
 					<groupId>mysql</groupId>
