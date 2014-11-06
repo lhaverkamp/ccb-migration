@@ -8,8 +8,8 @@ LOAD DATA INFILE '../csv/GivAccts.csv'
 	IGNORE 1 LINES
 	(
 		ContYr,
-		F_IncExpAcct,
-		F_AssetAcct,
+		@F_IncExpAcct,
+		@F_AssetAcct,
 		AcctID,
 		AcctName,
 		`Order`,
@@ -30,7 +30,9 @@ LOAD DATA INFILE '../csv/GivAccts.csv'
 		DebitedAccountGuid,
 		CreditedAccountGuid
 	)
-	SET Restricted = IF(@Restricted = 'TRUE', TRUE, FALSE),
+	SET F_IncExpAcct = NULLIF(@F_IncExpAcct, ''),
+		F_AssetAcct = NULLIF(@F_AssetAcct, ''),
+		Restricted = IF(@Restricted = 'TRUE', TRUE, FALSE),
 		Month1 = REPLACE(REPLACE(@Month1, '$', ''), ',', ''),
 		Month2 = REPLACE(REPLACE(@Month2, '$', ''), ',', ''),
 		Month3 = REPLACE(REPLACE(@Month3, '$', ''), ',', ''),

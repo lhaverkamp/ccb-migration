@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS IndRec(
 	IndNo INT(10) NOT NULL,
 	MiddleName VARCHAR(50),
 	FamNo INT(10) NOT NULL,
-	PreferredName VARCHAR(50) NOT NULL,
+	PreferredName VARCHAR(50),
 	Definable1 VARCHAR(50) COMMENT 'Gender', -- Gender
 	Definable2 VARCHAR(50) COMMENT 'Marital Status', -- Marital Status
 	Definable3 VARCHAR(50) COMMENT 'Maiden Name', -- Maiden Name

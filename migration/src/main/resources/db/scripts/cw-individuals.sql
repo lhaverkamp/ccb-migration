@@ -19,6 +19,7 @@ SELECT
 		THEN IndRec.FirstName
 		ELSE NULL
 	END) AS 'Legal Name', -- nickname vs firstname could be used here
+	TRIM(IndRec.Definable3) AS 'MaidenName',
 	NULL AS 'Limited Access User',
 	TRIM(CASE IndRec.IncludeOnDirYN 
 		WHEN 'Y' THEN 'Yes'
@@ -34,27 +35,46 @@ SELECT
 	TRIM(IndRec.Definable18) AS 'Individual Email',
 	TRIM(FamRec.Address1) AS 'Mailing Street 1',
 	TRIM(FamRec.Address2) AS 'Mailing Street 2',
-	TRIM(FamRec.CityState) AS 'Mailing City',
-	TRIM(FamRec.CityState) AS 'Mailing State',
+	CASE 
+		WHEN TRIM(FamRec.CityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(FamRec.CityState), 1, LENGTH(TRIM(FamRec.CityState)) - 2)
+		ELSE TRIM(FamRec.CityState)
+	END AS 'Mailing City',
+	CASE 
+		WHEN TRIM(FamRec.CityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(FamRec.CityState), -2)
+		ELSE NULL
+	END AS 'Mailing State',
 	TRIM(FamRec.Zip) AS 'Mailing Postal Code',
 	NULL AS 'Mailing Country',
 	TRIM(FamRec.CarrierRoute) AS 'Mailing Carrier Route',
 	TRIM(FamRec.Address1) AS 'Home Street 1',
 	TRIM(FamRec.Address2) AS 'Home Street 2',
-	TRIM(FamRec.CityState) AS 'Home City',
-	TRIM(FamRec.CityState) AS 'Home State',
+	CASE 
+		WHEN TRIM(FamRec.CityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(FamRec.CityState), 1, LENGTH(TRIM(FamRec.CityState)) - 2)
+		ELSE TRIM(FamRec.CityState)
+	END AS 'Home City',
+	CASE 
+		WHEN TRIM(FamRec.CityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(FamRec.CityState), -2)
+		ELSE NULL
+	END AS 'Home State',
 	TRIM(FamRec.Zip) AS 'Home Postal Code',
 	NULL AS 'Area of Town',
 	TRIM(FamRec.AltAddrAddress1) AS 'Other Street 1',
 	TRIM(FamRec.AltAddrAddress2) AS 'Other Street 2',
-	TRIM(FamRec.AltAddrCityState) AS 'Other City',
-	TRIM(FamRec.AltAddrCityState) AS 'Other State',
+	CASE 
+		WHEN TRIM(FamRec.AltAddrCityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(FamRec.AltAddrCityState), 1, LENGTH(TRIM(FamRec.AltAddrCityState)) - 2)
+		ELSE TRIM(FamRec.AltAddrCityState)
+	END AS 'Other City',
+	CASE 
+		WHEN TRIM(FamRec.AltAddrCityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(FamRec.AltAddrCityState), -2)
+		ELSE NULL
+	END AS 'Other State',
 	TRIM(FamRec.AltAddrZip) AS 'Other Postal Code',
 	REPLACE(TRIM(FamRec.HomePhone), '-', '') AS 'Contact Phone',
 	REPLACE(TRIM(FamRec.HomePhone), '-', '') AS 'Home Phone',
 	REPLACE(TRIM(IndRec.WorkPhone), '-', '') AS 'Work Phone',
 	REPLACE(TRIM(IndRec.Definable19), '-', '') AS 'Cell Phone',
 	NULL AS 'Service Provider',
+	REPLACE(TRIM(FamRec.AltAddrPhone), '-', '') AS 'Other Phone',
 	NULL AS 'Fax',
 	NULL AS 'Pager',
 	NULL AS 'Emergency Phone',
@@ -110,8 +130,14 @@ SELECT
 	TRIM(IndRec.Definable17) AS 'Work Email',
 	TRIM(IndRec.AltAddrAddress1) AS 'Work Street 1',
 	TRIM(IndRec.AltAddrAddress2) AS 'Work Street 2',
-	TRIM(IndRec.AltAddrCityState) AS 'Work City',
-	TRIM(IndRec.AltAddrCityState) AS 'Work State',
+	CASE 
+		WHEN TRIM(IndRec.AltAddrCityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(IndRec.AltAddrCityState), 1, LENGTH(TRIM(IndRec.AltAddrCityState)) - 2)
+		ELSE TRIM(IndRec.AltAddrCityState)
+	END AS 'Work City',
+	CASE 
+		WHEN TRIM(IndRec.AltAddrCityState) REGEXP '[A-Z]{2}$' THEN SUBSTR(TRIM(IndRec.AltAddrCityState), -2)
+		ELSE NULL
+	END AS 'Work State',
 	TRIM(IndRec.AltAddrZip) AS 'Work Postal Code',
 	NULL AS 'Testimony Current',
 	NULL AS 'Testimony Salvation',
@@ -152,6 +178,6 @@ SELECT
 
 	IndRec.UniqueID AS 'Other ID'
 FROM IndRec
-LEFT JOIN FamRec ON IndRec.FamNo = FamRec.FamNo
+LEFT JOIN FamRec ON IndRec.FamNo = FamRec.FamNo;
 
-WHERE IndRec.FamNo = 651;
+--WHERE IndRec.FamNo = 651;

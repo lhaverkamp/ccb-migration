@@ -1,4 +1,5 @@
-SELECT 
+-- 52, 965, 966, 967, 968, 4073, 4074 not resolved via distinct
+SELECT DISTINCT
 	person.personid AS [Individual Id],
 	person.houseid AS [Family Id],
 	CASE 
@@ -19,14 +20,15 @@ SELECT
 		THEN person.firstname
 		ELSE NULL
 	END) AS [Legal Name], -- nickname vs firstname could be used here
+	TRIM(person.maidenname) AS [Maiden Name],
 	NULL AS [Limited Access User],
 	TRIM(CASE WHEN person.usertext1 IS NOT NULL
 		THEN person.usertext1
 		ELSE 'No'
 	END) AS [Listed],
-	CASE WHEN person.memberparticipation = 'Inactive'
-		THEN 'Y'
-		ELSE NULL
+	CASE person.memberparticipation 
+		WHEN 'Inactive' THEN 'Yes'
+		ELSE 'No'
 	END AS [Inactive/Remove],
 	'Hope Lutheran Church' AS [Campus],
 	TRIM(household.emailaddress) AS [Family Email],
@@ -54,6 +56,7 @@ SELECT
 	REPLACE(TRIM(wp.areacode) & TRIM(wp.number), '-', '') AS [Work Phone],
 	REPLACE(TRIM(mp.areacode) & TRIM(mp.number), '-', '') AS [Cell Phone],
 	NULL AS [Service Provider],
+	REPLACE(TRIM(op.areacode) & TRIM(op.number), '-', '') AS [Other Phone],
 	NULL AS [Fax],
 	NULL AS [Pager],
 	NULL AS [Emergency Phone],
@@ -86,7 +89,10 @@ SELECT
 		WHEN 'Visitor' THEN person.memberparticipation
 		ELSE 'Other'
 	END) AS [Membership Type],
-	person.isbaptized AS [Baptized],
+	CASE WHEN person.baptismdate IS NOT NULL OR person.isbaptized 
+		THEN 'Yes'
+		ELSE 'No'
+	END AS [Baptized],
 	CASE WHEN person.baptismdate IS NOT NULL
 		THEN FORMAT(person.baptismdate, 'yyyy-mm-dd') 
 		ELSE NULL
@@ -132,7 +138,10 @@ SELECT
 	NULL AS [Personal Style],
 	NULL AS [Process Queue 1],
 	NULL AS [Process Queue 2],
-	person.isconfirmed AS [Confirmed],
+	CASE WHEN person.confirmationdate IS NOT NULL OR person.isconfirmed 
+		THEN 'Yes'
+		ELSE 'No'
+	END AS [Confirmed],
 	CASE WHEN person.confirmationdate IS NOT NULL
 		THEN FORMAT(person.confirmationdate, 'yyyy-mm-dd') 
 		ELSE NULL
@@ -146,7 +155,10 @@ SELECT
 	NULL AS [Significant Event 3],
 
 	TRIM(person.usertext2) AS [Confirmation Verse],
-	household.newsletter AS [Newsletter],
+	CASE WHEN household.newsletter 
+		THEN 'Yes'
+		ELSE 'No'
+	END AS [Newsletter],
 	TRIM(household.personassigned) AS [Elder],
 
 	person.personid AS [Other ID]
@@ -172,6 +184,6 @@ LEFT JOIN address oa ON opa.xrefid = oa.xrefid
 
 LEFT JOIN death ON person.personid = death.id
 LEFT JOIN note pn ON person.noteid = pn.noteid
-LEFT JOIN note hn ON household.noteid = hn.noteid
+LEFT JOIN note hn ON household.noteid = hn.noteid;
 
-WHERE person.houseid = 92;
+--WHERE person.houseid = 92;

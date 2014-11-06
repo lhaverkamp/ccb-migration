@@ -41,7 +41,7 @@
   				<sqlMigrationPrefix>v</sqlMigrationPrefix>
   				<sqlMigrationSeparator>-</sqlMigrationSeparator>
   				
-  				<outOfOrder>false</outOfOrder>
+  				<outOfOrder>true</outOfOrder>
   			</configuration>
 
   			<dependencies>

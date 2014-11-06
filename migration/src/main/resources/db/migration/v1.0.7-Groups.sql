@@ -9,16 +9,19 @@ LOAD DATA INFILE '../csv/Groups.csv'
 	(
 		IndNo,
 		Code,
-		Comments,
+		@Comments,
 		RecNo,
 		@DateFrom,
 		@DateTo,
 		@TransferDate,
-		TransferReason,
-		Role,
+		@TransferReason,
+		@Role,
 		@AdvFlag
 	)
-	SET DateFrom = STR_TO_DATE(@DateFrom, '%m/%d/%y %h:%i %p'),
+	SET Comments = NULLIF(@Comments, ''),
+		DateFrom = STR_TO_DATE(@DateFrom, '%m/%d/%y %h:%i %p'),
 		DateTo = STR_TO_DATE(@DateTo, '%m/%d/%y %h:%i %p'),
 		TransferDate = STR_TO_DATE(@TransferDate, '%m/%d/%y %h:%i %p'),
+		TransferReason = NULLIF(@TransferReason, ''),
+		Role = NULLIF(@Role, ''),
 		AdvFlag = IF(@AdvFlag = 'TRUE', TRUE, FALSE)
