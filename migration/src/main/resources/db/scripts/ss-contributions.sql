@@ -6,7 +6,7 @@ SELECT
 	contribution.checknumber AS [Check Number],
 	contributionfund.name AS [Fund Given To],
 	NULL AS [Sub Fund],
-	'Hope Lutheran Church' AS [Campus],
+	NULL AS [Campus],
 	NULL AS [Transaction Grouping],
 	contribution.batchid AS [Batch Number],
 	'Yes' AS [Tax Deductible], -- need to check if all of our 'funds' are tax deductible

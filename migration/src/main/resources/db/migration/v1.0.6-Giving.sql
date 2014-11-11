@@ -19,11 +19,12 @@ LOAD DATA INFILE '../csv/Giving.csv'
 		@DateTimePosted,
 		@User
 	)
-	SET Date = STR_TO_DATE(@Date, '%m/%d/%y %h:%i %p'),
+	SET 
+		Date = STR_TO_DATE(@Date, '%m/%d/%y %h:%i %p'),
 		Amount = REPLACE(REPLACE(@Amount, '$', ''), ',', ''),
 		Description = NULLIF(@Description, ''),
 		CheckNo = NULLIF(@CheckNo, ''),
 		BatchCode = NULLIF(@BatchCode, ''),
-		DateTimePosted = NULLIF(@DateTimePosted, ''),
+		DateTimePosted = STR_TO_DATE(@Date, '%m/%d/%y %h:%i %p'),
 		User = NULLIF(@User, '')
 		

@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS ss_individual(
 	limited_access_user BOOLEAN NOT NULL DEFAULT FALSE,
 	listed BOOLEAN NOT NULL DEFAULT TRUE,
 	inactive BOOLEAN NOT NULL DEFAULT FALSE,
-	campus VARCHAR(50) NOT NULL DEFAULT 'Hope Lutheran Church',
+	campus VARCHAR(50),
 	
 	email_family VARCHAR(50),
 	email_individual VARCHAR(50),
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS ss_chart_of_account(
 	fund VARCHAR(50) NOT NULL,
 	subfund VARCHAR(50),
 	tax_deductible BOOLEAN NOT NULL DEFAULT TRUE,
-	campus VARCHAR(50) NOT NULL DEFAULT 'Hope Lutheran Church',
+	campus VARCHAR(50),
 	active BOOLEAN NOT NULL DEFAULT TRUE,
 	
 	CONSTRAINT pk_ss_chart_of_account PRIMARY KEY (fund)
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS ss_contribution(
 	check_number VARCHAR(10),
 	fund VARCHAR(50) NOT NULL,
 	subfund VARCHAR(50),
-	campus VARCHAR(50) NOT NULL DEFAULT 'Hope Lutheran Church',
+	campus VARCHAR(50),
 	transaction_grouping VARCHAR(50),
 	batch_number INT(10) NOT NULL,
 	tax_deductible BOOLEAN NOT NULL DEFAULT TRUE,

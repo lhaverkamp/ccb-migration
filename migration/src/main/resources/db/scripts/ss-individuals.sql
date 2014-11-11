@@ -1,5 +1,5 @@
--- 52, 965, 966, 967, 968, 4073, 4074 not resolved via distinct
-SELECT DISTINCT
+-- 52, 965, 966, 967, 968, 4073, 4074
+SELECT
 	person.personid AS [Individual Id],
 	person.houseid AS [Family Id],
 	CASE 
@@ -30,7 +30,7 @@ SELECT DISTINCT
 		WHEN 'Inactive' THEN 'Yes'
 		ELSE 'No'
 	END AS [Inactive/Remove],
-	'Hope Lutheran Church' AS [Campus],
+	NULL AS [Campus],
 	TRIM(household.emailaddress) AS [Family Email],
 	TRIM(person.emailpersonal) AS [Individual Email],
 	TRIM(ha.address1) AS [Mailing Street 1],
@@ -46,17 +46,17 @@ SELECT DISTINCT
 	TRIM(ha.state) AS [Home State],
 	TRIM(ha.zipcode) AS [Home Postal Code],
 	NULL AS [Area of Town],
-	TRIM(oa.address1) AS [Other Street 1],
-	TRIM(oa.address2) AS [Other Street 2],
-	TRIM(oa.city) AS [Other City],
-	TRIM(oa.state) AS [Other State],
-	TRIM(oa.zipcode) AS [Other Postal Code],
+	--TRIM(oa.address1) AS [Other Street 1],
+	--TRIM(oa.address2) AS [Other Street 2],
+	--TRIM(oa.city) AS [Other City],
+	--TRIM(oa.state) AS [Other State],
+	--TRIM(oa.zipcode) AS [Other Postal Code],
 	REPLACE(TRIM(hp.areacode) & TRIM(hp.number), '-', '') AS [Contact Phone],
 	REPLACE(TRIM(hp.areacode) & TRIM(hp.number), '-', '') AS [Home Phone],
 	REPLACE(TRIM(wp.areacode) & TRIM(wp.number), '-', '') AS [Work Phone],
 	REPLACE(TRIM(mp.areacode) & TRIM(mp.number), '-', '') AS [Cell Phone],
 	NULL AS [Service Provider],
-	REPLACE(TRIM(op.areacode) & TRIM(op.number), '-', '') AS [Other Phone],
+	--REPLACE(TRIM(op.areacode) & TRIM(op.number), '-', '') AS [Other Phone],
 	NULL AS [Fax],
 	NULL AS [Pager],
 	NULL AS [Emergency Phone],
@@ -167,20 +167,15 @@ LEFT JOIN household ON person.houseid = household.houseid
 LEFT JOIN contributor ON person.personid = contributor.person1id OR person.personid = contributor.person2id
 
 LEFT JOIN addressphonexref hpa ON person.houseid = hpa.id AND hpa.idtype = 'H'
+LEFT JOIN address ha ON hpa.xrefid = ha.xrefid AND DATE() BETWEEN ha.begindate AND ha.enddate
+--LEFT JOIN address oa ON hpa.xrefid = oa.xrefid AND DATE() NOT BETWEEN oa.begindate AND oa.enddate
 LEFT JOIN phone hp ON hpa.xrefid = hp.xrefid AND hp.type = 'PRIMARY'
-LEFT JOIN address ha ON hpa.xrefid = ha.xrefid
+LEFT JOIN phone mp ON hpa.xrefid = mp.xrefid AND mp.type = 'MOBILE'
+--LEFT JOIN phone op ON hpa.xrefid = op.xrefid AND op.type = 'OTHER'
 
 LEFT JOIN addressphonexref wpa ON person.personid = wpa.id AND wpa.idtype = 'P'
-LEFT JOIN phone wp ON wpa.xrefid = wp.xrefid AND wp.type = 'WORK'
 LEFT JOIN address wa ON wpa.xrefid = wa.xrefid
-
-LEFT JOIN addressphonexref mpa ON person.houseid = mpa.id AND mpa.idtype = 'H'
-LEFT JOIN phone mp ON mpa.xrefid = mp.xrefid AND mp.type = 'MOBILE'
-LEFT JOIN address ma ON mpa.xrefid = ma.xrefid
-
-LEFT JOIN addressphonexref opa ON person.houseid = opa.id AND opa.idtype = 'H'
-LEFT JOIN phone op ON opa.xrefid = op.xrefid AND op.type = 'OTHER'
-LEFT JOIN address oa ON opa.xrefid = oa.xrefid
+LEFT JOIN phone wp ON wpa.xrefid = wp.xrefid AND wp.type = 'WORK'
 
 LEFT JOIN death ON person.personid = death.id
 LEFT JOIN note pn ON person.noteid = pn.noteid

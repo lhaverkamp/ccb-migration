@@ -30,7 +30,7 @@ SELECT
 		WHEN 'I' THEN 'Y'
 		ELSE NULL
 	END AS 'Inactive/Remove',
-	'Hope Lutheran Church' AS 'Campus',
+	NULL AS 'Campus',
 	NULL AS 'Family Email',
 	TRIM(IndRec.Definable18) AS 'Individual Email',
 	TRIM(FamRec.Address1) AS 'Mailing Street 1',

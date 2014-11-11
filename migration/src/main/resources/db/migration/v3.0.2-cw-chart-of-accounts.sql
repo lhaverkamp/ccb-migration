@@ -1,5 +1,5 @@
-LOAD DATA INFILE '../csv/ss-chart-of-accounts.csv'
-INTO TABLE ss_chart_of_account
+LOAD DATA INFILE '../csv/cw-chart-of-accounts.csv'
+INTO TABLE cw_chart_of_account
 FIELDS
 	TERMINATED BY ','
 	OPTIONALLY ENCLOSED BY '"'

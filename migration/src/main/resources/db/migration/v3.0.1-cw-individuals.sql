@@ -230,7 +230,20 @@ SET individual_id = REPLACE(@individual_id, ' ', ''),
 	commitment_date = NULLIF(@commitment_date, ''),
 	how_they_heard = NULLIF(@how_they_heard, ''),
 	how_they_joined = NULLIF(@how_they_joined, ''),
-	reason_left_church = NULLIF(@reason_left_church, ''),
+	reason_left_church =
+		CASE @reason_left_church
+			WHEN '1' THEN 'Death'
+			WHEN '2' THEN 'Transfer to other LCMS'
+			WHEN '3' THEN 'Removed by church'
+			WHEN '4' THEN 'Removed by their request'
+			WHEN '5' THEN 'Transfer to non-LCMS Lutheran'
+			WHEN '6' THEN 'Transfer to non-Lutheran church'
+			WHEN '7' THEN 'Inactive file'
+			WHEN '8' THEN 'Spouse or Parent Transfered'
+			WHEN '9' THEN 'Other'
+			WHEN 'C' THEN 'Children/Parents not members'
+			ELSE NULLIF(@reason_left_church, '')
+		END,
 	
 	job_title = NULLIF(@job_title, ''),
 	email_work = NULLIF(@email_work, ''),
