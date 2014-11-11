@@ -10,7 +10,7 @@ SELECT
 	ss_contribution.campus,
 	ss_contribution.transaction_grouping,
 	ss_contribution.batch_number,
-	ss_contribution.tax_deductible,
+	IF(ss_contribution.tax_deductible, 'Yes', 'No') AS tax_deductible,
 	ss_contribution.memo
 FROM ss_contribution
 UNION ALL
@@ -31,7 +31,7 @@ SELECT
 	cw_contribution.campus,
 	cw_contribution.transaction_grouping,
 	cw_contribution.batch_number,
-	cw_contribution.tax_deductible,
+	IF(cw_contribution.tax_deductible, 'Yes', 'No') AS tax_deductible,
 	cw_contribution.memo
 FROM cw_contribution
 INNER JOIN cw_individual ON cw_contribution.individual_id = cw_individual.individual_id
