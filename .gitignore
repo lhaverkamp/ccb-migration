@@ -1,0 +1,6 @@
+/target/
+*.classpath
+*.project
+*.csv
+migration/.settings/
+migration/target/
