@@ -15,12 +15,17 @@ SELECT
 FROM ss_contribution
 UNION ALL
 SELECT
-	vw_individual.individual_id,
+	IF(ss_individual.individual_id IS NOT NULL, ss_individual.individual_id, cw_contribution.individual_id + 100000) AS individual_id,
 	cw_contribution.contribution_date,
 	cw_contribution.amount,
 	cw_contribution.type_of_gift,
 	cw_contribution.check_number,
-	cw_contribution.fund,
+	CASE fund
+		WHEN 'Lenten Offering' THEN 'Lent'
+		WHEN 'Memorial' THEN 'Memorials'
+		WHEN 'Mission' THEN 'Missions'
+		ELSE fund
+	END AS fund,
 	cw_contribution.subfund,
 	cw_contribution.campus,
 	cw_contribution.transaction_grouping,
@@ -28,4 +33,7 @@ SELECT
 	cw_contribution.tax_deductible,
 	cw_contribution.memo
 FROM cw_contribution
-INNER JOIN vw_individual ON cw_contribution.individual_id = vw_individual.cw_individual_id;
+INNER JOIN cw_individual ON cw_contribution.individual_id = cw_individual.individual_id
+LEFT JOIN ss_individual
+	ON cw_individual.first_name IN (ss_individual.first_name, ss_individual.legal_name)
+	AND cw_individual.last_name IN (ss_individual.last_name, ss_individual.maiden_name);

@@ -103,7 +103,7 @@ LEFT JOIN cw_individual
 WHERE ss_individual.family_id IS NOT NULL
 UNION ALL
 SELECT
-	vw_individual.individual_id,
+	cw_individual.individual_id + 100000 AS individual_id,
 	vw_family.family_id,
 	IF(cw_individual.deceased IS NOT NULL, 'Other', cw_individual.family_position) AS family_position,
 	cw_individual.prefix,
@@ -200,7 +200,6 @@ SELECT
 	cw_individual.elder,
 	cw_individual.other_id
 FROM cw_individual
-INNER JOIN vw_individual ON cw_individual.individual_id = vw_individual.cw_individual_id
 LEFT JOIN vw_family ON cw_individual.family_id = vw_family.cw_family_id 
 WHERE NOT EXISTS (
 	SELECT 1

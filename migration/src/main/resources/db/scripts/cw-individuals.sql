@@ -107,7 +107,10 @@ SELECT
 		WHEN 'V' THEN 'Visitor'
 		ELSE 'Other'
 	END) AS 'Membership Type',
-	IndRec.Definable22 AS 'Baptized',
+	CASE WHEN IndRec.Definable7 IS NOT NULL 
+		THEN 'Yes'
+		ELSE IndRec.Definable22 
+	END AS 'Baptized',
 	CASE WHEN IndRec.Definable7 IS NOT NULL
 		THEN DATE_FORMAT(IndRec.Definable7, '%Y-%m-%d') 
 		ELSE NULL
@@ -122,7 +125,7 @@ SELECT
 	NULL AS 'Commitment Date', -- not sure the intended purpose of this field; so leaving it blank
 	NULL AS 'How They Heard',
 	TRIM(CASE 
-		WHEN IndRec.Definable9 = 'Unknown' AND IndRec.Definable7 = IndRec.Definable8 THEN 'Child Baptism'
+		WHEN IndRec.Definable7 = IndRec.Definable8 THEN 'Child Baptism'
 		ELSE IndRec.Definable9 
 	END) AS 'How They Joined',
 	TRIM(IndRec.ReasonForTermination) AS 'Reason Left Church',
@@ -159,7 +162,10 @@ SELECT
 	NULL AS 'Personal Style',
 	NULL AS 'Process Queue 1',
 	NULL AS 'Process Queue 2',
-	IndRec.Definable24 AS 'Confirmed',
+	CASE WHEN IndRec.Definable12 IS NOT NULL
+		THEN 'Yes'
+		ELSE IndRec.Definable24 
+	END AS 'Confirmed',
 	CASE WHEN IndRec.Definable12 IS NOT NULL
 		THEN DATE_FORMAT(IndRec.Definable12, '%Y-%m-%d') 
 		ELSE NULL
