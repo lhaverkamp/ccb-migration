@@ -9,6 +9,7 @@ FROM ss_chart_of_account
 UNION
 SELECT 
 	CASE fund
+		WHEN 'Envelope Offering' THEN 'General Fund'
 		WHEN 'Lenten Offering' THEN 'Lent'
 		WHEN 'Memorial' THEN 'Memorials'
 		WHEN 'Mission' THEN 'Missions'

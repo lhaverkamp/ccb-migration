@@ -1,7 +1,7 @@
 CREATE OR REPLACE VIEW vw_contributions AS 
 SELECT
 	ss_contribution.individual_id,
-	ss_contribution.contribution_date,
+	DATE_FORMAT(ss_contribution.contribution_date, '%Y-%m-%d') AS contribution_date,
 	ss_contribution.amount,
 	ss_contribution.type_of_gift,
 	ss_contribution.check_number,
@@ -16,11 +16,12 @@ FROM ss_contribution
 UNION ALL
 SELECT
 	IF(ss_individual.individual_id IS NOT NULL, ss_individual.individual_id, cw_contribution.individual_id + 100000) AS individual_id,
-	cw_contribution.contribution_date,
+	DATE_FORMAT(cw_contribution.contribution_date, '%Y-%m-%d') AS contribution_date,
 	cw_contribution.amount,
 	cw_contribution.type_of_gift,
 	cw_contribution.check_number,
 	CASE fund
+		WHEN 'Envelope Offering' THEN 'General Fund'
 		WHEN 'Lenten Offering' THEN 'Lent'
 		WHEN 'Memorial' THEN 'Memorials'
 		WHEN 'Mission' THEN 'Missions'
