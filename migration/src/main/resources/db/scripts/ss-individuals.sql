@@ -1,5 +1,5 @@
 -- 52, 965, 966, 967, 968, 4073, 4074
-SELECT
+SELECT DISTINCT
 	person.personid AS [Individual Id],
 	person.houseid AS [Family Id],
 	CASE 
@@ -51,12 +51,18 @@ SELECT
 	--TRIM(oa.city) AS [Other City],
 	--TRIM(oa.state) AS [Other State],
 	--TRIM(oa.zipcode) AS [Other Postal Code],
+	NULL AS [Other Street 1],
+	NULL AS [Other Street 2],
+	NULL AS [Other City],
+	NULL AS [Other State],
+	NULL AS [Other Postal Code],
 	REPLACE(TRIM(hp.areacode) & TRIM(hp.number), '-', '') AS [Contact Phone],
 	REPLACE(TRIM(hp.areacode) & TRIM(hp.number), '-', '') AS [Home Phone],
 	REPLACE(TRIM(wp.areacode) & TRIM(wp.number), '-', '') AS [Work Phone],
 	REPLACE(TRIM(mp.areacode) & TRIM(mp.number), '-', '') AS [Cell Phone],
 	NULL AS [Service Provider],
 	--REPLACE(TRIM(op.areacode) & TRIM(op.number), '-', '') AS [Other Phone],
+	NULL AS [Other Phone],
 	NULL AS [Fax],
 	NULL AS [Pager],
 	NULL AS [Emergency Phone],

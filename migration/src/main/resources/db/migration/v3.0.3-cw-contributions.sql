@@ -27,7 +27,11 @@ SET
 	campus = NULLIF(@campus, ''),
 	transaction_grouping = NULLIF(@transaction_grouping, ''),
 	tax_deductible = IF(@tax_deductible = 'Yes', TRUE, FALSE),
-	batch_number = NULLIF(@batch_number, ''),
+	batch_number = 
+		CASE @batch_number
+			WHEN 'EARLY' THEN NULL
+			ELSE NULLIF(@batch_number, '')
+		END,
 	memo = NULLIF(@memo, '')
 ;
 	
