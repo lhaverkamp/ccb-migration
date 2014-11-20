@@ -15,7 +15,7 @@ SELECT
 FROM ss_contribution
 UNION ALL
 SELECT
-	IF(ss_individual.individual_id IS NOT NULL, ss_individual.individual_id, cw_contribution.individual_id + 100000) AS individual_id,
+	IF(ss_individual.individual_id IS NOT NULL, ss_individual.individual_id, cw_contribution.individual_id + 1000000) AS individual_id,
 	DATE_FORMAT(cw_contribution.contribution_date, '%Y-%m-%d') AS contribution_date,
 	cw_contribution.amount,
 	cw_contribution.type_of_gift,

@@ -22,6 +22,7 @@ SELECT
 	ss_individual.address_mailing_state,
 	ss_individual.address_mailing_postal_code,
 	ss_individual.address_mailing_country,
+	ss_individual.address_mailing_carrier_route,
 	ss_individual.address_home_street1,
 	ss_individual.address_home_street2,
 	ss_individual.address_home_city,
@@ -58,7 +59,7 @@ SELECT
 	ss_individual.known_allergies,
 	NULLIF(CONCAT_WS('; ', cw_individual.notes_family, ss_individual.notes_family), '') AS notes_family,
 	NULLIF(CONCAT_WS('; ', cw_individual.notes_individual, ss_individual.notes_individual), '') AS notes_individual,
-	IF(ss_individual.approved_to_work_with_children, 'Yes', 'No') AS approved_to_work_with_children,
+	ss_individual.approved_to_work_with_children,
 	ss_individual.approved_to_work_with_children_stop_date,
 	ss_individual.commitment_date,
 	ss_individual.how_they_heard,
@@ -100,10 +101,9 @@ FROM ss_individual
 LEFT JOIN cw_individual 
 	ON cw_individual.first_name IN (ss_individual.first_name, ss_individual.legal_name)
 	AND cw_individual.last_name IN (ss_individual.last_name, ss_individual.maiden_name)
-WHERE ss_individual.family_id IS NOT NULL
 UNION ALL
 SELECT
-	cw_individual.individual_id + 100000 AS individual_id,
+	cw_individual.individual_id + 1000000 AS individual_id,
 	vw_family.family_id,
 	IF(cw_individual.deceased IS NOT NULL, 'Other', cw_individual.family_position) AS family_position,
 	cw_individual.prefix,
@@ -125,6 +125,7 @@ SELECT
 	cw_individual.address_mailing_state,
 	cw_individual.address_mailing_postal_code,
 	cw_individual.address_mailing_country,
+	cw_individual.address_mailing_carrier_route,
 	cw_individual.address_home_street1,
 	cw_individual.address_home_street2,
 	cw_individual.address_home_city,
@@ -149,7 +150,7 @@ SELECT
 	cw_individual.birthdate,
 	cw_individual.anniversary,
 	cw_individual.gender,
-	cw_individual.giving_number,
+	NULL AS giving_number,
 	cw_individual.marital_status,
 	cw_individual.membership_date,
 	cw_individual.membership_stop_date,
@@ -161,7 +162,7 @@ SELECT
 	cw_individual.known_allergies,
 	cw_individual.notes_family,
 	cw_individual.notes_individual,
-	IF(cw_individual.approved_to_work_with_children, 'Yes', 'No') AS approved_to_work_with_children,
+	cw_individual.approved_to_work_with_children,
 	cw_individual.approved_to_work_with_children_stop_date,
 	cw_individual.commitment_date,
 	cw_individual.how_they_heard,
@@ -198,7 +199,7 @@ SELECT
 	cw_individual.confirmation_verse,
 	IF(cw_individual.newsletter, 'Yes', 'No') AS newsletter,
 	cw_individual.elder,
-	cw_individual.other_id
+	cw_individual.individual_id AS other_id
 FROM cw_individual
 LEFT JOIN vw_family ON cw_individual.family_id = vw_family.cw_family_id 
 WHERE NOT EXISTS (

@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS ss_individual(
 	notes_family VARCHAR(5000),
 	notes_individual VARCHAR(5000),
 	
-	approved_to_work_with_children BOOLEAN,
+	approved_to_work_with_children DATE,
 	approved_to_work_with_children_stop_date DATE,
 	commitment_date DATE,
 	how_they_heard VARCHAR(50),

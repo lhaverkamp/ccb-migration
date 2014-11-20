@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS cw_individual(
+CREATE TABLE IF NOT EXISTS ccb_individual(
 	individual_id INT(10) NOT NULL,
-	family_id INT(10) NOT NULL,
+	family_id INT(10),
 	family_position VARCHAR(50) NOT NULL,
 	
 	prefix VARCHAR(10),
@@ -109,15 +109,7 @@ CREATE TABLE IF NOT EXISTS cw_individual(
 	confirmed BOOLEAN NOT NULL DEFAULT FALSE,
 	confirmation_date DATE,
 	
-	custom_text2 VARCHAR(50),
-	custom_text3 VARCHAR(50),
-	custom_date2 DATE,
-	custom_date3 DATE,
-	
 	first_communion_date DATE,
-	
-	significant_event2 DATE,
-	significant_event3 DATE,
 	
 	confirmation_verse VARCHAR(50),
 	newsletter BOOLEAN NOT NULL DEFAULT TRUE,
@@ -125,20 +117,20 @@ CREATE TABLE IF NOT EXISTS cw_individual(
 	
 	other_id VARCHAR(50) NOT NULL,
 	
-	CONSTRAINT pk_cw_individual PRIMARY KEY (individual_id)
+	CONSTRAINT pk_ccb_individual PRIMARY KEY (individual_id)
 );
 
-CREATE TABLE IF NOT EXISTS cw_chart_of_account(
+CREATE TABLE IF NOT EXISTS ccb_chart_of_account(
 	fund VARCHAR(50) NOT NULL,
 	subfund VARCHAR(50),
 	tax_deductible BOOLEAN NOT NULL DEFAULT TRUE,
 	campus VARCHAR(50),
 	active BOOLEAN NOT NULL DEFAULT TRUE,
 	
-	CONSTRAINT pk_cw_chart_of_account PRIMARY KEY (fund)
+	CONSTRAINT pk_ccb_chart_of_account PRIMARY KEY (fund)
 );
 
-CREATE TABLE IF NOT EXISTS cw_contribution(
+CREATE TABLE IF NOT EXISTS ccb_contribution(
 	individual_id INT(10) NOT NULL,
 	contribution_date TIMESTAMP NOT NULL,
 	amount DOUBLE(15,4) NOT NULL,
@@ -152,21 +144,5 @@ CREATE TABLE IF NOT EXISTS cw_contribution(
 	tax_deductible BOOLEAN NOT NULL DEFAULT TRUE,
 	memo VARCHAR(1000),
 	
-	CONSTRAINT fk_cw_contributions_individual_id FOREIGN KEY (individual_id) REFERENCES cw_individual(individual_id)
-);
-
-CREATE TABLE IF NOT EXISTS cw_attendance(
-	event_id INT(10) NOT NULL,
-	occurance TIMESTAMP NOT NULL,
-	did_not_meet BOOLEAN NOT NULL DEFAULT FALSE,
-	head_count INT(10) NOT NULL,
-	attendee_id INT(10) NOT NULL,
-	topic VARCHAR(100),
-	notes VARCHAR(5000),
-	prayer_requests VARCHAR(1000),
-	info VARCHAR(1000),
-	email_notifications BOOLEAN NOT NULL DEFAULT FALSE,
-	
-	CONSTRAINT pk_cw_attendance PRIMARY KEY (event_id, occurance, attendee_id),
-	CONSTRAINT fk_cw_attendance_attendee_id FOREIGN KEY (attendee_id) REFERENCES cw_individual(individual_id)
+	CONSTRAINT fk_ccb_contributions_individual_id FOREIGN KEY (individual_id) REFERENCES ccb_individual(individual_id)
 );
