@@ -10,7 +10,7 @@ SELECT
 	NULL AS [Transaction Grouping],
 	contribution.batchid AS [Batch Number],
 	'Yes' AS [Tax Deductible], -- need to check if all of our 'funds' are tax deductible
-	NULL AS [Memo]
+	contribution.description AS [Memo]
 FROM contribution
 INNER JOIN contributionfund ON contribution.fundid = contributionfund.fundid;
 --WHERE contribution.person1id = 283;

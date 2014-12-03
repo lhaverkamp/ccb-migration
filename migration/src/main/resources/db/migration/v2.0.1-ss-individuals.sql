@@ -12,7 +12,7 @@ IGNORE 1 LINES
 	family_position,
 	
 	@prefix,
-	first_name,
+	@first_name,
 	@middle_name,
 	last_name,
 	@suffix,
@@ -136,6 +136,7 @@ IGNORE 1 LINES
 SET family_id = NULLIF(@family_id, 0),
 
 	prefix = NULLIF(@prefix, ''),
+	first_name = REPLACE(@first_name, '*', ''),
 	middle_name = NULLIF(@middle_name, ''),
 	suffix = NULLIF(@suffix, ''),
 	legal_name = NULLIF(@legal_name, ''),
@@ -149,25 +150,73 @@ SET family_id = NULLIF(@family_id, 0),
 	email_family = NULLIF(@email_family, ''),
 	email_individual = NULLIF(@email_individual, ''),
 	
-	address_mailing_street1 = NULLIF(@address_mailing_street1, ''),
-	address_mailing_street2 = NULLIF(@address_mailing_street2, ''),
-	address_mailing_city = NULLIF(@address_mailing_city, ''),
-	address_mailing_state = NULLIF(@address_mailing_state, ''),
+	address_mailing_street1 = 
+		CASE @address_mailing_street1
+			WHEN 'Unknown' THEN NULL
+			WHEN '**********' THEN NULL
+			ELSE NULLIF(@address_mailing_street1, '')
+		END,
+	address_mailing_street2 = 
+		CASE @address_mailing_street2
+			WHEN 'Unknown' THEN NULL
+			WHEN '**********' THEN NULL
+			ELSE NULLIF(@address_mailing_street2, '')
+		END,
+	address_mailing_city = 
+		CASE @address_mailing_city
+			WHEN 'Unknown' THEN NULL
+			WHEN 'xxxx' THEN NULL
+			ELSE NULLIF(@address_mailing_city, '')
+		END,
+	address_mailing_state = 
+		CASE @address_mailing_state
+			WHEN 'XX' THEN NULL
+			WHEN 'xx' THEN NULL
+			WHEN '**' THEN NULL
+			ELSE NULLIF(@address_mailing_state, '')
+		END,
 	address_mailing_postal_code = 
 		CASE @address_mailing_postal_code
 			WHEN '*****-****-**' THEN NULL
+			WHEN 'Unknown' THEN NULL
+			WHEN 'xxxx' THEN NULL
+			WHEN '*****' THEN NULL
 			ELSE NULLIF(@address_mailing_postal_code, '')
 		END,
 	address_mailing_country = NULLIF(@address_mailing_country, ''),
 	address_mailing_carrier_route = NULLIF(@address_mailing_carrier_route, ''),
 	
-	address_home_street1 = NULLIF(@address_home_street1, ''),
-	address_home_street2 = NULLIF(@address_home_street2, ''),
-	address_home_city = NULLIF(@address_home_city, ''),
-	address_home_state = NULLIF(@address_home_state, ''),
+	address_home_street1 = 
+		CASE @address_home_street1
+			WHEN 'Unknown' THEN NULL
+			WHEN '**********' THEN NULL
+			ELSE NULLIF(@address_home_street1, '')
+		END,
+	address_home_street2 = 
+		CASE @address_home_street2
+			WHEN 'Unknown' THEN NULL
+			WHEN '**********' THEN NULL
+			ELSE NULLIF(@address_home_street2, '')
+		END,
+	address_home_city = 
+		CASE @address_home_city
+			WHEN 'Unknown' THEN NULL
+			WHEN 'xxxx' THEN NULL
+			ELSE NULLIF(@address_home_city, '')
+		END,
+	address_home_state = 
+		CASE @address_home_state
+			WHEN 'XX' THEN NULL
+			WHEN 'xx' THEN NULL
+			WHEN '**' THEN NULL
+			ELSE NULLIF(@address_home_state, '')
+		END,
 	address_home_postal_code = 
 		CASE @address_home_postal_code
 			WHEN '*****-****-**' THEN NULL
+			WHEN 'Unknown' THEN NULL
+			WHEN 'xxxx' THEN NULL
+			WHEN '*****' THEN NULL
 			ELSE NULLIF(@address_home_postal_code, '')
 		END,
 	area_of_town = NULLIF(@area_of_town, ''),
@@ -179,15 +228,44 @@ SET family_id = NULLIF(@family_id, 0),
 	address_other_postal_code = 
 		CASE @address_other_postal_code
 			WHEN '*****-****-**' THEN NULL
+			WHEN 'Unknown' THEN NULL
 			ELSE NULLIF(@address_other_postal_code, '')
 		END,
 	
-	phone_contact = NULLIF(@phone_contact, ''),
-	phone_home = NULLIF(@phone_home, ''),
-	phone_work = NULLIF(@phone_work, ''),
-	phone_mobile = NULLIF(@phone_mobile, ''),
+	phone_contact = 
+		CASE @phone_contact
+			WHEN '913' THEN NULL
+			WHEN '9134225Y' THEN NULL
+			WHEN '9132481Y' THEN NULL
+			WHEN '91' THEN NULL
+			WHEN '816596Y0' THEN NULL
+			ELSE NULLIF(@phone_contact, '')
+		END,
+	phone_home =
+		CASE @phone_home
+			WHEN '913' THEN NULL
+			WHEN '9134225Y' THEN NULL
+			WHEN '9132481Y' THEN NULL
+			WHEN '91' THEN NULL
+			WHEN '816596Y0' THEN NULL
+			ELSE NULLIF(@phone_home, '')
+		END,
+	phone_work =
+		CASE @phone_work
+			WHEN '913' THEN NULL
+			ELSE NULLIF(@phone_work, '')
+		END,
+	phone_mobile =
+		CASE @phone_mobile
+			WHEN '913' THEN NULL
+			ELSE NULLIF(@phone_mobile, '')
+		END,
 	service_provider = NULLIF(@service_provider, ''),
-	phone_other = NULLIF(@phone_other, ''),
+	phone_other =
+		CASE @phone_other
+			WHEN '913' THEN NULL
+			ELSE NULLIF(@phone_other, '')
+		END,
 	fax = NULLIF(@fax, ''),
 	pager = NULLIF(@pager, ''),
 	emergency_phone = NULLIF(@emergency_phone, ''),

@@ -1,4 +1,5 @@
 -- 52, 965, 966, 967, 968, 4073, 4074
+-- DISTINCT is due to Mobile Phone field being duplicated for the Riddell's
 SELECT DISTINCT
 	person.personid AS [Individual Id],
 	person.houseid AS [Family Id],
@@ -172,8 +173,8 @@ FROM person
 LEFT JOIN household ON person.houseid = household.houseid
 LEFT JOIN contributor ON person.personid = contributor.person1id OR person.personid = contributor.person2id
 
-LEFT JOIN addressphonexref hpa ON person.houseid = hpa.id AND hpa.idtype = 'H'
-LEFT JOIN address ha ON hpa.xrefid = ha.xrefid AND DATE() BETWEEN ha.begindate AND ha.enddate
+INNER JOIN addressphonexref hpa ON person.houseid = hpa.id AND hpa.idtype = 'H'
+INNER JOIN address ha ON hpa.xrefid = ha.xrefid AND ha.isprimary = true
 --LEFT JOIN address oa ON hpa.xrefid = oa.xrefid AND DATE() NOT BETWEEN oa.begindate AND oa.enddate
 LEFT JOIN phone hp ON hpa.xrefid = hp.xrefid AND hp.type = 'PRIMARY'
 LEFT JOIN phone mp ON hpa.xrefid = mp.xrefid AND mp.type = 'MOBILE'
@@ -183,7 +184,7 @@ LEFT JOIN addressphonexref wpa ON person.personid = wpa.id AND wpa.idtype = 'P'
 LEFT JOIN address wa ON wpa.xrefid = wa.xrefid
 LEFT JOIN phone wp ON wpa.xrefid = wp.xrefid AND wp.type = 'WORK'
 
-LEFT JOIN death ON person.personid = death.id
+LEFT JOIN death ON person.houseid = death.id AND CONCAT(person.firstname, ' ', person.lastname) = death.nameofdeceased
 LEFT JOIN note pn ON person.noteid = pn.noteid
 LEFT JOIN note hn ON household.noteid = hn.noteid;
 
