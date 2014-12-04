@@ -21,6 +21,24 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.33</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.3.6</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-lang3</artifactId>
+		<version>3.3.2</version>
+	</dependency>
   </dependencies>
   
   <build>
@@ -51,6 +69,28 @@
 					<version>5.1.33</version>
 				</dependency>
 			</dependencies>
+  		</plugin>
+  		
+  		<plugin>
+  			<groupId>org.codehaus.mojo</groupId>
+  			<artifactId>exec-maven-plugin</artifactId>
+  			<version>1.1.1</version>
+  			<executions>
+  				<execution>
+  					<phase>test</phase>
+  					<goals>
+  						<goal>java</goal>
+  					</goals>
+  					
+  					<configuration>
+  						<mainClass>us.haverkamp.ccb.migration.App</mainClass>
+  						<arguments>
+  							<argument>${jdbc.url}</argument>
+  							<argument>${ccb.url}</argument>
+  						</arguments>
+  					</configuration>
+				</execution>
+  			</executions>
   		</plugin>
   	</plugins>
   </build>
