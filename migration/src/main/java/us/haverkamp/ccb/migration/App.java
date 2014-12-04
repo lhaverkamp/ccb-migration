@@ -17,6 +17,8 @@ public class App {
         for(Individual individual : individuals) {
         	if(dao.update(individual) == 200) {
         		cnt++;
+        		
+        		System.out.println(cnt + ": " + individual.getFirstName() + " " + individual.getLastName());
         	};
         }
         

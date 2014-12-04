@@ -52,7 +52,7 @@ public class IndividualDAO extends GenericDAO {
 		"	t.middle_name, " +
 		"	t.last_name, " +
 		"	t.suffix, " +
-		"	t.email_individual, " +
+		"	IF(t.email_individual IS NULL, t.email_family, t.email_individual) AS email_individual, " +
 		"	individual_export.area_of_town, " +
 		"	t.area_of_town, " +
 		"	t.address_mailing_street1, " +
@@ -116,14 +116,14 @@ public class IndividualDAO extends GenericDAO {
 		"INNER JOIN custom_report ON individual_export.individual_id = custom_report.individual_id " +
 		"INNER JOIN ss_individual t ON custom_report.other_id = t.other_id AND custom_report.last_name = t.last_name " +
 		"WHERE individual_export.modified_by IN ('System', 'Laura Haverkamp') " +
-		"  AND NOT (individual_export.family_position = t.family_position " +
-		"  AND individual_export.limited_access_user = t.limited_access_user " +
+		"  AND NOT (/*individual_export.family_position = t.family_position " +
+		"  AND */individual_export.limited_access_user = t.limited_access_user " +
 		"  AND individual_export.prefix <=> t.prefix " +
 		"  AND individual_export.first_name = t.first_name " +
 		"  AND individual_export.middle_name <=> t.middle_name " +
 		"  AND individual_export.last_name = t.last_name " +
 		"  AND individual_export.suffix <=> t.suffix " +
-		"  AND individual_export.email <=> t.email_individual " +
+		"  AND individual_export.email <=> IF(t.email_individual IS NULL, t.email_family, t.email_individual) " +
 //		"  AND individual_export.area_of_town <=> t.area_of_town " +
 //		"  AND individual_export.mailing_street <=> t.address_mailing_street1 " +
 //		"  AND individual_export.mailing_city <=> t.address_mailing_city " +
@@ -142,7 +142,7 @@ public class IndividualDAO extends GenericDAO {
 		"  AND individual_export.anniversary <=> t.anniversary " +
 		"  AND SUBSTR(individual_export.gender, 1, 1) <=> t.gender " +
 		"  AND individual_export.giving_number <=> t.giving_number " +
-		"  AND individual_export.marital_status <=> t.marital_status " +
+//		"  AND individual_export.marital_status <=> t.marital_status " +
 //		"  AND individual_export.home_area <=> t.area_of_town " +
 //		"  AND individual_export.home_street <=> t.address_home_street1 " +
 //		"  AND individual_export.home_city <=> t.address_home_city " +
@@ -178,7 +178,7 @@ public class IndividualDAO extends GenericDAO {
 		"  AND (individual_export.inactive <=> t.inactive OR individual_export.membership_type = 'Deceased') " +
 		"  AND individual_export.how_they_heard <=> t.how_they_heard " +
 		"  AND individual_export.reason_left_church <=> t.reason_left_church " +
-		") AND individual_export.individual_id = 1";
+		")";
 	
 	private Map<String, Integer> elders;
 	private Map<String, Integer> newsletter;
