@@ -161,6 +161,6 @@ CREATE TABLE IF NOT EXISTS custom_report(
 	family_id INT(10) NOT NULL,
 	first_name VARCHAR(50) NOT NULL,
 	last_name VARCHAR(50) NOT NULL,
-	other_id INT(10),
+	other_id VARCHAR(10),
 	CONSTRAINT pk_custom_export PRIMARY KEY (individual_id)
 );

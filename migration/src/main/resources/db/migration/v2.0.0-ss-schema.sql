@@ -157,15 +157,11 @@ CREATE TABLE IF NOT EXISTS ss_contribution(
 
 CREATE TABLE IF NOT EXISTS ss_attendance(
 	event_id INT(10) NOT NULL,
-	occurance TIMESTAMP NOT NULL,
-	did_not_meet BOOLEAN NOT NULL DEFAULT FALSE,
-	head_count INT(10) NOT NULL,
+	event VARCHAR(100) NOT NULL,
+	occurance DATE NOT NULL,
 	attendee_id INT(10) NOT NULL,
-	topic VARCHAR(100),
-	notes VARCHAR(5000),
-	prayer_requests VARCHAR(1000),
-	info VARCHAR(1000),
-	email_notifications BOOLEAN NOT NULL DEFAULT FALSE,
+	created_date TIMESTAMP NOT NULL,
+	updated_date TIMESTAMP NOT NULL,
 	
 	CONSTRAINT pk_ss_attendance PRIMARY KEY (event_id, occurance, attendee_id),
 	CONSTRAINT fk_ss_attendance_attendee_id FOREIGN KEY (attendee_id) REFERENCES ss_individual(individual_id)

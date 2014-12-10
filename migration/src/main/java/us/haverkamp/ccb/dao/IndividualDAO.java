@@ -41,6 +41,7 @@ public class IndividualDAO extends GenericDAO {
 	private final DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public static final String SQL_NEW = "SELECT";
+	
 	public static final String SQL_UPDATE = 
 		"SELECT " +
 		"	individual_export.individual_id, " +
@@ -111,7 +112,8 @@ public class IndividualDAO extends GenericDAO {
 		"	t.listed, " +
 		"	t.inactive, " +
 		"	t.how_they_heard, " +
-		"	t.reason_left_church " +
+		"	t.reason_left_church," +
+		"	t.other_id " +
 		"FROM individual_export " +
 		"INNER JOIN custom_report ON individual_export.individual_id = custom_report.individual_id " +
 		"INNER JOIN ss_individual t ON custom_report.other_id = t.other_id AND custom_report.last_name = t.last_name " +
@@ -287,6 +289,8 @@ public class IndividualDAO extends GenericDAO {
 		}
 		params.add(new BasicNameValuePair("udf_pulldown_5", getNewsletter().get(individual.getNewsletter() ? "Yes" : "No").toString())); // Newsletter
 		params.add(new BasicNameValuePair("udf_pulldown_6", getConfirmed().get(individual.getConfirmed() ? "Yes" : "No").toString())); // Confirmed
+		
+		params.add(new BasicNameValuePair("other_id", individual.getOtherId()));
 		
 		try {
 			request.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));

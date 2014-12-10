@@ -4,7 +4,7 @@ FIELDS
 	TERMINATED BY ','
 	OPTIONALLY ENCLOSED BY '"'
 LINES
-	TERMINATED BY '\n'
+	TERMINATED BY '\r\n'
 IGNORE 1 LINES
 (
 	@individual_id,
@@ -131,7 +131,7 @@ IGNORE 1 LINES
 	@newsletter,
 	@elder,
 	
-	@other_id
+	other_id
 )
 SET individual_id = REPLACE(@individual_id, ' ', ''),
 	family_id = NULLIF(@family_id, 0),
@@ -288,7 +288,5 @@ SET individual_id = REPLACE(@individual_id, ' ', ''),
 	
 	confirmation_verse = NULLIF(@confirmation_verse, ''),
 	newsletter = IF(@newsletter = 'Yes', TRUE, FALSE),
-	elder = NULLIF(@elder, ''),
-	
-	other_id = NULLIF(@other_id, '')
+	elder = NULLIF(@elder, '')
 ;

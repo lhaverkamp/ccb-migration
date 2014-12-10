@@ -182,7 +182,7 @@ SELECT
 	NULL AS 'Newsletter',
 	NULL AS 'Elder',
 
-	IndRec.UniqueID AS 'Other ID'
+	IndRec.IndivNo AS 'Other ID'
 FROM IndRec
 LEFT JOIN FamRec ON IndRec.FamNo = FamRec.FamNo;
 

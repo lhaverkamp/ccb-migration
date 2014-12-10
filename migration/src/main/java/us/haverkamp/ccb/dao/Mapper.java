@@ -103,6 +103,8 @@ public class Mapper {
 		individual.setHowTheyHeard(rs.getString("how_they_heard"));
 		individual.setReasonLeftChurch(rs.getString("reason_left_church"));
 		
+		individual.setOtherId(rs.getString("other_id"));
+		
 		return individual;
 	}
 	

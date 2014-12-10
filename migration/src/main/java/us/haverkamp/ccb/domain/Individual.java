@@ -73,6 +73,8 @@ public class Individual {
 	private String howTheyHeard;
 	private String reasonLeftChurch;
 	
+	private String otherId;
+	
 	public Individual(Long id) {
 		setId(id);
 	}
@@ -454,7 +456,7 @@ public class Individual {
 	}
 
 	public String getHowTheyHeard() {
-		return howTheyHeard;
+		return this.howTheyHeard;
 	}
 
 	public void setHowTheyHeard(String howTheyHeard) {
@@ -462,11 +464,18 @@ public class Individual {
 	}
 
 	public String getReasonLeftChurch() {
-		return reasonLeftChurch;
+		return this.reasonLeftChurch;
 	}
 
 	public void setReasonLeftChurch(String reasonLeftChurch) {
 		this.reasonLeftChurch = reasonLeftChurch;
 	}
-		
+
+	public String getOtherId() {
+		return this.otherId;
+	}
+
+	public void setOtherId(String otherId) {
+		this.otherId = otherId;
+	}
 }

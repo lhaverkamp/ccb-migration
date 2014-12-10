@@ -14,4 +14,4 @@ SELECT
 FROM contribution
 INNER JOIN contributionfund ON contribution.fundid = contributionfund.fundid;
 --WHERE contribution.person1id = 283;
- 
+--WHERE creationdatetime > '2014-11-10 00:00:00.0'

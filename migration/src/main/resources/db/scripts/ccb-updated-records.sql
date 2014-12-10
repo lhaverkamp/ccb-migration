@@ -127,7 +127,7 @@ SELECT
 	t.reason_left_church
 FROM individual_export
 INNER JOIN custom_report ON individual_export.individual_id = custom_report.individual_id
-INNER JOIN ss_individual t ON custom_report.other_id = t.other_id AND custom_report.last_name = t.last_name
+INNER JOIN ss_individual t ON custom_report.other_id = t.other_id
 WHERE individual_export.modified_by IN ('System', 'Laura Haverkamp')
   AND NOT (/*individual_export.family_position = t.family_position 
   AND */individual_export.limited_access_user = t.limited_access_user 

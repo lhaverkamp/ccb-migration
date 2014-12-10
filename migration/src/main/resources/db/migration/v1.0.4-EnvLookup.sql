@@ -4,7 +4,7 @@ LOAD DATA INFILE '../csv/EnvLookup.csv'
 		TERMINATED BY ','
 		OPTIONALLY ENCLOSED BY '"'
 	LINES
-		TERMINATED BY '\n'
+		TERMINATED BY '\r\n'
 	IGNORE 1 LINES
 	(
 		EnvNo,

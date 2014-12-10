@@ -15,11 +15,13 @@ public class App {
         
         int cnt = 0;
         for(Individual individual : individuals) {
-        	if(dao.update(individual) == 200) {
+        	int status;
+        	
+			if((status = dao.update(individual)) == 200) {
         		cnt++;
-        		
-        		System.out.println(cnt + ": " + individual.getFirstName() + " " + individual.getLastName());
         	};
+        	
+        	System.out.println(status + ": " + individual.getFirstName() + " " + individual.getLastName());
         }
         
         System.out.println(cnt + " of " + individuals.size());
