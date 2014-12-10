@@ -1,73 +1,73 @@
 -- Gender
-SELECT ccb_export.*, t.first_name, t.last_name, t.gender
+SELECT custom_report.*, t.first_name, t.last_name, t.gender, individual_export.gender
 FROM ss_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.gender != ccb_export.gender;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.gender != SUBSTR(individual_export.gender, 1, 1);
 
-SELECT ccb_export.*, t.first_name, t.last_name, t.gender
+SELECT custom_report.*, t.first_name, t.last_name, t.gender, individual_export.gender
 FROM cw_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.gender != ccb_export.gender;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.gender != SUBSTR(individual_export.gender, 1, 1);
 
 -- Family Position
-SELECT ccb_export.*, t.first_name, t.last_name, t.family_position
+SELECT custom_report.*, t.first_name, t.last_name, t.family_position, individual_export.family_position
 FROM ss_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.family_position != ccb_export.family_position
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.family_position != individual_export.family_position
 AND t.family_position != 'Other';
 
-SELECT ccb_export.*, t.first_name, t.last_name, t.family_position
+SELECT custom_report.*, t.first_name, t.last_name, t.family_position, individual_export.family_position
 FROM cw_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.family_position != ccb_export.family_position
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.family_position != individual_export.family_position
 AND t.family_position != 'Other';
 
 -- Deceased
-SELECT ccb_export.*, t.first_name, t.last_name, t.deceased
+SELECT custom_report.*, t.first_name, t.last_name, t.deceased, individual_export.deceased
 FROM ss_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.deceased != ccb_export.deceased_date;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.deceased != individual_export.deceased_date;
 
-SELECT ccb_export.*, t.first_name, t.last_name, t.deceased
+SELECT custom_report.*, t.first_name, t.last_name, t.deceased, individual_export.deceased
 FROM cw_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.deceased != ccb_export.deceased_date;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.deceased != individual_export.deceased_date;
 
 -- Maiden Name
-SELECT ccb_export.*, t.first_name, t.last_name, t.maiden_name
+SELECT custom_report.*, t.first_name, t.last_name, t.maiden_name, individual_export.maiden_name
 FROM ss_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.maiden_name != ccb_export.maiden_name;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.maiden_name != individual_export.maiden_name;
 
-SELECT ccb_export.*, t.first_name, t.last_name, t.maiden_name
+SELECT custom_report.*, t.first_name, t.last_name, t.maiden_name, individual_export.maiden_name
 FROM cw_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.maiden_name != ccb_export.maiden_name;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.maiden_name != individual_export.maiden_name;
 
 -- Inactive
-SELECT ccb_export.*, t.first_name, t.last_name, t.inactive
+SELECT custom_report.*, t.first_name, t.last_name, t.inactive, individual_export.inactive
 FROM ss_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.inactive != ccb_export.inactive;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.inactive != individual_export.inactive;
 
-SELECT ccb_export.*, t.first_name, t.last_name, t.inactive
+SELECT custom_report.*, t.first_name, t.last_name, t.inactive, individual_export.inactive
 FROM cw_individual t
-INNER JOIN ccb_export ON t.other_id = ccb_export.other_id
-WHERE t.last_name = ccb_export.last_name
-AND t.inactive != ccb_export.inactive;
+INNER JOIN custom_report ON t.other_id = custom_report.other_id
+INNER JOIN individual_export ON custom_report.individual_id = individual_export.individual_id
+WHERE t.inactive != individual_export.inactive;
 
 -- Membership Type
-SELECT * FROM ccb_export WHERE membership_type = 'Member';
+SELECT * FROM custom_report WHERE membership_type = 'Member';
 
 -- Reason Left Church
-SELECT * FROM ccb_export WHERE reason_left_church = 'DELETION';
+SELECT * FROM custom_report WHERE reason_left_church = 'DELETION';
 

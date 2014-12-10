@@ -232,18 +232,22 @@ public class IndividualDAO extends GenericDAO {
 		params.add(new BasicNameValuePair("first_name", toString(individual.getFirstName())));
 		params.add(new BasicNameValuePair("last_name", toString(individual.getLastName())));
 		params.add(new BasicNameValuePair("middle_name", toString(individual.getMiddleName())));
-		//params.add(new BasicNameValuePair(other_id, )));
+		//params.add(new BasicNameValuePair("legal_first_name", toString(individual.getLegalFirstName())));
+		//sync_id
+		//params.add(new BasicNameValuePair("other_id", individual.getOtherId()));
 		params.add(new BasicNameValuePair("salutation", toString(individual.getPrefix())));
 		params.add(new BasicNameValuePair("suffix", toString(individual.getSuffix())));
 		
-		//TODO params.add(new BasicNameValuePair("family_position", ));
-		//TODO params.add(new BasicNameValuePair("gender", ));
+		//campus_id
+		//family_id
+		//TODO params.add(new BasicNameValuePair("family_position", toString(individual.getFamilyPosition())));
+		params.add(new BasicNameValuePair("gender", toString(individual.getGender())));
 		params.add(new BasicNameValuePair("birthday", toString(individual.getBirthday())));
 		params.add(new BasicNameValuePair("anniversary", toString(individual.getAnniversary())));
 		//TODO params.add(new BasicNameValuePair("deceased", format(individual.getDeceased())));
 		params.add(new BasicNameValuePair("membership_date", toString(individual.getMembershipStartDate())));
 		params.add(new BasicNameValuePair("membership_end", toString(individual.getMembershipStopDate())));
-		//params.add(new BasicNameValuePair("membership_type_id", ));
+		//membership_type_id;
 
 		params.add(new BasicNameValuePair("giving_number", toString(individual.getGivingNo())));
 		params.add(new BasicNameValuePair("email", toString(individual.getEmail())));
@@ -252,21 +256,25 @@ public class IndividualDAO extends GenericDAO {
 		params.add(new BasicNameValuePair("mailing_city", toString(individual.getContact().getCity())));
 		params.add(new BasicNameValuePair("mailing_state", toString(individual.getContact().getState())));
 		params.add(new BasicNameValuePair("mailing_zip", toString(individual.getContact().getZip())));
+		//mailing_country
 		
 		params.add(new BasicNameValuePair("home_street_address", toString(individual.getHome().getStreet())));
 		params.add(new BasicNameValuePair("home_city", toString(individual.getHome().getCity())));
 		params.add(new BasicNameValuePair("home_state", toString(individual.getHome().getState())));
 		params.add(new BasicNameValuePair("home_zip", toString(individual.getHome().getZip())));
+		//home_country
 		
 		params.add(new BasicNameValuePair("work_street_address", toString(individual.getWork().getStreet())));
 		params.add(new BasicNameValuePair("work_city", toString(individual.getWork().getCity())));
 		params.add(new BasicNameValuePair("work_state", toString(individual.getWork().getState())));
 		params.add(new BasicNameValuePair("work_zip", toString(individual.getWork().getZip())));
+		//work_country
 		
 		params.add(new BasicNameValuePair("other_street_address", toString(individual.getOther().getStreet())));
 		params.add(new BasicNameValuePair("other_city", toString(individual.getOther().getCity())));
 		params.add(new BasicNameValuePair("other_state", toString(individual.getOther().getState())));
 		params.add(new BasicNameValuePair("other_zip", toString(individual.getOther().getZip())));
+		//other_country
 		
 		params.add(new BasicNameValuePair("contact_phone", toString(individual.getContactPhone())));
 		params.add(new BasicNameValuePair("home_phone", toString(individual.getHomePhone())));
@@ -290,7 +298,7 @@ public class IndividualDAO extends GenericDAO {
 		params.add(new BasicNameValuePair("udf_pulldown_5", getNewsletter().get(individual.getNewsletter() ? "Yes" : "No").toString())); // Newsletter
 		params.add(new BasicNameValuePair("udf_pulldown_6", getConfirmed().get(individual.getConfirmed() ? "Yes" : "No").toString())); // Confirmed
 		
-		params.add(new BasicNameValuePair("other_id", individual.getOtherId()));
+		//modifier_id
 		
 		try {
 			request.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
