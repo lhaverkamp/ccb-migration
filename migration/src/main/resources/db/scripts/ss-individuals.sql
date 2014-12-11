@@ -119,7 +119,7 @@ SELECT DISTINCT
 	END) AS [How They Joined],
 	person.removedby AS [Reason Left Church],
 	person.occupationtitle AS [Job Title],
-	NULL AS [Work Email],
+	NULL AS [Work Email], -- TODO need to pull this out of SS
 	TRIM(wa.address1) AS [Work Street 1],
 	TRIM(wa.address2) AS [Work Street 2],
 	TRIM(wa.city) AS [Work City],

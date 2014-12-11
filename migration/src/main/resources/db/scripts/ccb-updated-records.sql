@@ -16,7 +16,7 @@ SELECT
 	individual_export.suffix,
 	t.suffix,
 	individual_export.email,
-	IF(t.email_individual IS NULL, t.email_family, t.email_individual) AS email,
+	IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) AS email,
 	individual_export.area_of_town,
 	t.area_of_town,
 	individual_export.mailing_street,
@@ -136,7 +136,7 @@ WHERE individual_export.modified_by IN ('System', 'Laura Haverkamp')
   AND individual_export.middle_name <=> t.middle_name 
   AND individual_export.last_name = t.last_name 
   AND individual_export.suffix <=> t.suffix 
-  AND individual_export.email <=> IF(t.email_individual IS NULL, t.email_family, t.email_individual) 
+  AND individual_export.email <=> IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) 
 --  AND individual_export.area_of_town <=> t.area_of_town 
 --  AND individual_export.mailing_street <=> t.address_mailing_street1 
 --  AND individual_export.mailing_city <=> t.address_mailing_city 

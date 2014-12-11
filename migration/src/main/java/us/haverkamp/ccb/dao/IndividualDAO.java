@@ -1,51 +1,19 @@
 package us.haverkamp.ccb.dao;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
+import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Individual;
 
-public class IndividualDAO extends GenericDAO {
-	private final DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-	
-	public static final String SQL_NEW = "SELECT";
-	
-	public static final String SQL_UPDATE = 
-		"SELECT " +
-		"	individual_export.individual_id, " +
-		"	individual_export.family_id, " +
+public class IndividualDAO extends GenericDAO<Individual> {
+	private static final String COLUMNS = 
 		"	t.family_position, " +
 		"	t.limited_access_user, " +
 		"	t.prefix, " +
@@ -53,8 +21,7 @@ public class IndividualDAO extends GenericDAO {
 		"	t.middle_name, " +
 		"	t.last_name, " +
 		"	t.suffix, " +
-		"	IF(t.email_individual IS NULL, t.email_family, t.email_individual) AS email_individual, " +
-		"	individual_export.area_of_town, " +
+		"	IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) AS email, " +
 		"	t.area_of_town, " +
 		"	t.address_mailing_street1, " +
 		"	t.address_mailing_city, " +
@@ -71,11 +38,7 @@ public class IndividualDAO extends GenericDAO {
 		"	t.emergency_contact_name, " +
 		"	t.birthdate, " +
 		"	t.anniversary, " +
-		"	CASE t.gender " +
-		"		WHEN 'F' THEN 'Female' " +
-		"		WHEN 'M' THEN 'Male' " +
-		"		ELSE NULL " +
-		"	END AS gender, " +
+		"	t.gender, " +
 		"	t.giving_number, " +
 		"	t.marital_status, " +
 		"	t.area_of_town, " +
@@ -113,7 +76,28 @@ public class IndividualDAO extends GenericDAO {
 		"	t.inactive, " +
 		"	t.how_they_heard, " +
 		"	t.reason_left_church," +
-		"	t.other_id " +
+		"	t.other_id ";
+	
+	public static final String SQL_FIND_BY_EVENT_ID =
+		"SELECT " +
+		"	event_id, " +
+		"	event, " +
+		"	occurance, " +
+		"	attendee_id, " +
+		"	custom_report.individual_id, " +
+		"	custom_report.family_id, " +
+		COLUMNS +
+		"FROM ss_attendance " +
+		"INNER JOIN ss_individual t ON ss_attendance.attendee_id = t.individual_id " +
+		"INNER JOIN custom_report ON t.other_id = custom_report.other_id " +
+		"WHERE ss_attendance.event_id = ?" +
+		"  AND ss_attendance.occurance = ?";
+	
+	public static final String SQL_UPDATE = 
+		"SELECT " +
+		"	individual_export.individual_id, " +
+		"	individual_export.family_id, " +
+		COLUMNS +
 		"FROM individual_export " +
 		"INNER JOIN custom_report ON individual_export.individual_id = custom_report.individual_id " +
 		"INNER JOIN ss_individual t ON custom_report.other_id = t.other_id AND custom_report.last_name = t.last_name " +
@@ -125,7 +109,7 @@ public class IndividualDAO extends GenericDAO {
 		"  AND individual_export.middle_name <=> t.middle_name " +
 		"  AND individual_export.last_name = t.last_name " +
 		"  AND individual_export.suffix <=> t.suffix " +
-		"  AND individual_export.email <=> IF(t.email_individual IS NULL, t.email_family, t.email_individual) " +
+		"  AND individual_export.email <=> IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) " +
 //		"  AND individual_export.area_of_town <=> t.area_of_town " +
 //		"  AND individual_export.mailing_street <=> t.address_mailing_street1 " +
 //		"  AND individual_export.mailing_city <=> t.address_mailing_city " +
@@ -186,47 +170,25 @@ public class IndividualDAO extends GenericDAO {
 	private Map<String, Integer> newsletter;
 	private Map<String, Integer> confirmed;
 	
-	public List<Individual> findBy(String sql) throws DataAccessException {
+	public List<Individual> findBy(Event event) throws DataAccessException {
+		return findBy(SQL_FIND_BY_EVENT_ID, new Object[] { 
+			event.getId(),
+			event.getStart()
+		});
+	}
+	
+	@Override
+	protected Individual getItem(ResultSet rs) throws DataAccessException {
 		try {
-			final Connection connection = getConnection();
-			
-			try {
-				final PreparedStatement ps = connection.prepareStatement(sql);
-				
-				try {
-					final ResultSet rs = ps.executeQuery();
-					
-					try {
-						final List<Individual> individuals = new ArrayList<Individual>();
-						
-						while(rs.next()) {
-							individuals.add(Mapper.getIndividual(rs));
-						}
-						
-						return individuals;
-					} finally {
-						rs.close();
-					}
-				} finally {
-					ps.close();
-				}
-			} finally {
-				connection.close();
-			}
+			return Mapper.getIndividual(rs);
 		} catch(SQLException e) {
 			throw new DataAccessException(e);
 		}
 	}
-	
-	public int update(Individual individual) throws DataAccessException {
-		final String url = getURL() + "?srv=update_individual&individual_id=" + individual.getId();
 
-		final CloseableHttpClient client = HttpClients.createDefault();
-		final HttpPost request = new HttpPost(url);
-		
-		// add header
-		request.setHeader("Authorization", getAuthorizationValue());
-		
+	public int update(Individual individual) throws DataAccessException {
+		final String srv = "update_individual&individual_id=" + individual.getId();
+
 		// add params
 		final List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("first_name", toString(individual.getFirstName())));
@@ -299,80 +261,13 @@ public class IndividualDAO extends GenericDAO {
 		params.add(new BasicNameValuePair("udf_pulldown_6", getConfirmed().get(individual.getConfirmed() ? "Yes" : "No").toString())); // Confirmed
 		
 		//modifier_id
-		
-		try {
-			request.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-			//request.getEntity().writeTo(System.out);
-			
-			final CloseableHttpResponse response = client.execute(request);
-			
-			try {
-				return response.getStatusLine().getStatusCode();
-			} finally {
-				response.close();
-			}
-		} catch(UnsupportedEncodingException e) {
-			throw new DataAccessException(e);
-		} catch (ClientProtocolException e) {
-			throw new DataAccessException(e);
-		} catch (IOException e) {
-			throw new DataAccessException(e);
-		}
-	}
-	
-	private Map<String, Integer> getPulldownOptions(String srv) throws DataAccessException {
-		final String url = getURL() + "?srv=" + srv;
 
-		final CloseableHttpClient client = HttpClients.createDefault();
-		final HttpGet request = new HttpGet(url);
-		
-		// add header
-		request.setHeader("Authorization", "Basic d29yZHByZXNzOlBoOkEtOFpTUllJMQ==");
-
-		try {
-			final CloseableHttpResponse response = client.execute(request);
-			
-			try {
-				final HttpEntity entity = response.getEntity();
-				final String xml = EntityUtils.toString(entity);
-				
-				final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				final Document document = builder.parse(new ByteArrayInputStream(xml.getBytes()));
-				
-				final Map<String, Integer> dropdown = new HashMap<String, Integer>();
-				final NodeList items = document.getElementsByTagName("item");
-				
-				for(int i=0;i<items.getLength();i++) {
-					final Element item = (Element) items.item(i);
-					
-					final Integer value = Integer.valueOf(item.getElementsByTagName("id").item(0).getTextContent());
-					final String key = item.getElementsByTagName("name").item(0).getTextContent();
-					
-					dropdown.put(key, value);
-				}
-
-				return dropdown;
-			} catch (ParserConfigurationException e) {
-				throw new DataAccessException(e);
-			} catch (IllegalStateException e) {
-				throw new DataAccessException(e);
-			} catch (SAXException e) {
-				throw new DataAccessException(e);
-			} finally {
-				response.close();
-			}
-		} catch(UnsupportedEncodingException e) {
-			throw new DataAccessException(e);
-		} catch (ClientProtocolException e) {
-			throw new DataAccessException(e);
-		} catch (IOException e) {
-			throw new DataAccessException(e);
-		}
+		return post(srv, params);
 	}
 	
 	private Map<String, Integer> getElders() throws DataAccessException {
 		if(this.elders == null) {
-			this.elders = getPulldownOptions("udf_ind_pulldown_4_list");
+			this.elders = getLookupTable("udf_ind_pulldown_4_list");
 		}
 		
 		return this.elders;
@@ -380,7 +275,7 @@ public class IndividualDAO extends GenericDAO {
 	
 	private Map<String, Integer> getNewsletter() throws DataAccessException {
 		if(this.newsletter == null) {
-			this.newsletter = getPulldownOptions("udf_ind_pulldown_5_list");
+			this.newsletter = getLookupTable("udf_ind_pulldown_5_list");
 		}
 		
 		return this.newsletter;
@@ -388,21 +283,9 @@ public class IndividualDAO extends GenericDAO {
 	
 	private Map<String, Integer> getConfirmed() throws DataAccessException {
 		if(this.confirmed == null) {
-			this.confirmed = getPulldownOptions("udf_ind_pulldown_6_list");
+			this.confirmed = getLookupTable("udf_ind_pulldown_6_list");
 		}
 		
 		return this.confirmed;
-	}
-	
-	private String toString(String string) {
-		return string != null ? string : "";
-	}
-	
-	private String toString(Number number) {
-		return number != null ? number.toString() : "";
-	}
-	
-	private String toString(Date date) {
-		return date != null ? this.date.format(date) : "";
 	}
 }

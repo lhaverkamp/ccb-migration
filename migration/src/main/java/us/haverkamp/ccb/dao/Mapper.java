@@ -1,13 +1,75 @@
 package us.haverkamp.ccb.dao;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import us.haverkamp.ccb.domain.Address;
+import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
+import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
 
 public class Mapper {
+	private static final String NODE_GROUP = "group";
+	private static final String NODE_GROUP_ATTRIBUTE_ID = "id";
+	private static final String NODE_NAME = "name";
+	
+	public static Event getEvent(ResultSet rs) throws SQLException {
+		final Event event = new Event(rs.getLong("event_id"));
+		
+		event.setName(rs.getString("event"));
+		event.setEventGrouping(rs.getString("event_grouping"));
+		// occurrence
+		event.setStart(rs.getDate("start_date"));
+		event.setEnd(rs.getDate("end_date"));
+		
+		return event;
+	}
+	
+	public static Group getGroup(Element e) {
+		final Group group = new Group(Long.valueOf(e.getAttribute(NODE_GROUP_ATTRIBUTE_ID)));
+		group.setName(e.getElementsByTagName(NODE_NAME).item(0).getTextContent());
+		
+		return group;
+	}
+	
+	public static Group getGroup(ResultSet rs) throws SQLException {
+		final Group group = new Group(rs.getLong("group_id"));
+		
+		group.setName(rs.getString("group"));
+		
+		return group;
+	}
+	
+	public static List<Group> getGroups(String xml) 
+			throws ParserConfigurationException, SAXException, IOException {
+		final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		final Document document = builder.parse(new ByteArrayInputStream(xml.getBytes()));
+		
+		final List<Group> groups = new ArrayList<Group>();
+		final NodeList items = document.getElementsByTagName(NODE_GROUP);
+		
+		for(int i=0;i<items.getLength();i++) {
+			groups.add(Mapper.getGroup((Element) items.item(i)));
+		}
+
+		return groups;
+
+	}
+	
 	public static Individual getIndividual(ResultSet rs) throws SQLException {
 		final Individual individual = new Individual(rs.getLong("individual_id"));
 		
@@ -22,7 +84,7 @@ public class Mapper {
 		individual.setLastName(rs.getString("last_name"));
 		individual.setSuffix(rs.getString("suffix"));
 		
-		individual.setEmail(rs.getString("email_individual"));
+		individual.setEmail(rs.getString("email"));
 		
 		individual.setContact(Mapper.getContactAddress(rs));
 		individual.setHome(Mapper.getHomeAddress(rs));
@@ -108,7 +170,7 @@ public class Mapper {
 		return individual;
 	}
 	
-	private static Family getFamily(ResultSet rs) throws SQLException {
+	public static Family getFamily(ResultSet rs) throws SQLException {
 		return new Family(rs.getLong("family_id"));
 	}
 	
