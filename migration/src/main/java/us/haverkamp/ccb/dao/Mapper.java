@@ -1,14 +1,11 @@
 package us.haverkamp.ccb.dao;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
@@ -21,6 +18,7 @@ import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
+import us.haverkamp.utils.XmlUtils;
 
 public class Mapper {
 	private static final String NODE_GROUP = "group";
@@ -32,9 +30,7 @@ public class Mapper {
 		
 		event.setName(rs.getString("event"));
 		event.setEventGrouping(rs.getString("event_grouping"));
-		// occurrence
-		event.setStart(rs.getDate("start_date"));
-		event.setEnd(rs.getDate("end_date"));
+		event.setDate(rs.getDate("event_date"));
 		
 		return event;
 	}
@@ -56,8 +52,7 @@ public class Mapper {
 	
 	public static List<Group> getGroups(String xml) 
 			throws ParserConfigurationException, SAXException, IOException {
-		final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		final Document document = builder.parse(new ByteArrayInputStream(xml.getBytes()));
+		final Document document = XmlUtils.getDocument(xml);
 		
 		final List<Group> groups = new ArrayList<Group>();
 		final NodeList items = document.getElementsByTagName(NODE_GROUP);
@@ -67,7 +62,6 @@ public class Mapper {
 		}
 
 		return groups;
-
 	}
 	
 	public static Individual getIndividual(ResultSet rs) throws SQLException {
@@ -125,6 +119,7 @@ public class Mapper {
 		
 		individual.setBirthday(rs.getDate("birthdate"));
 		individual.setAnniversary(rs.getDate("anniversary"));
+		individual.setDeceased(rs.getDate("deceased"));
 		
 		individual.setGender(rs.getString("gender"));
 		
@@ -155,7 +150,6 @@ public class Mapper {
 		
 		individual.setMembershipStartDate(rs.getDate("membership_date"));
 		individual.setMembershipStopDate(rs.getDate("membership_stop_date"));
-		
 		individual.setMembershipType(rs.getString("membership_type"));
 
 		individual.setBaptized(rs.getBoolean("baptized"));

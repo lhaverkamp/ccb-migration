@@ -16,7 +16,7 @@ SELECT
 	individual_export.suffix,
 	t.suffix,
 	individual_export.email,
-	IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) AS email,
+	IF(t.email_individual IS NOT NULL, t.email_individual, IF(t.email_work IS NOT NULL, t.email_work, IF(t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, NULL))) AS email,
 	individual_export.area_of_town,
 	t.area_of_town,
 	individual_export.mailing_street,
@@ -136,7 +136,7 @@ WHERE individual_export.modified_by IN ('System', 'Laura Haverkamp')
   AND individual_export.middle_name <=> t.middle_name 
   AND individual_export.last_name = t.last_name 
   AND individual_export.suffix <=> t.suffix 
-  AND individual_export.email <=> IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) 
+  AND individual_export.email <=> IF(t.email_individual IS NOT NULL, t.email_individual, IF(t.email_work IS NOT NULL, t.email_work, IF(t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, NULL))) 
 --  AND individual_export.area_of_town <=> t.area_of_town 
 --  AND individual_export.mailing_street <=> t.address_mailing_street1 
 --  AND individual_export.mailing_city <=> t.address_mailing_city 
@@ -151,8 +151,9 @@ WHERE individual_export.modified_by IN ('System', 'Laura Haverkamp')
   AND individual_export.pager <=> t.pager 
   AND individual_export.emergency_phone <=> t.emergency_phone 
   AND individual_export.emergency_contact_name <=> t.emergency_contact_name 
-  AND individual_export.birthday <=> t.birthdate 
+  AND individual_export.birthday <=> t.birthdate
   AND individual_export.anniversary <=> t.anniversary 
+  AND t.deceased IS NULL
   AND SUBSTR(individual_export.gender, 1, 1) <=> t.gender 
   AND individual_export.giving_number <=> t.giving_number 
 --  AND individual_export.marital_status <=> t.marital_status 
@@ -181,7 +182,7 @@ WHERE individual_export.modified_by IN ('System', 'Laura Haverkamp')
   AND individual_export.confirmation <=> t.confirmation_date 
   AND individual_export.baptism <=> t.baptism_date 
   AND individual_export.elder <=> t.elder 
-  AND individual_export.newsletter <=> IF(t.newsletter, 'Yes', 'No') 
+  AND individual_export.newsletter <=> IF(t.newsletter, 'Yes', 'No')
   AND individual_export.confirmed <=> IF(t.confirmed, 'Yes', 'No') 
   AND individual_export.membership_start_date <=> t.membership_date 
   AND individual_export.membership_end_date <=> t.membership_stop_date 

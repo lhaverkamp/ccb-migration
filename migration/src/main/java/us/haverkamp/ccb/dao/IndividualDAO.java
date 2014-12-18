@@ -21,7 +21,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"	t.middle_name, " +
 		"	t.last_name, " +
 		"	t.suffix, " +
-		"	IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) AS email, " +
+		"	IF(t.email_individual IS NOT NULL, t.email_individual, IF(t.email_work IS NOT NULL, t.email_work, IF(t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, NULL))) AS email, " +
 		"	t.area_of_town, " +
 		"	t.address_mailing_street1, " +
 		"	t.address_mailing_city, " +
@@ -38,6 +38,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"	t.emergency_contact_name, " +
 		"	t.birthdate, " +
 		"	t.anniversary, " +
+		"   t.deceased, " + 
 		"	t.gender, " +
 		"	t.giving_number, " +
 		"	t.marital_status, " +
@@ -109,7 +110,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"  AND individual_export.middle_name <=> t.middle_name " +
 		"  AND individual_export.last_name = t.last_name " +
 		"  AND individual_export.suffix <=> t.suffix " +
-		"  AND individual_export.email <=> IF(t.email_individual IS NULL AND t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, t.email_individual) " +
+		"  AND individual_export.email <=> IF(t.email_individual IS NOT NULL, t.email_individual, IF(t.email_work IS NOT NULL, t.email_work, IF(t.family_position IN ('Primary Contact', 'Spouse'), t.email_family, NULL))) " +
 //		"  AND individual_export.area_of_town <=> t.area_of_town " +
 //		"  AND individual_export.mailing_street <=> t.address_mailing_street1 " +
 //		"  AND individual_export.mailing_city <=> t.address_mailing_city " +
@@ -126,6 +127,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"  AND individual_export.emergency_contact_name <=> t.emergency_contact_name " +
 		"  AND individual_export.birthday <=> t.birthdate " +
 		"  AND individual_export.anniversary <=> t.anniversary " +
+		"  AND t.deceased IS NULL " +
 		"  AND SUBSTR(individual_export.gender, 1, 1) <=> t.gender " +
 		"  AND individual_export.giving_number <=> t.giving_number " +
 //		"  AND individual_export.marital_status <=> t.marital_status " +
@@ -166,6 +168,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"  AND individual_export.reason_left_church <=> t.reason_left_church " +
 		")";
 	
+	private Map<String, Integer> membershipType;
 	private Map<String, Integer> elders;
 	private Map<String, Integer> newsletter;
 	private Map<String, Integer> confirmed;
@@ -173,7 +176,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 	public List<Individual> findBy(Event event) throws DataAccessException {
 		return findBy(SQL_FIND_BY_EVENT_ID, new Object[] { 
 			event.getId(),
-			event.getStart()
+			event.getDate()
 		});
 	}
 	
@@ -186,7 +189,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		}
 	}
 
-	public int update(Individual individual) throws DataAccessException {
+	public String update(Individual individual) throws DataAccessException {
 		final String srv = "update_individual&individual_id=" + individual.getId();
 
 		// add params
@@ -206,10 +209,10 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		params.add(new BasicNameValuePair("gender", toString(individual.getGender())));
 		params.add(new BasicNameValuePair("birthday", toString(individual.getBirthday())));
 		params.add(new BasicNameValuePair("anniversary", toString(individual.getAnniversary())));
-		//TODO params.add(new BasicNameValuePair("deceased", format(individual.getDeceased())));
+		params.add(new BasicNameValuePair("deceased", toString(individual.getDeceased())));
 		params.add(new BasicNameValuePair("membership_date", toString(individual.getMembershipStartDate())));
 		params.add(new BasicNameValuePair("membership_end", toString(individual.getMembershipStopDate())));
-		//membership_type_id;
+		params.add(new BasicNameValuePair("membership_type_id", getMembershipType().get(individual.getMembershipType()).toString()));
 
 		params.add(new BasicNameValuePair("giving_number", toString(individual.getGivingNo())));
 		params.add(new BasicNameValuePair("email", toString(individual.getEmail())));
@@ -265,6 +268,14 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		return post(srv, params);
 	}
 	
+	private Map<String, Integer> getMembershipType() throws DataAccessException {
+		if(this.membershipType == null) {
+			this.membershipType = getLookupTable("membership_type_list");
+		}
+		
+		return this.membershipType;
+	}
+
 	private Map<String, Integer> getElders() throws DataAccessException {
 		if(this.elders == null) {
 			this.elders = getLookupTable("udf_ind_pulldown_4_list");

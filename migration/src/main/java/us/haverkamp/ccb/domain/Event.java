@@ -1,26 +1,27 @@
 package us.haverkamp.ccb.domain;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import us.haverkamp.utils.XmlUtils;
+
 public class Event {
 	private Long id;
 	private Group group;
 	private String name;
-	
-	private Date start;
-	private Date end;
+
+	private Date date;
 	
 	private String description;
 	private String leaderNotes;
@@ -97,32 +98,17 @@ public class Event {
 		this.name = name;
 	}
 
-	public Date getStart() {
-		return start;
-	}
-
-	public void setStart(Date start) {
-		this.start = start;
-	}
-
-	public Date getEnd() {
-		return end;
-	}
-
-	public void setEnd(Date end) {
-		this.end = end;
+	public Date getDate() {
+		return this.date;
 	}
 	
-	/**
-	 * This method figures out the Event Time based upon the classification of
-	 * the event.  Some events do occur at multiple times but for historic data
-	 * we are simply importing them at one specific time.
-	 * 
-	 * @return String in the format of yyyy-mm-dd HH:mi:ss
-	 */
-	private String getOccurrence() {
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
+	public Date getStartTime() {
 		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(getStart());
+		calendar.setTime(getDate());
 		
 		switch (getEventGrouping()) {
 		case "Sunday Worship":
@@ -153,9 +139,28 @@ public class Event {
 			throw new NullPointerException("event grouping (" + getEventGrouping() + ") does not have a default time specified");
 		}
 		
-		final DateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mi:ss");
+		return calendar.getTime();
+	}
+	
+	public Date getEndTime() {
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(getStartTime());
+		calendar.add(Calendar.HOUR, 1);
 		
-		return format.format(calendar.getTime());
+		return calendar.getTime();
+	}
+	
+	/**
+	 * This method figures out the Event Time based upon the classification of
+	 * the event.  Some events do occur at multiple times but for historic data
+	 * we are simply importing them at one specific time.
+	 * 
+	 * @return String in the format of yyyy-mm-dd HH:mi:ss
+	 */
+	private String getOccurrence() {
+		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		return format.format(getStartTime());
 	}
 
 	public String getDescription() {
@@ -228,34 +233,14 @@ public class Event {
 	 * it uses the occurrence field to represent a particular instance of an
 	 * event that has occurred.
 	 * 
-	 *	<?xml version="1.0" encoding="UTF-8" ?>
-		<events>
-			<event id="#" occurrence="yyyy-mm-dd hh:mi:ss">
-				<did_not_meet>false</did_not_meet>
-				<head_count>#</head_count>
-				<attendees>
-					<attendee id="#"></attendee>
-					<attendee id="#"></attendee>
-					...
-				</attendees>
-				<topic>...</topic>
-				<notes>...</notes>
-				<prayer_requests>...</prayer_requests>
-				<info>...</info>
-				<email_notification>none</email_notification>
-			</event>
-			...
-		</events>
-		
 	 * @return Element representing the XML for the event node.
 	 * @throws ParserConfigurationException 
 	 */
-	public Element toXML() throws ParserConfigurationException {
-		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		final DocumentBuilder builder = factory.newDocumentBuilder();
-		final Document document = builder.newDocument();
+	public Element toXML() 
+			throws ParserConfigurationException, TransformerException, IOException {
+		final Document document = XmlUtils.newDocument();
+
 		final Element event = document.createElement(NODE_EVENT);
-		
 		event.setAttribute(NODE_EVENT_ATTRIBUTE_ID, getId().toString());
 		event.setAttribute(NODE_EVENT_ATTRIBUTE_OCCURRENCE, getOccurrence());
 		
@@ -265,7 +250,7 @@ public class Event {
 		
 		final Node headCount = 
 			event.appendChild(document.createElement(NODE_HEAD_COUNT));
-		headCount.setTextContent(Integer.toString(getAttendees().size()));
+		//headCount.setTextContent(Integer.toString(getAttendees().size()));
 		
 		final Node attendees = 
 			event.appendChild(document.createElement(NODE_ATTENDEES));

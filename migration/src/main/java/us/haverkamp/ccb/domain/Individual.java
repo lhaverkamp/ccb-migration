@@ -36,6 +36,7 @@ public class Individual {
 	
 	private Date birthday;
 	private Date anniversary;
+	private Date deceased;
 	
 	private String gender;
 	
@@ -271,6 +272,14 @@ public class Individual {
 		this.anniversary = anniversary;
 	}
 
+	public Date getDeceased() {
+		return this.deceased;
+	}
+	
+	public void setDeceased(Date deceased) {
+		this.deceased = deceased;
+	}
+
 	public String getGender() {
 		return this.gender;
 	}
@@ -382,7 +391,7 @@ public class Individual {
 	public void setBaptism(Date baptism) {
 		this.baptism = baptism;
 	}
-
+	
 	public String getElder() {
 		return elder;
 	}

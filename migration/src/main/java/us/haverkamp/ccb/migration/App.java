@@ -1,6 +1,13 @@
 package us.haverkamp.ccb.migration;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.dao.EventDAO;
@@ -9,6 +16,7 @@ import us.haverkamp.ccb.dao.IndividualDAO;
 import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
+import us.haverkamp.utils.XmlUtils;
 
 public class App {
 	public void syncIndividuals() throws DataAccessException {
@@ -16,18 +24,11 @@ public class App {
         final List<Individual> individuals = 
         	dao.findBy(IndividualDAO.SQL_UPDATE);
         
-        int cnt = 0;
         for(Individual individual : individuals) {
-        	int status;
+        	final String xml = dao.update(individual);
         	
-			if((status = dao.update(individual)) == 200) {
-        		cnt++;
-        	};
-        	
-        	System.out.println(status + ": " + individual.getFirstName() + " " + individual.getLastName());
+        	System.out.println(xml);
         }
-        
-        System.out.println(cnt + " of " + individuals.size());
 	}
 	
 	public void syncEvents() throws DataAccessException {
@@ -36,26 +37,36 @@ public class App {
 		final EventDAO dao = Factory.getInstance().getEventDAO();
 		final List<Event> events = dao.findBy(EventDAO.SQL_ALL);
 		
-		int cnt = 0;
 		for(Event event : events) {
-			int status;
-
 			event.setGroup(group);
 			
-			if((status = dao.create(event)) == 200) {
-				cnt++;
+			String xml = dao.create(event);
+			System.out.println(xml);
+			
+			try {
+				final Document document = XmlUtils.getDocument(xml);
+				final Element element = 
+					(Element) document.getElementsByTagName("event").item(0);
+				
+				event.setId(Long.valueOf(element.getAttribute("id")));
+			} catch(ParserConfigurationException e) {
+				throw new DataAccessException(e);
+			} catch(SAXException e) {
+				throw new DataAccessException(e);
+			} catch(IOException e) {
+				throw new DataAccessException(e);
 			}
-        	
-        	System.out.println(status + ": " + event.getName() + " " + event.getAttendees().size());
+			
+			xml = dao.attendance(event);
+			
+        	System.out.println(xml);
 		}
-        
-        System.out.println(cnt + " of " + events.size());
-	}
+ 	}
 	
     public static void main( String[] args ) throws DataAccessException {
     	final App app = new App();
     	
-    	//TODO app.syncIndividuals();
+    	//app.syncIndividuals();
     	app.syncEvents();
     }
 }
