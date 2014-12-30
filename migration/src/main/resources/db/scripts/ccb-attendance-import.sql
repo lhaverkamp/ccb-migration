@@ -6,7 +6,7 @@ SELECT
 	TRIM(occurance) AS event_date, 
 	COUNT(*) AS attendance 
 FROM ss_attendance 
---WHERE event_id = 1 AND occurance = '2013-08-04' 
+WHERE occurance > '2014-12-14' 
 GROUP BY event_id, event, occurance
 ORDER BY occurance, event, event_id;
 

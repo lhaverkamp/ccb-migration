@@ -171,7 +171,7 @@ SELECT DISTINCT
 	person.personid AS [Other ID]
 FROM person
 LEFT JOIN household ON person.houseid = household.houseid
-LEFT JOIN contributor ON person.personid = contributor.person1id OR person.personid = contributor.person2id
+LEFT JOIN contributor ON person.personid = contributor.person1id-- OR person.personid = contributor.person2id
 
 INNER JOIN addressphonexref hpa ON person.houseid = hpa.id AND hpa.idtype = 'H'
 INNER JOIN address ha ON hpa.xrefid = ha.xrefid AND ha.isprimary = true

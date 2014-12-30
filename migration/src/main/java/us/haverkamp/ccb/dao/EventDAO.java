@@ -29,6 +29,7 @@ public class EventDAO extends GenericDAO<Event> {
 		"	TRIM(occurance) AS event_date, " +
 		"	COUNT(*) AS attendance " +
 		"FROM ss_attendance " +
+		"WHERE occurance > '2014-12-14' " + 
 		"GROUP BY event_id, event, occurance " +
 		"ORDER BY occurance, event, event_id";
 	
