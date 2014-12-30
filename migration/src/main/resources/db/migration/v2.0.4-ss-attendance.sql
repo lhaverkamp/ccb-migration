@@ -19,7 +19,7 @@ IGNORE 1 LINES
 		WHEN 'Christmas Eve Servic' THEN 'Christmas Eve'
 		WHEN 'New Year’s Eve Ser' THEN 'New Year''s Eve'
 		WHEN 'Lenten Services' THEN 'Lent'
-		WHEN 'Maundy Thursday Ser' THEN 'Manudy Thursday'
+		WHEN 'Maundy Thursday Ser' THEN 'Maundy Thursday'
 		WHEN 'Good Friday Ser' THEN 'Good Friday'
 		WHEN 'Thanksgiving Eve Ser' THEN 'Thanksgiving Eve'
 		ELSE @event

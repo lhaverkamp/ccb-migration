@@ -29,8 +29,8 @@ public class EventDAO extends GenericDAO<Event> {
 		"	TRIM(occurance) AS event_date, " +
 		"	COUNT(*) AS attendance " +
 		"FROM ss_attendance " +
-		"WHERE event_id = 1 AND occurance = '2013-08-04' " +
-		"GROUP BY event_id, event, occurance";
+		"GROUP BY event_id, event, occurance " +
+		"ORDER BY occurance, event, event_id";
 	
 	private Map<String, Integer> eventGrouping;
 
