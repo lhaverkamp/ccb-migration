@@ -22,5 +22,5 @@ INNER JOIN contributionfund ON contribution.fundid = contributionfund.fundid
 INNER JOIN contributor ON contribution.person1id = contributor.person1id AND NVL(contribution.person2id, 0) = NVL(contribution.person2id, 0)
 --WHERE creationdatetime > '2014-11-10 00:00:00.0'
 --WHERE creationdatetime > '2014-12-02 00:00:00.0'
-WHERE creationdatetime > '2014-12-16 10:24:28.0'
--- TODO need to run at this specified time
+--WHERE creationdatetime > '2014-12-16 10:24:28.0'
+WHERE creationdatetime > '2014-12-29 11:21:43.0'
