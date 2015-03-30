@@ -1,3 +1,19 @@
+-- The following fields aren't part of the CCB API and need to be synced 
+-- manually:
+-- family_position (is but requires one child families to be Primary Contact)
+-- limited_access_user
+-- fax
+-- pager
+-- marital_status
+-- school
+-- school_grade
+-- military
+-- baptized
+-- listed
+-- inactive
+-- how_they_heard
+-- reason_left_church
+
 -- Gender
 SELECT custom_report.*, t.first_name, t.last_name, t.gender, individual_export.gender
 FROM ss_individual t

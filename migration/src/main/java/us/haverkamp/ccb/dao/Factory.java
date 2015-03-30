@@ -1,6 +1,7 @@
 package us.haverkamp.ccb.dao;
 
 public class Factory {
+	private AttendanceDAO attendanceDAO;
 	private EventDAO eventDAO;
 	private GroupDAO groupDAO;
 	private IndividualDAO individualDAO;
@@ -11,6 +12,14 @@ public class Factory {
 	
 	public static Factory getInstance() {
 		return new Factory();
+	}
+	
+	public AttendanceDAO getAttendanceDAO() {
+		if(this.attendanceDAO == null) {
+			this.attendanceDAO = new AttendanceDAO();
+		}
+		
+		return this.attendanceDAO;
 	}
 	
 	public EventDAO getEventDAO() {

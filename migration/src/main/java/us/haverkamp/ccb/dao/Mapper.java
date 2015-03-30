@@ -3,6 +3,7 @@ package us.haverkamp.ccb.dao;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +19,50 @@ import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
+import us.haverkamp.utils.DateUtils;
 import us.haverkamp.utils.XmlUtils;
 
 public class Mapper {
+	private static final String NODE_ATTENDEE = "attendee";
+	private static final String NODE_FIRST_NAME = "first_name";
+	private static final String NODE_LAST_NAME = "last_name";
+	
+	private static final String NODE_EVENT = "event";
+	private static final String NODE_OCCURRENCE = "occurrence";
+	
 	private static final String NODE_GROUP = "group";
 	private static final String NODE_GROUP_ATTRIBUTE_ID = "id";
 	private static final String NODE_NAME = "name";
+	
+	public static Event getEvent(String xml) 
+			throws NoDataFoundException, ParserConfigurationException, SAXException, IOException, ParseException {
+		final Document document = XmlUtils.getDocument(xml);
+		
+		final Element e = (Element) document.getElementsByTagName(NODE_EVENT).item(0);
+		if(e == null) {
+			throw new NoDataFoundException(
+				document.getElementsByTagName("message").item(0).getTextContent()
+			);
+		}
+		final Event event = 
+			new Event(Long.valueOf(e.getAttribute(NODE_GROUP_ATTRIBUTE_ID)));
+		event.setDate(
+			DateUtils.toDate(
+				e.getElementsByTagName(NODE_OCCURRENCE).item(0).getTextContent(),
+				DateUtils.DATE_TIME
+			));
+
+		final NodeList items = document.getElementsByTagName(NODE_ATTENDEE);
+		
+		final List<Individual> attendees = new ArrayList<Individual>();
+		for(int i=0;i<items.getLength();i++) {
+			attendees.add(Mapper.getIndividual((Element) items.item(i)));
+		}
+		event.setAttendees(attendees);
+
+		return event;
+	}
+
 	
 	public static Event getEvent(ResultSet rs) throws SQLException {
 		final Event event = new Event(rs.getLong("event_id"));
@@ -62,6 +101,14 @@ public class Mapper {
 		}
 
 		return groups;
+	}
+	
+	public static Individual getIndividual(Element e) {
+		final Individual individual = new Individual(Long.valueOf(e.getAttribute(NODE_GROUP_ATTRIBUTE_ID)));
+		individual.setFirstName(e.getElementsByTagName(NODE_FIRST_NAME).item(0).getTextContent());
+		individual.setLastName(e.getElementsByTagName(NODE_LAST_NAME).item(0).getTextContent());
+		
+		return individual;
 	}
 	
 	public static Individual getIndividual(ResultSet rs) throws SQLException {

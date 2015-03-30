@@ -137,7 +137,7 @@ SET family_id = NULLIF(@family_id, 0),
 
 	prefix = NULLIF(@prefix, ''),
 	first_name = REPLACE(REPLACE(@first_name,'’', ''''), '*', ''),
-	middle_name = NULLIF(@middle_name, ''),
+	middle_name = NULLIF(REPLACE(@middle_name, '’', ''''), ''),
 	last_name = REPLACE(@last_name, '’', ''''),
 	suffix = NULLIF(@suffix, ''),
 	legal_name = NULLIF(@legal_name, ''),

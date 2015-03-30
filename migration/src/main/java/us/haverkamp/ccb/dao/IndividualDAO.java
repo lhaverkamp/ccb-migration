@@ -101,7 +101,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		COLUMNS +
 		"FROM individual_export " +
 		"INNER JOIN custom_report ON individual_export.individual_id = custom_report.individual_id " +
-		"INNER JOIN ss_individual t ON custom_report.other_id = t.other_id AND custom_report.last_name = t.last_name " +
+		"INNER JOIN ss_individual t ON custom_report.other_id = t.other_id " +
 		"WHERE individual_export.modified_by IN ('System', 'Laura Haverkamp') " +
 		"  AND NOT (/*individual_export.family_position = t.family_position " +
 		"  AND */individual_export.limited_access_user = t.limited_access_user " +
@@ -121,8 +121,8 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"  AND REPLACE(individual_export.home_phone, '+1', '') <=> t.phone_home " +
 		"  AND REPLACE(individual_export.work_phone, '+1', '') <=> t.phone_work " +
 		"  AND REPLACE(individual_export.mobile_phone, '+1', '') <=> t.phone_mobile " +
-		"  AND individual_export.fax <=> t.fax " +
-		"  AND individual_export.pager <=> t.pager " +
+//		"  AND individual_export.fax <=> t.fax " +
+//		"  AND individual_export.pager <=> t.pager " +
 		"  AND individual_export.emergency_phone <=> t.emergency_phone " +
 		"  AND individual_export.emergency_contact_name <=> t.emergency_contact_name " +
 		"  AND individual_export.birthday <=> t.birthdate " +
@@ -145,10 +145,10 @@ public class IndividualDAO extends GenericDAO<Individual> {
 //		"  AND individual_export.other_state <=> t.address_other_state " +
 //		"  AND individual_export.other_zip <=> t.address_other_postal_code " +
 		"  AND individual_export.work_title <=> t.job_title " +
-		"  AND individual_export.school_name <=> t.school " +
-		"  AND individual_export.school_grade <=> t.school_grade " +
+//		"  AND individual_export.school_name <=> t.school " +
+//		"  AND individual_export.school_grade <=> t.school_grade " +
 		"  AND individual_export.allergies <=> t.known_allergies " +
-		"  AND individual_export.military <=> t.military " +
+//		"  AND individual_export.military <=> t.military " +
 		"  AND individual_export.confirmation_verse <=> t.confirmation_verse " +
 		"  AND individual_export.email_work <=> t.email_work " +
 		"  AND individual_export.maiden_name <=> t.maiden_name " +
@@ -162,11 +162,11 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"  AND individual_export.membership_end_date <=> t.membership_stop_date " +
 		"  AND individual_export.membership_type <=> t.membership_type " +
 		"  AND individual_export.baptized <=> t.baptized " +
-		"  AND individual_export.listed <=> t.listed " +
+		"  AND (individual_export.listed <=> t.listed OR individual_export.membership_type = 'Deceased') " +
 		"  AND (individual_export.inactive <=> t.inactive OR individual_export.membership_type = 'Deceased') " +
 		"  AND individual_export.how_they_heard <=> t.how_they_heard " +
 		"  AND individual_export.reason_left_church <=> t.reason_left_church " +
-		")";
+		") AND individual_export.individual_id = 1321";
 	
 	private Map<String, Integer> membershipType;
 	private Map<String, Integer> elders;
@@ -234,6 +234,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		params.add(new BasicNameValuePair("work_state", toString(individual.getWork().getState())));
 		params.add(new BasicNameValuePair("work_zip", toString(individual.getWork().getZip())));
 		//work_country
+		params.add(new BasicNameValuePair("work_title", toString(individual.getWorkTitle())));
 		
 		params.add(new BasicNameValuePair("other_street_address", toString(individual.getOther().getStreet())));
 		params.add(new BasicNameValuePair("other_city", toString(individual.getOther().getCity())));

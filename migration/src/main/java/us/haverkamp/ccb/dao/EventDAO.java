@@ -29,11 +29,14 @@ public class EventDAO extends GenericDAO<Event> {
 		"	TRIM(occurance) AS event_date, " +
 		"	COUNT(*) AS attendance " +
 		"FROM ss_attendance " +
-		"WHERE occurance > '2014-12-14' " + 
+		//"WHERE occurance > '2014-12-14' " + 
+		"WHERE occurance > '2014-12-21' " + 
 		"GROUP BY event_id, event, occurance " +
 		"ORDER BY occurance, event, event_id";
 	
 	private Map<String, Integer> eventGrouping;
+	
+	// Event ID = 2,3,4 (for the 3 Sunday Worship ones we use)
 
 	//TODO should return the Event object that was just created
 	public String create(Event event) throws DataAccessException {

@@ -1,6 +1,7 @@
 package us.haverkamp.ccb.migration;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -9,10 +10,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import us.haverkamp.ccb.dao.AttendanceDAO;
 import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.dao.EventDAO;
 import us.haverkamp.ccb.dao.Factory;
 import us.haverkamp.ccb.dao.IndividualDAO;
+import us.haverkamp.ccb.dao.NoDataFoundException;
 import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
@@ -63,10 +66,36 @@ public class App {
 		}
  	}
 	
+	public void syncAttendance() throws DataAccessException {
+		final AttendanceDAO dao = Factory.getInstance().getAttendanceDAO();
+		
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setWeekDate(
+			calendar.getWeekYear(),
+			calendar.get(Calendar.WEEK_OF_YEAR),
+			Calendar.SUNDAY
+		);
+		
+		for(int i=0;i<13;i++) {
+			for(int j=2;j<=4;j++) {
+				try {
+					final Event event = dao.findBy(j, calendar.getTime());
+				
+					dao.create(event);
+				} catch(NoDataFoundException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			
+			calendar.roll(Calendar.WEEK_OF_YEAR, false);
+		}
+	}
+	
     public static void main( String[] args ) throws DataAccessException {
     	final App app = new App();
     	
     	//app.syncIndividuals();
-    	app.syncEvents();
+    	//app.syncEvents();
+    	app.syncAttendance();
     }
 }
