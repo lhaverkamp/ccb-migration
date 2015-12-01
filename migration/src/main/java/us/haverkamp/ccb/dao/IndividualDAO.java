@@ -93,7 +93,17 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		"INNER JOIN custom_report ON t.other_id = custom_report.other_id " +
 		"WHERE ss_attendance.event_id = ?" +
 		"  AND ss_attendance.occurance = ?";
-	
+
+	public static final String SQL_UPDATE_2 = 
+		"SELECT " +
+		"	individual_export.individual_id, " +
+		"	individual_export.family_id, " +
+		COLUMNS +
+		"FROM individual_export " +
+		"INNER JOIN custom_report ON individual_export.individual_id = custom_report.individual_id " +
+		"INNER JOIN ss_individual t ON custom_report.other_id = t.other_id " +
+		"WHERE custom_report.how_joined_church = 'Unknown'";
+
 	public static final String SQL_UPDATE = 
 		"SELECT " +
 		"	individual_export.individual_id, " +

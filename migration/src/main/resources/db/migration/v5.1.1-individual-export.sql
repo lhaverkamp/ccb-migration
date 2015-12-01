@@ -1,4 +1,4 @@
-LOAD DATA INFILE '../csv/export_all_individuals.csv'
+LOAD DATA INFILE '../csv/export_individuals.csv'
 INTO TABLE individual_export
 FIELDS
 	TERMINATED BY ','

@@ -2,6 +2,7 @@ package us.haverkamp.ccb.migration;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -75,19 +76,19 @@ public class App {
 			calendar.get(Calendar.WEEK_OF_YEAR),
 			Calendar.SUNDAY
 		);
-		
-		for(int i=0;i<13;i++) {
-			for(int j=2;j<=4;j++) {
-				try {
-					final Event event = dao.findBy(j, calendar.getTime());
-				
-					dao.create(event);
-				} catch(NoDataFoundException e) {
-					System.out.println(e.getMessage());
-				}
+		final Date endDate = calendar.getTime();
+		calendar.set(2015, 0, 1);
+		final Date startDate = calendar.getTime();
+
+		try {
+			final List<Event> events = dao.findBy(startDate, endDate);
+			System.out.println(events);
+			for(Event event : events) {
+				System.out.println(event);
+				dao.create(event);
 			}
-			
-			calendar.roll(Calendar.WEEK_OF_YEAR, false);
+		} catch(NoDataFoundException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 	

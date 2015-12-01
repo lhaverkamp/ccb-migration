@@ -24,16 +24,40 @@ import us.haverkamp.utils.XmlUtils;
 
 public class Mapper {
 	private static final String NODE_ATTENDEE = "attendee";
+	private static final String NODE_ATTENDEE_ATTRIBUTE_ID = "id";
 	private static final String NODE_FIRST_NAME = "first_name";
 	private static final String NODE_LAST_NAME = "last_name";
 	
 	private static final String NODE_EVENT = "event";
+	private static final String NODE_EVENT_ATTRIBUTE_ID = "id";
 	private static final String NODE_OCCURRENCE = "occurrence";
 	
 	private static final String NODE_GROUP = "group";
 	private static final String NODE_GROUP_ATTRIBUTE_ID = "id";
 	private static final String NODE_NAME = "name";
 	
+	public static List<Event> getEvents(String xml) 
+			throws NoDataFoundException, ParserConfigurationException, SAXException, IOException, ParseException {
+		final Document document = XmlUtils.getDocument(xml);
+		
+		final NodeList items = document.getElementsByTagName(NODE_EVENT);
+		if(items == null) {
+			throw new NoDataFoundException(
+				document.getElementsByTagName("message").item(0).getTextContent()
+			);
+		}
+		
+		final List<Event> events = new ArrayList<Event>();
+		for(int i=0;i<items.getLength();i++) {
+			final Element e = (Element) items.item(i);
+			
+			events.add(Mapper.getEvent(e));
+			
+		}
+		
+		return events;
+	}
+
 	public static Event getEvent(String xml) 
 			throws NoDataFoundException, ParserConfigurationException, SAXException, IOException, ParseException {
 		final Document document = XmlUtils.getDocument(xml);
@@ -44,15 +68,20 @@ public class Mapper {
 				document.getElementsByTagName("message").item(0).getTextContent()
 			);
 		}
+		
+		return Mapper.getEvent(e);
+	}
+	
+	public static Event getEvent(Element e) throws ParseException {
 		final Event event = 
-			new Event(Long.valueOf(e.getAttribute(NODE_GROUP_ATTRIBUTE_ID)));
+			new Event(Long.valueOf(e.getAttribute(NODE_EVENT_ATTRIBUTE_ID)));
 		event.setDate(
 			DateUtils.toDate(
 				e.getElementsByTagName(NODE_OCCURRENCE).item(0).getTextContent(),
 				DateUtils.DATE_TIME
 			));
 
-		final NodeList items = document.getElementsByTagName(NODE_ATTENDEE);
+		final NodeList items = e.getElementsByTagName(NODE_ATTENDEE);
 		
 		final List<Individual> attendees = new ArrayList<Individual>();
 		for(int i=0;i<items.getLength();i++) {
@@ -62,7 +91,6 @@ public class Mapper {
 
 		return event;
 	}
-
 	
 	public static Event getEvent(ResultSet rs) throws SQLException {
 		final Event event = new Event(rs.getLong("event_id"));
@@ -104,7 +132,7 @@ public class Mapper {
 	}
 	
 	public static Individual getIndividual(Element e) {
-		final Individual individual = new Individual(Long.valueOf(e.getAttribute(NODE_GROUP_ATTRIBUTE_ID)));
+		final Individual individual = new Individual(Long.valueOf(e.getAttribute(NODE_ATTENDEE_ATTRIBUTE_ID)));
 		individual.setFirstName(e.getElementsByTagName(NODE_FIRST_NAME).item(0).getTextContent());
 		individual.setLastName(e.getElementsByTagName(NODE_LAST_NAME).item(0).getTextContent());
 		

@@ -5,7 +5,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -225,6 +227,15 @@ public class Event {
 
 	public void setAttendees(List<Individual> attendees) {
 		this.attendees = attendees;
+	}
+	
+	public String toString() {
+		final Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("id", getId());
+		map.put("date", getDate());
+		
+		return map.toString();
 	}
 	
 	/**

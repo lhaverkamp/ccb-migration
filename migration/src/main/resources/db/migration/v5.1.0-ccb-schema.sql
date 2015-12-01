@@ -116,8 +116,8 @@ CREATE TABLE IF NOT EXISTS individual_export(
 	custom_field_privacy_level INT(10) NOT NULL,
 	personal_style VARCHAR(100),
 	spiritual_gifts VARCHAR(100),
-	passions VARCHAR(100),
-	abilities VARCHAR(100),
+	passions VARCHAR(1000),
+	abilities VARCHAR(1000),
 	my_fit_privacy_level INT(10) NOT NULL,
 	last_logged_in TIMESTAMP,
 	created_by VARCHAR(50) NOT NULL,
@@ -169,4 +169,17 @@ CREATE TABLE IF NOT EXISTS attendance(
 	updated_date TIMESTAMP NOT NULL,
 	CONSTRAINT pk_attendance PRIMARY KEY (individual_id, occurance),
 	CONSTRAINT fk_individual_id FOREIGN KEY (individual_id) REFERENCES individual_export(individual_id) 
+);
+
+CREATE TABLE IF NOT EXISTS custom_report(
+	individual_id INT(10) NOT NULL,
+	family_id INT(10) NOT NULL,
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
+	membership_start_date DATE,
+	how_joined_church VARCHAR(100),
+	membership_stop_date DATE,
+	reason_left_church VARCHAR(100),
+	other_id VARCHAR(10),
+	CONSTRAINT pk_custom_export PRIMARY KEY (individual_id)
 );

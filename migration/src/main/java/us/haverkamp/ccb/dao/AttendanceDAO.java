@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -19,7 +20,7 @@ import us.haverkamp.utils.DateUtils;
 public class AttendanceDAO extends GenericDAO<Event> {
 	private static final String SQL_INSERT = 
 		"INSERT INTO attendance(individual_id, occurance, updated_date) " +
-		"VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE updated_date = ?";
+		"VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE occurance = ?, updated_date = ?";
 
 	public int[] create(Event event) throws DataAccessException {
 		try {
@@ -29,10 +30,13 @@ public class AttendanceDAO extends GenericDAO<Event> {
 				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
 				
 				try {
-					ps.setDate(2, new Date(event.getDate().getTime()));
+					final String occurance = DateUtils.toString(event.getDate(), DateUtils.DATE_TIME); 
 					final Date updated = new Date(System.currentTimeMillis());
+					ps.setString(2, occurance);
 					ps.setDate(3, updated);
-					ps.setDate(4, updated);
+
+					ps.setString(4, occurance);
+					ps.setDate(5, updated);
 
 					for(Individual individual : event.getAttendees()) {
 						ps.setLong(1, individual.getId());
@@ -57,6 +61,22 @@ public class AttendanceDAO extends GenericDAO<Event> {
 		
 		try {
 			return Mapper.getEvent(xml);
+		} catch(IOException e) {
+			throw new DataAccessException(e);
+		} catch(SAXException e) {
+			throw new DataAccessException(e);
+		} catch(ParserConfigurationException e) {
+			throw new DataAccessException(e);
+		} catch(ParseException e) {
+			throw new DataAccessException(e);
+		}
+	}
+	
+	public List<Event> findBy(java.util.Date startDate, java.util.Date endDate) throws DataAccessException {
+		final String xml = get("attendance_profiles&start_date=" + DateUtils.toString(startDate) + "&end_date=" + DateUtils.toString(endDate));
+		
+		try {
+			return Mapper.getEvents(xml);
 		} catch(IOException e) {
 			throw new DataAccessException(e);
 		} catch(SAXException e) {
