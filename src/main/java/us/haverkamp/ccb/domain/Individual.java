@@ -556,13 +556,33 @@ public class Individual extends Api {
 		this.privacySettings = privacySettings;
 	}
 
+	public String getUserDefinedTextField(String name) {
+		for(UserDefinedField field : getUserDefinedTextFields()) {
+			if(name.equals(field.getName())) {
+				return field.getText();
+			}
+		}
+		
+		return null;
+	}
+
 	public List<UserDefinedField> getUserDefinedTextFields() {
 		return userDefinedTextFields;
 	}
-
+	
 	public void setUserDefinedTextFields(
 			List<UserDefinedField> userDefinedTextFields) {
 		this.userDefinedTextFields = userDefinedTextFields;
+	}
+
+	public Date getUserDefinedDateField(String name) {
+		for(UserDefinedField field : getUserDefinedDateFields()) {
+			if(name.equals(field.getName())) {
+				return field.getDate();
+			}
+		}
+		
+		return null;
 	}
 
 	public List<UserDefinedField> getUserDefinedDateFields() {
@@ -572,6 +592,16 @@ public class Individual extends Api {
 	public void setUserDefinedDateFields(
 			List<UserDefinedField> userDefinedDateFields) {
 		this.userDefinedDateFields = userDefinedDateFields;
+	}
+
+	public Integer getUserDefinedPulldownField(String name) {
+		for(UserDefinedField field : getUserDefinedPulldownFields()) {
+			if(name.equals(field.getName())) {
+				return field.getSelection();
+			}
+		}
+		
+		return null;
 	}
 
 	public List<UserDefinedField> getUserDefinedPulldownFields() {

@@ -86,4 +86,10 @@ public class Constants {
 	public static final String ITEM_ID = "item_id";
 	public static final String ITEM = "item";
 	public static final String ORDER = "order";
+	public static final String UDF_PULLDOWN_1 = "udf_pulldown_1";
+	public static final String UDF_PULLDOWN_2 = "udf_pulldown_2";
+	public static final String UDF_PULLDOWN_3 = "udf_pulldown_3";
+	public static final String UDF_PULLDOWN_4 = "udf_pulldown_4";
+	public static final String UDF_PULLDOWN_5 = "udf_pulldown_5";
+	public static final String UDF_PULLDOWN_6 = "udf_pulldown_6";
 }

@@ -71,63 +71,6 @@ CREATE TABLE udf_pulldown_field_value(
 	CONSTRAINT		uk_udf_pulldown_field_value UNIQUE(type, name)
 );
 
--- The user-defined fields are rather oddly modeled in the API call.  Rather
--- than attempt to model differently, we are simply leaving it as-is.
-
--- udf_ind_pulldown_1
-CREATE TABLE udf_ind_pulldown_1(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(50)				NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_udf_ind_pulldown_1_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_ind_pulldown_1_name	UNIQUE(name)
-);
-
--- udf_ind_pulldown_2
-CREATE TABLE udf_ind_pulldown_2(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(50)				NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_udf_ind_pulldown_2_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_ind_pulldown_2_name	UNIQUE(name)
-);
-
--- udf_ind_pulldown_3
-CREATE TABLE udf_ind_pulldown_3(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(50)				NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_udf_ind_pulldown_3_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_ind_pulldown_3_name	UNIQUE(name)
-);
-
--- udf_ind_pulldown_4
-CREATE TABLE udf_ind_pulldown_4(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(50)				NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_udf_ind_pulldown_4_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_ind_pulldown_4_name	UNIQUE(name)
-);
-
--- udf_ind_pulldown_5
-CREATE TABLE udf_ind_pulldown_5(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(50)				NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_udf_ind_pulldown_5_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_ind_pulldown_5_name	UNIQUE(name)
-);
-
--- udf_ind_pulldown_6
-CREATE TABLE udf_ind_pulldown_6(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(50)				NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_udf_ind_pulldown_6_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_ind_pulldown_6_name	UNIQUE(name)
-);
-
 -- individual_profiles
 CREATE TABLE IF NOT EXISTS individual(
 	id				INT(10)					NOT NULL,
@@ -242,13 +185,7 @@ CREATE TABLE IF NOT EXISTS individual(
 	udf_pulldown_5 INT(10),
 	udf_pulldown_6 INT(10),
 	CONSTRAINT		pk_individual_id		PRIMARY KEY(id),
-	CONSTRAINT		fk_family_id			FOREIGN KEY(family_id)		REFERENCES family(id),
-	CONSTRAINT		fk_udf_pulldown_1	FOREIGN KEY(udf_pulldown_1)	REFERENCES udf_ind_pulldown_1(id),
-	CONSTRAINT		fk_udf_pulldown_2	FOREIGN KEY(udf_pulldown_2)	REFERENCES udf_ind_pulldown_2(id),
-	CONSTRAINT		fk_udf_pulldown_3	FOREIGN KEY(udf_pulldown_3)	REFERENCES udf_ind_pulldown_3(id),
-	CONSTRAINT		fk_udf_pulldown_4	FOREIGN KEY(udf_pulldown_4)	REFERENCES udf_ind_pulldown_4(id),
-	CONSTRAINT		fk_udf_pulldown_5	FOREIGN KEY(udf_pulldown_5)	REFERENCES udf_ind_pulldown_5(id),
-	CONSTRAINT		fk_udf_pulldown_6	FOREIGN KEY(udf_pulldown_6)	REFERENCES udf_ind_pulldown_6(id)
+	CONSTRAINT		fk_family_id			FOREIGN KEY(family_id)		REFERENCES family(id)
 );
 
 -- group_type_list

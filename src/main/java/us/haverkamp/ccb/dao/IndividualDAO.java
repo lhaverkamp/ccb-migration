@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import us.haverkamp.ccb.Constants;
 import us.haverkamp.ccb.domain.Individual;
 import us.haverkamp.utils.DateUtils;
 
@@ -26,8 +27,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "full_name, "
 			+ "salutation, "
 			+ "suffix, "
-			/*
-			+ "image, "
+			//+ "image, "
 			+ "login, "
 			+ "email, "
 			+ "allergies, "
@@ -43,6 +43,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "phone_home,"
 			+ "phone_work,"
 			+ "phone_emergency,"
+			/*
 			+ "mobile_carrier_id,"
 			+ "gender,"
 			+ "marital_status"
@@ -97,14 +98,15 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_date_4,"
 			+ "udf_date_5"
 			+ "udf_date_6,"
+			*/
 			+ "udf_pulldown_1,"
 			+ "udf_pulldown_2,"
 			+ "udf_pulldown_3,"
 			+ "udf_pulldown_4,"
 			+ "udf_pulldown_5,"
-			*/
 			+ "udf_pulldown_6"
-			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE "
+			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			+ "ON DUPLICATE KEY UPDATE "
 			+ "sync_id = ?, "
 			+ "other_id = ?, "
 			+ "giving_number = ?, "
@@ -119,8 +121,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "full_name = ?, "
 			+ "salutation = ?, "
 			+ "suffix = ?, "
-			/*
-			+ "image = ?, "
+			//+ "image = ?, "
 			+ "login = ?, "
 			+ "email = ?, "
 			+ "allergies = ?, "
@@ -136,6 +137,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "phone_home = ?,"
 			+ "phone_work = ?,"
 			+ "phone_emergency = ?,"
+			/*
 			+ "mobile_carrier_id = ?,"
 			+ "gender = ?,"
 			+ "marital_status = ?"
@@ -190,12 +192,12 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_date_4 = ?,"
 			+ "udf_date_5 = ?"
 			+ "udf_date_6 = ?,"
+			*/
 			+ "udf_pulldown_1 = ?,"
 			+ "udf_pulldown_2 = ?,"
 			+ "udf_pulldown_3 = ?,"
 			+ "udf_pulldown_4 = ?,"
 			+ "udf_pulldown_5 = ?,"
-			*/
 			+ "udf_pulldown_6 = ?"
 			;
 	
@@ -214,7 +216,6 @@ public class IndividualDAO extends GenericDAO<Individual> {
 				
 				try {
 					for(Individual item : items) {
-						System.out.println(item);
 						int i = 1;
 						
 						ps.setLong(i++, item.getId());
@@ -235,20 +236,20 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setString(i++, item.getPrefix()); // salutation,
 							ps.setString(i++,  item.getSuffix()); // suffix, 
 							// image, 
-							// login, 
-							// email, 
-							// allergies, 
-							// confirmed_no_allergies, 
-							// address_mailing_street, 
-							// address_mailing_city,
-							// address_mailing_state,
-							// address_mailing_zip,
-							// address_mailing_line_1,
-							// address_mailing_line_2,
-							// phone_contact,
-							// phone_home,
-							// phone_work,
-							// phone_emergency,
+							ps.setObject(i++, item.getLogin()); // login, 
+							ps.setObject(i++, item.getEmail()); // email, 
+							ps.setObject(i++, item.getAllergies()); // allergies, 
+							ps.setObject(i++, item.getConfirmedNoAllergies()); // confirmed_no_allergies, 
+							ps.setObject(i++, item.getContact().getStreet()); // address_mailing_street, 
+							ps.setObject(i++, item.getContact().getCity()); // address_mailing_city,
+							ps.setObject(i++, item.getContact().getState()); // address_mailing_state,
+							ps.setObject(i++, item.getContact().getZip()); // address_mailing_zip,
+							ps.setObject(i++, item.getContact().getLine1()); // address_mailing_line_1,
+							ps.setObject(i++, item.getContact().getLine2()); // address_mailing_line_2,
+							ps.setObject(i++, item.getContactPhone()); // phone_contact,
+							ps.setObject(i++, item.getHomePhone()); // phone_home,
+							ps.setObject(i++, item.getWorkPhone()); // phone_work,
+							ps.setObject(i++, item.getEmergencyPhone()); // phone_emergency,
 							// mobile_carrier_id,
 							// gender,
 							// marital_status
@@ -279,7 +280,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							// user_defined_fields_privacy_level,
 							// allergies_privacy_level,
 							// active,
-							ps.setObject(i++,  item.getCreator().getId()); // creator
+							ps.setObject(i++, item.getCreator().getId()); // creator
 							ps.setObject(i++, item.getModifier().getId()); // modifier
 							ps.setString(i++, DateUtils.toString(item.getCreated(), DateUtils.TIMESTAMP)); //created
 							ps.setString(i++, DateUtils.toString(item.getModified(), DateUtils.TIMESTAMP)); // modified
@@ -301,12 +302,12 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							// udf_date_4,
 							// udf_date_5
 							// udf_date_6,
-							// udf_pulldown_1,
-							// udf_pulldown_2,
-							// udf_pulldown_3,
-							// udf_pulldown_4,
-							// udf_pulldown_5,
-							ps.setObject(i++, null); // udf_pulldown_6			
+							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_1)); // udf_pulldown_1,
+							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_2)); // udf_pulldown_2,
+							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_3)); // udf_pulldown_3,
+							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_4)); // udf_pulldown_4,
+							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_5)); // udf_pulldown_5,
+							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_6)); // udf_pulldown_6			
 						}
 						
 						ps.addBatch();
