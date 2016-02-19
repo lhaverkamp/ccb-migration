@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ccb_api>
+     <request>
+          <parameters>
+               <argument value="udf_ind_pulldown_5_list" name="srv"/>
+          </parameters>
+     </request>
+     <response>
+          <service>udf_ind_pulldown_5_list</service>
+          <service_action>execute</service_action>
+          <availability>public</availability>
+          <items count="2">
+               <item>
+                    <item_id type="udf_ind_pulldown_5">1</item_id>
+                    <id>1</id>
+                    <name>Yes</name>
+                    <order>1</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_5">2</item_id>
+                    <id>2</id>
+                    <name>No</name>
+                    <order>2</order>
+               </item>
+          </items>
+     </response>
+</ccb_api>

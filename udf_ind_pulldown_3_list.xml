@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ccb_api>
+     <request>
+          <parameters>
+               <argument value="udf_ind_pulldown_3_list" name="srv"/>
+          </parameters>
+     </request>
+     <response>
+          <service>udf_ind_pulldown_3_list</service>
+          <service_action>execute</service_action>
+          <availability>public</availability>
+          <items count="0"/>
+     </response>
+</ccb_api>

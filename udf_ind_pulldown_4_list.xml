@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ccb_api>
+     <request>
+          <parameters>
+               <argument value="udf_ind_pulldown_4_list" name="srv"/>
+          </parameters>
+     </request>
+     <response>
+          <service>udf_ind_pulldown_4_list</service>
+          <service_action>execute</service_action>
+          <availability>public</availability>
+          <items count="16">
+               <item>
+                    <item_id type="udf_ind_pulldown_4">1</item_id>
+                    <id>1</id>
+                    <name>Bob Pitcel</name>
+                    <order>1</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">2</item_id>
+                    <id>2</id>
+                    <name>Chuck Cammack</name>
+                    <order>2</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">4</item_id>
+                    <id>4</id>
+                    <name>Dale Woltman</name>
+                    <order>3</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">14</item_id>
+                    <id>14</id>
+                    <name>Dennis Grauer</name>
+                    <order>4</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">6</item_id>
+                    <id>6</id>
+                    <name>Doug Eichholz</name>
+                    <order>5</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">7</item_id>
+                    <id>7</id>
+                    <name>Fred Vaughan</name>
+                    <order>6</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">8</item_id>
+                    <id>8</id>
+                    <name>Fritz McGinness</name>
+                    <order>7</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">9</item_id>
+                    <id>9</id>
+                    <name>George Nagel</name>
+                    <order>8</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">10</item_id>
+                    <id>10</id>
+                    <name>Jeff Davis</name>
+                    <order>9</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">11</item_id>
+                    <id>11</id>
+                    <name>Karl Bolte</name>
+                    <order>10</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">12</item_id>
+                    <id>12</id>
+                    <name>Karl Schoettlin</name>
+                    <order>11</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">13</item_id>
+                    <id>13</id>
+                    <name>Larry Pendleton</name>
+                    <order>12</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">3</item_id>
+                    <id>3</id>
+                    <name>Roger Hill</name>
+                    <order>13</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">5</item_id>
+                    <id>5</id>
+                    <name>Ron Cornett</name>
+                    <order>14</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">15</item_id>
+                    <id>15</id>
+                    <name>Ron Kettner</name>
+                    <order>15</order>
+               </item>
+               <item>
+                    <item_id type="udf_ind_pulldown_4">16</item_id>
+                    <id>16</id>
+                    <name>Terry Gansebom</name>
+                    <order>16</order>
+               </item>
+          </items>
+     </response>
+</ccb_api>

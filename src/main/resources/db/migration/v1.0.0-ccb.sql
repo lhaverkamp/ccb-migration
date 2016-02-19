@@ -1,0 +1,297 @@
+-- It appears there isn't an API call that will allow us to populate this 
+-- information.  It is being hard-coded based upon how the values look in the 
+-- application.
+CREATE TABLE IF NOT EXISTS privacy_level(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	CONSTRAINT		pk_privacy				PRIMARY KEY(id)
+);
+INSERT INTO privacy_level(id, name) VALUES(1, 'Church Leadership Only') ON DUPLICATE KEY UPDATE name = 'Church Leadership Only';
+INSERT INTO privacy_level(id, name) VALUES(2, 'Friends Only') ON DUPLICATE KEY UPDATE name = 'Friends Only';
+INSERT INTO privacy_level(id, name) VALUES(3, 'Friends & My Group Members') ON DUPLICATE KEY UPDATE name = 'Friends & My Group Members';
+INSERT INTO privacy_level(id, name) VALUES(4, 'Everybody') ON DUPLICATE KEY UPDATE name = 'Everybody';
+
+-- campus_list
+CREATE TABLE IF NOT EXISTS campus(
+	id 				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	CONSTRAINT		pk_campripus_id			PRIMARY KEY(id),
+	CONSTRAINT		uk_campus_name			UNIQUE(name)
+);
+
+-- group_grouping_list
+CREATE TABLE IF NOT EXISTS department(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	CONSTRAINT		pk_department_id		PRIMARY KEY(id),
+	CONSTRAINT		uk_department_name		UNIQUE(name)
+);
+
+-- family_list
+CREATE TABLE IF NOT EXISTS family(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100),
+	modified		TIMESTAMP				NOT NULL,
+	CONSTRAINT		pk_family_id			PRIMARY KEY(id)
+);
+
+CREATE TABLE udf_text_field(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	label			VARCHAR(100)			NOT NULL,
+	admin_only		BOOLEAN					DEFAULT FALSE,
+	CONSTRAINT		pk_udf_text_field_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
+);
+
+CREATE TABLE udf_date_field(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	label			VARCHAR(100)			NOT NULL,
+	admin_only		BOOLEAN					DEFAULT FALSE,
+	CONSTRAINT		pk_udf_text_field_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
+);
+
+CREATE TABLE udf_pulldown_field(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	label			VARCHAR(100)			NOT NULL,
+	admin_only		BOOLEAN					DEFAULT FALSE,
+	CONSTRAINT		pk_udf_text_field_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
+);
+
+CREATE TABLE udf_pulldown_field_value(
+	type			VARCHAR(100)			NOT NULL,
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_udf_pulldown_field_value	PRIMARY KEY(type, id),
+	CONSTRAINT		uk_udf_pulldown_field_value UNIQUE(type, name)
+);
+
+-- The user-defined fields are rather oddly modeled in the API call.  Rather
+-- than attempt to model differently, we are simply leaving it as-is.
+
+-- udf_ind_pulldown_1
+CREATE TABLE udf_ind_pulldown_1(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_udf_ind_pulldown_1_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_1_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_2
+CREATE TABLE udf_ind_pulldown_2(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_udf_ind_pulldown_2_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_2_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_3
+CREATE TABLE udf_ind_pulldown_3(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_udf_ind_pulldown_3_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_3_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_4
+CREATE TABLE udf_ind_pulldown_4(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_udf_ind_pulldown_4_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_4_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_5
+CREATE TABLE udf_ind_pulldown_5(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_udf_ind_pulldown_5_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_5_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_6
+CREATE TABLE udf_ind_pulldown_6(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_udf_ind_pulldown_6_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_6_name	UNIQUE(name)
+);
+
+-- individual_profiles
+CREATE TABLE IF NOT EXISTS individual(
+	id				INT(10)					NOT NULL,
+	sync_id			INT(10),
+	other_id		VARCHAR(10),
+	giving_number	INT(10),
+	campus_id		INT(10)					NOT NULL,
+	family_id		INT(10)					NOT NULL,
+	family_image	BLOB,
+	family_position	VARCHAR(100),
+	first_name		VARCHAR(50),
+	last_name		VARCHAR(50),
+	middle_name		VARCHAR(50),
+	legal_first_name	VARCHAR(50),
+	full_name		VARCHAR(100),
+	salutation		VARCHAR(10),
+	suffix			VARCHAR(10),
+	image			BLOB,
+	login			VARCHAR(50),
+	email			VARCHAR(100),
+	allergies		TEXT,
+	confirmed_no_allergies	BOOLEAN,
+	address_mailing_street	VARCHAR(100),
+	address_mailing_city	VARCHAR(50),
+	address_mailing_state	VARCHAR(10),
+	address_mailing_zip		VARCHAR(10),
+	address_mailing_country	VARCHAR(20),
+	address_mailing_line_1	VARCHAR(100),
+	address_mailing_line_2	VARCHAR(100),
+	address_home_street	VARCHAR(100),
+	address_home_city	VARCHAR(50),
+	address_home_state	VARCHAR(10),
+	address_home_zip		VARCHAR(10),
+	address_home_country	VARCHAR(20),
+	address_home_line_1	VARCHAR(100),
+	address_home_line_2	VARCHAR(100),
+	address_work_street	VARCHAR(100),
+	address_work_city	VARCHAR(50),
+	address_work_state	VARCHAR(10),
+	address_work_zip		VARCHAR(10),
+	address_work_country	VARCHAR(20),
+	address_work_line_1	VARCHAR(100),
+	address_work_line_2	VARCHAR(100),
+	address_other_street	VARCHAR(100),
+	address_other_city	VARCHAR(50),
+	address_other_state	VARCHAR(10),
+	address_other_zip		VARCHAR(10),
+	address_other_country	VARCHAR(20),
+	address_other_line_1	VARCHAR(100),
+	address_other_line_2	VARCHAR(100),
+	phone_contact		VARCHAR(50),
+	phone_home			VARCHAR(50),
+	phone_work			VARCHAR(50),
+	phone_mobile		VARCHAR(50),
+	phone_emergency		VARCHAR(50),
+	mobile_carrier_id	INT(10),
+	gender			VARCHAR(1),
+	marital_status	VARCHAR(10),
+	birthday		DATE,
+	emergency_contact_name	VARCHAR(100),
+	anniversary		DATE,
+	baptized		BOOLEAN,
+	deceased		BOOLEAN,
+	membership_type_id	INT(10),
+	membership_date	DATE,
+	membership_end	DATE,
+	receive_email_from_church BOOLEAN,
+	default_new_group_messages VARCHAR(50),
+	default_new_group_comments VARCHAR(50),
+	default_new_group_digest VARCHAR(50),
+	profile_listed	BOOLEAN,
+	mailing_address_privacy_level_id	INT(10),
+	home_address_privacy_level_id	INT(10),
+	contact_phone_privacy_level_id	INT(10),
+	home_phone_privacy_level_id		INT(10),
+	work_phone_privacy_level_id		INT(10),
+	mobile_phone_privacy_level_id	INT(10),
+	emergency_phone_privacy_level_id	INT(10),
+	birthday_privacy_level_id	INT(10),
+	anniversary_privacy_level_id	INT(10),
+	gender_privacy_level_id	INT(10),
+	marital_status_privacy_level_id INT(10),
+	user_defined_fields_privacy_level_id INT(10),
+	allergies_privacy_level_id INT(10),
+	active BOOLEAN,
+	creator INT(10)	NOT NULL,
+	modifier INT(10) NOT NULL,
+	created TIMESTAMP NOT NULL,
+	modified TIMESTAMP NOT NULL,
+	udf_text_1 VARCHAR(50),
+	udf_text_2 VARCHAR(50),
+	udf_text_3 VARCHAR(50),
+	udf_text_4 VARCHAR(50),
+	udf_text_5 VARCHAR(50),
+	udf_text_6 VARCHAR(50),
+	udf_text_7 VARCHAR(50),
+	udf_text_8 VARCHAR(50),
+	udf_text_9 VARCHAR(50),
+	udf_text_10 VARCHAR(50),
+	udf_text_11 VARCHAR(50),
+	udf_text_12 VARCHAR(50),
+	udf_date_1 DATE,
+	udf_date_2 DATE,
+	udf_date_3 DATE,
+	udf_date_4 DATE,
+	udf_date_5 DATE,
+	udf_date_6 DATE,
+	udf_pulldown_1 INT(10),
+	udf_pulldown_2 INT(10),
+	udf_pulldown_3 INT(10),
+	udf_pulldown_4 INT(10),
+	udf_pulldown_5 INT(10),
+	udf_pulldown_6 INT(10),
+	CONSTRAINT		pk_individual_id		PRIMARY KEY(id),
+	CONSTRAINT		fk_family_id			FOREIGN KEY(family_id)		REFERENCES family(id),
+	CONSTRAINT		fk_udf_pulldown_1	FOREIGN KEY(udf_pulldown_1)	REFERENCES udf_ind_pulldown_1(id),
+	CONSTRAINT		fk_udf_pulldown_2	FOREIGN KEY(udf_pulldown_2)	REFERENCES udf_ind_pulldown_2(id),
+	CONSTRAINT		fk_udf_pulldown_3	FOREIGN KEY(udf_pulldown_3)	REFERENCES udf_ind_pulldown_3(id),
+	CONSTRAINT		fk_udf_pulldown_4	FOREIGN KEY(udf_pulldown_4)	REFERENCES udf_ind_pulldown_4(id),
+	CONSTRAINT		fk_udf_pulldown_5	FOREIGN KEY(udf_pulldown_5)	REFERENCES udf_ind_pulldown_5(id),
+	CONSTRAINT		fk_udf_pulldown_6	FOREIGN KEY(udf_pulldown_6)	REFERENCES udf_ind_pulldown_6(id)
+);
+
+-- group_type_list
+CREATE TABLE IF NOT EXISTS group_type(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	sort_order		INT(10),
+	CONSTRAINT		pk_group_type_id		PRIMARY KEY(id),
+	CONSTRAINT		uk_group_type_name		UNIQUE(name)
+);
+
+-- group_profiles
+CREATE TABLE IF NOT EXISTS `group`(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	description		TEXT,
+	image			BLOB,
+	campus_id		INT(10)					NOT NULL,
+	main_leader_id	INT(10)					NOT NULL,
+	director_id		INT(10),
+	group_type_id	INT(10)					NOT NULL,
+	department_id	INT(10),
+	creator_id		INT(10),
+	modifier_id		INT(10),
+	created			TIMESTAMP,
+	modified		TIMESTAMP,
+	CONSTRAINT		pk_group_id				PRIMARY KEY(id),
+	CONSTRAINT		uk_group_name			UNIQUE(name),
+	CONSTRAINT		fk_group_campus_id		FOREIGN KEY(campus_id)		REFERENCES campus(id),
+	CONSTRAINT		fk_group_main_leader_id	FOREIGN KEY(main_leader_id)	REFERENCES individual(id),
+	CONSTRAINT		fk_group_department_id	FOREIGN KEY(department_id)	REFERENCES department(id),
+	CONSTRAINT		fk_creator_id			FOREIGN KEY(creator_id)		REFERENCES individual(id),
+	CONSTRAINT		fk_modifier_id			FOREIGN KEY(modifier_id)	REFERENCES individual(id)
+);
+
+CREATE TABLE IF NOT EXISTS group_leader(
+	group_id		INT(10)					NOT NULL,
+	individual_id	INT(10)					NOT NULL,
+	CONSTRAINT pk_group_leader				PRIMARY KEY(group_id, individual_id)
+);
+
+CREATE TABLE IF NOT EXISTS group_participant(
+	group_id		INT(10)					NOT NULL,
+	individual_id	INT(10)					NOT NULL,
+	CONSTRAINT pk_group_participant			PRIMARY KEY(group_id, individual_id)
+);
