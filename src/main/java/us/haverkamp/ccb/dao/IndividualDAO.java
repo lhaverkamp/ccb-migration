@@ -71,27 +71,25 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			// TODO + "membership_type_id,"
 			+ "membership_date,"
 			+ "membership_end,"
-			+ "recieve_email_from_church,"
+			+ "receive_email_from_church,"
 			+ "default_new_group_messages,"
 			+ "default_new_group_comments,"
 			+ "default_new_group_digest,"
-			/*
 			+ "profile_listed,"
-			+ "mailing_address_privacy_level,"
-			+ "home_address_privacy_level,"
-			+ "contact_phone_privacy_level,"
-			+ "home_phone_privacy_level,"
-			+ "work_phone_privacy_level,"
-			+ "mobile_phone_privacy_level,"
-			+ "emergency_phone_privacy_level,"
-			+ "birthday_privacy_level,"
-			+ "anniversary_privacy_level,"
-			+ "gender_privacy_level,"
-			+ "marital_status_privacy_level,"
-			+ "user_defined_fields_privacy_level,"
-			+ "allergies_privacy_level,"
+			+ "mailing_address_privacy_level_id,"
+			+ "home_address_privacy_level_id,"
+			+ "contact_phone_privacy_level_id,"
+			+ "home_phone_privacy_level_id,"
+			+ "work_phone_privacy_level_id,"
+			+ "mobile_phone_privacy_level_id,"
+			+ "emergency_phone_privacy_level_id,"
+			+ "birthday_privacy_level_id,"
+			+ "anniversary_privacy_level_id,"
+			+ "gender_privacy_level_id,"
+			+ "marital_status_privacy_level_id,"
+			+ "user_defined_fields_privacy_level_id,"
+			+ "allergies_privacy_level_id,"
 			+ "active,"
-			*/
 			+ "creator,"
 			+ "modifier,"
 			+ "created,"
@@ -122,7 +120,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_pulldown_4,"
 			+ "udf_pulldown_5,"
 			+ "udf_pulldown_6"
-			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 			+ "ON DUPLICATE KEY UPDATE "
 			+ "sync_id = ?, "
 			+ "other_id = ?, "
@@ -182,27 +180,25 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			// TODO + "membership_type_id = ?,"
 			+ "membership_date = ?,"
 			+ "membership_end = ?,"
-			+ "recieve_email_from_church = ?,"
+			+ "receive_email_from_church = ?,"
 			+ "default_new_group_messages = ?,"
 			+ "default_new_group_comments = ?,"
 			+ "default_new_group_digest = ?,"
-			/* TODO
 			+ "profile_listed = ?,"
-			+ "mailing_address_privacy_level = ?,"
-			+ "home_address_privacy_level = ?,"
-			+ "contact_phone_privacy_level = ?,"
-			+ "home_phone_privacy_level = ?,"
-			+ "work_phone_privacy_level = ?,"
-			+ "mobile_phone_privacy_level = ?,"
-			+ "emergency_phone_privacy_level = ?,"
-			+ "birthday_privacy_level = ?,"
-			+ "anniversary_privacy_level = ?,"
-			+ "gender_privacy_level = ?,"
-			+ "marital_status_privacy_level = ?,"
-			+ "user_defined_fields_privacy_level = ?,"
-			+ "allergies_privacy_level = ?,"
+			+ "mailing_address_privacy_level_id = ?,"
+			+ "home_address_privacy_level_id = ?,"
+			+ "contact_phone_privacy_level_id = ?,"
+			+ "home_phone_privacy_level_id = ?,"
+			+ "work_phone_privacy_level_id = ?,"
+			+ "mobile_phone_privacy_level_id = ?,"
+			+ "emergency_phone_privacy_level_id = ?,"
+			+ "birthday_privacy_level_id = ?,"
+			+ "anniversary_privacy_level_id = ?,"
+			+ "gender_privacy_level_id = ?,"
+			+ "marital_status_privacy_level_id = ?,"
+			+ "user_defined_fields_privacy_level_id = ?,"
+			+ "allergies_privacy_level_id = ?,"
 			+ "active = ?,"
-			*/
 			+ "creator = ?,"
 			+ "modifier = ?,"
 			+ "created = ?,"
@@ -313,25 +309,25 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							// membership_type_id,
 							ps.setObject(i++, DateUtils.toString(item.getMembershipDate())); // membership_date,
 							ps.setObject(i++, DateUtils.toString(item.getMembershipEnd())); // membership_end
-							ps.setObject(i++, item.getCommunicationPreferences().getReceiveEmailFromChurch()); // recieve_email_from_church,
+							ps.setObject(i++, item.getCommunicationPreferences().getReceiveEmailFromChurch()); // receive_email_from_church,
 							ps.setObject(i++, item.getCommunicationPreferences().getDefaultNewGroupMessages()); // default_new_group_messages,
 							ps.setObject(i++, item.getCommunicationPreferences().getDefaultNewGroupComments()); // default_new_group_comments,
 							ps.setObject(i++, item.getCommunicationPreferences().getDefaultNewGroupDigest()); // default_new_group_digest,
-							// profile_listed,
-							// mailing_address_privacy_level,
-							// home_address_privacy_level,
-							// contact_phone_privacy_level,
-							// home_phone_privacy_level,
-							// work_phone_privacy_level,
-							// mobile_phone_privacy_level,
-							// emergency_phone_privacy_level,
-							// birthday_privacy_level,
-							// anniversary_privacy_level,
-							// gender_privacy_level,
-							// marital_status_privacy_level,
-							// user_defined_fields_privacy_level,
-							// allergies_privacy_level,
-							// active,
+							ps.setObject(i++, item.getPrivacySettings().getListed()); // profile_listed,
+							ps.setObject(i++, item.getPrivacySettings().getMailingAddress()); // mailing_address_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getHomeAddress()); // home_address_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getContactPhone()); // contact_phone_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getHomePhone()); // home_phone_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getWorkPhone()); // work_phone_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getMobilePhone()); // mobile_phone_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getEmergencyPhone()); // emergency_phone_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getBirthday()); // birthday_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getAnniversary()); // anniversary_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getGender()); // gender_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getMartialStatus()); // marital_status_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getUserDefinedFields()); // user_defined_fields_privacy_level_id,
+							ps.setObject(i++, item.getPrivacySettings().getAllergies()); // allergies_privacy_level_id,
+							ps.setObject(i++, item.getActive()); // active,
 							ps.setObject(i++, item.getCreator().getId()); // creator
 							ps.setObject(i++, item.getModifier().getId()); // modifier
 							ps.setString(i++, DateUtils.toString(item.getCreated(), DateUtils.TIMESTAMP)); //created
