@@ -94,7 +94,6 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "modifier,"
 			+ "created,"
 			+ "modified,"
-			/*
 			+ "udf_text_1,"
 			+ "udf_text_2,"
 			+ "udf_text_3,"
@@ -111,16 +110,15 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_date_2,"
 			+ "udf_date_3,"
 			+ "udf_date_4,"
-			+ "udf_date_5"
+			+ "udf_date_5,"
 			+ "udf_date_6,"
-			*/
 			+ "udf_pulldown_1,"
 			+ "udf_pulldown_2,"
 			+ "udf_pulldown_3,"
 			+ "udf_pulldown_4,"
 			+ "udf_pulldown_5,"
 			+ "udf_pulldown_6"
-			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 			+ "ON DUPLICATE KEY UPDATE "
 			+ "sync_id = ?, "
 			+ "other_id = ?, "
@@ -203,7 +201,6 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "modifier = ?,"
 			+ "created = ?,"
 			+ "modified = ?,"
-			/*
 			+ "udf_text_1 = ?,"
 			+ "udf_text_2 = ?,"
 			+ "udf_text_3 = ?,"
@@ -220,9 +217,8 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_date_2 = ?,"
 			+ "udf_date_3 = ?,"
 			+ "udf_date_4 = ?,"
-			+ "udf_date_5 = ?"
+			+ "udf_date_5 = ?,"
 			+ "udf_date_6 = ?,"
-			*/
 			+ "udf_pulldown_1 = ?,"
 			+ "udf_pulldown_2 = ?,"
 			+ "udf_pulldown_3 = ?,"
@@ -332,24 +328,24 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setObject(i++, item.getModifier().getId()); // modifier
 							ps.setString(i++, DateUtils.toString(item.getCreated(), DateUtils.TIMESTAMP)); //created
 							ps.setString(i++, DateUtils.toString(item.getModified(), DateUtils.TIMESTAMP)); // modified
-							// udf_text_1,
-							// udf_text_2,
-							// udf_text_3,
-							// udf_text_4,
-							// udf_text_5,
-							// udf_text_6,
-							// udf_text_7,
-							// udf_text_8,
-							// udf_text_9,
-							// udf_text_10,
-							// udf_text_11,
-							// udf_text_12,
-							// udf_date_1,
-							// udf_date_2,
-							// udf_date_3,
-							// udf_date_4,
-							// udf_date_5
-							// udf_date_6,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_1)); // udf_text_1,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_2)); // udf_text_2,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_3)); // udf_text_3,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_4)); // udf_text_4,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_5)); // udf_text_5,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_6)); // udf_text_6,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_7)); // udf_text_7,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_8)); // udf_text_8,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_9)); // udf_text_9,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_10)); // udf_text_10,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_11)); // udf_text_11,
+							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_12)); // udf_text_12,
+							ps.setObject(i++, item.getUserDefinedDateField(Constants.UDF_DATE_1)); // udf_date_1,
+							ps.setObject(i++, item.getUserDefinedDateField(Constants.UDF_DATE_2)); // udf_date_2,
+							ps.setObject(i++, item.getUserDefinedDateField(Constants.UDF_DATE_3)); // udf_date_3,
+							ps.setObject(i++, item.getUserDefinedDateField(Constants.UDF_DATE_4)); // udf_date_4,
+							ps.setObject(i++, item.getUserDefinedDateField(Constants.UDF_DATE_5)); // udf_date_5
+							ps.setObject(i++, item.getUserDefinedDateField(Constants.UDF_DATE_6)); // udf_date_6,
 							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_1)); // udf_pulldown_1,
 							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_2)); // udf_pulldown_2,
 							ps.setObject(i++, item.getUserDefinedPulldownField(Constants.UDF_PULLDOWN_3)); // udf_pulldown_3,
