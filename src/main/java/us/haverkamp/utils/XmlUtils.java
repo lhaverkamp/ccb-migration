@@ -36,7 +36,7 @@ public class XmlUtils {
 			throws ParserConfigurationException, SAXException, IOException {
 		final DocumentBuilder documentBuilder = newDocumentBuilder();
 		
-		return documentBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+		return documentBuilder.parse(new ByteArrayInputStream(xml.getBytes("UTF-8")));
 	}
 	
 	public static String toString(Node node) 

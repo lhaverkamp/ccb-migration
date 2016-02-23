@@ -18,7 +18,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "giving_number, "
 			+ "campus_id, "
 			+ "family_id, "
-			//+ "family_image, "
+			// TODO + "family_image, "
 			+ "family_position, "
 			+ "first_name, "
 			+ "last_name, "
@@ -27,7 +27,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "full_name, "
 			+ "salutation, "
 			+ "suffix, "
-			//+ "image, "
+			// TODO + "image, "
 			+ "login, "
 			+ "email, "
 			+ "allergies, "
@@ -38,27 +38,44 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "address_mailing_zip,"
 			+ "address_mailing_line_1,"
 			+ "address_mailing_line_2,"
-			// TODO home, work, other
+			+ "address_home_street, "
+			+ "address_home_city,"
+			+ "address_home_state,"
+			+ "address_home_zip,"
+			+ "address_home_line_1,"
+			+ "address_home_line_2,"
+			+ "address_work_street, "
+			+ "address_work_city,"
+			+ "address_work_state,"
+			+ "address_work_zip,"
+			+ "address_work_line_1,"
+			+ "address_work_line_2,"
+			+ "address_other_street, "
+			+ "address_other_city,"
+			+ "address_other_state,"
+			+ "address_other_zip,"
+			+ "address_other_line_1,"
+			+ "address_other_line_2,"
 			+ "phone_contact,"
 			+ "phone_home,"
 			+ "phone_work,"
 			+ "phone_emergency,"
-			/*
-			+ "mobile_carrier_id,"
+			// TODO + "mobile_carrier_id,"
 			+ "gender,"
-			+ "marital_status"
+			+ "marital_status,"
 			+ "birthday,"
 			+ "emergency_contact_name,"
 			+ "anniversary,"
-			+ "baptized"
-			+ "deceased"
-			+ "membership_type_id,"
+			+ "baptized,"
+			+ "deceased,"
+			// TODO + "membership_type_id,"
 			+ "membership_date,"
 			+ "membership_end,"
 			+ "recieve_email_from_church,"
 			+ "default_new_group_messages,"
 			+ "default_new_group_comments,"
 			+ "default_new_group_digest,"
+			/*
 			+ "profile_listed,"
 			+ "mailing_address_privacy_level,"
 			+ "home_address_privacy_level,"
@@ -105,14 +122,14 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_pulldown_4,"
 			+ "udf_pulldown_5,"
 			+ "udf_pulldown_6"
-			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 			+ "ON DUPLICATE KEY UPDATE "
 			+ "sync_id = ?, "
 			+ "other_id = ?, "
 			+ "giving_number = ?, "
 			+ "campus_id = ?, "
 			+ "family_id = ?, "
-			//+ "family_image = ?, "
+			// TODO + "family_image = ?, "
 			+ "family_position = ?, "
 			+ "first_name = ?, "
 			+ "last_name = ?, "
@@ -121,7 +138,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "full_name = ?, "
 			+ "salutation = ?, "
 			+ "suffix = ?, "
-			//+ "image = ?, "
+			// TODO + "image = ?, "
 			+ "login = ?, "
 			+ "email = ?, "
 			+ "allergies = ?, "
@@ -132,27 +149,44 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "address_mailing_zip = ?,"
 			+ "address_mailing_line_1 = ?,"
 			+ "address_mailing_line_2 = ?,"
-			// TODO home, work, other
+			+ "address_home_street = ?, "
+			+ "address_home_city = ?,"
+			+ "address_home_state = ?,"
+			+ "address_home_zip = ?,"
+			+ "address_home_line_1 = ?,"
+			+ "address_home_line_2 = ?,"
+			+ "address_work_street = ?, "
+			+ "address_work_city = ?,"
+			+ "address_work_state = ?,"
+			+ "address_work_zip = ?,"
+			+ "address_work_line_1 = ?,"
+			+ "address_work_line_2 = ?,"
+			+ "address_other_street = ?, "
+			+ "address_other_city = ?,"
+			+ "address_other_state = ?,"
+			+ "address_other_zip = ?,"
+			+ "address_other_line_1 = ?,"
+			+ "address_other_line_2 = ?,"
 			+ "phone_contact = ?,"
 			+ "phone_home = ?,"
 			+ "phone_work = ?,"
 			+ "phone_emergency = ?,"
-			/*
-			+ "mobile_carrier_id = ?,"
+			// TODO + "mobile_carrier_id = ?,"
 			+ "gender = ?,"
-			+ "marital_status = ?"
+			+ "marital_status = ?,"
 			+ "birthday = ?,"
 			+ "emergency_contact_name = ?,"
 			+ "anniversary = ?,"
-			+ "baptized = ?"
-			+ "deceased = ?"
-			+ "membership_type_id = ?,"
+			+ "baptized = ?,"
+			+ "deceased = ?,"
+			// TODO + "membership_type_id = ?,"
 			+ "membership_date = ?,"
 			+ "membership_end = ?,"
 			+ "recieve_email_from_church = ?,"
 			+ "default_new_group_messages = ?,"
 			+ "default_new_group_comments = ?,"
 			+ "default_new_group_digest = ?,"
+			/* TODO
 			+ "profile_listed = ?,"
 			+ "mailing_address_privacy_level = ?,"
 			+ "home_address_privacy_level = ?,"
@@ -246,25 +280,43 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setObject(i++, item.getContact().getZip()); // address_mailing_zip,
 							ps.setObject(i++, item.getContact().getLine1()); // address_mailing_line_1,
 							ps.setObject(i++, item.getContact().getLine2()); // address_mailing_line_2,
+							ps.setObject(i++, item.getHome().getStreet()); // address_home_street, 
+							ps.setObject(i++, item.getHome().getCity()); // address_home_city,
+							ps.setObject(i++, item.getHome().getState()); // address_home_state,
+							ps.setObject(i++, item.getHome().getZip()); // address_home_zip,
+							ps.setObject(i++, item.getHome().getLine1()); // address_home_line_1,
+							ps.setObject(i++, item.getHome().getLine2()); // address_home_line_2,
+							ps.setObject(i++, item.getWork().getStreet()); // address_work_street, 
+							ps.setObject(i++, item.getWork().getCity()); // address_work_city,
+							ps.setObject(i++, item.getWork().getState()); // address_work_state,
+							ps.setObject(i++, item.getWork().getZip()); // address_work_zip,
+							ps.setObject(i++, item.getWork().getLine1()); // address_work_line_1,
+							ps.setObject(i++, item.getWork().getLine2()); // address_work_line_2,
+							ps.setObject(i++, item.getOther().getStreet()); // address_other_street, 
+							ps.setObject(i++, item.getOther().getCity()); // address_other_city,
+							ps.setObject(i++, item.getOther().getState()); // address_other_state,
+							ps.setObject(i++, item.getOther().getZip()); // address_other_zip,
+							ps.setObject(i++, item.getOther().getLine1()); // address_other_line_1,
+							ps.setObject(i++, item.getOther().getLine2()); // address_other_line_2,
 							ps.setObject(i++, item.getContactPhone()); // phone_contact,
 							ps.setObject(i++, item.getHomePhone()); // phone_home,
 							ps.setObject(i++, item.getWorkPhone()); // phone_work,
 							ps.setObject(i++, item.getEmergencyPhone()); // phone_emergency,
 							// mobile_carrier_id,
-							// gender,
-							// marital_status
-							// birthday,
-							// emergency_contact_name,
-							// anniversary,
-							// baptized
-							// deceased
+							ps.setObject(i++, item.getGender()); // gender,
+							ps.setObject(i++, item.getMaritalStatus()); // marital_status
+							ps.setObject(i++, DateUtils.toString(item.getBirthday())); // birthday,
+							ps.setObject(i++, item.getEmergencyContact()); // emergency_contact_name,
+							ps.setObject(i++, DateUtils.toString(item.getAnniversary())); // anniversary,
+							ps.setObject(i++, item.getBaptized()); // baptized
+							ps.setObject(i++, DateUtils.toString(item.getDeceased())); // deceased
 							// membership_type_id,
-							// membership_date,
-							// membership_end
-							// recieve_email_from_church,
-							// default_new_group_messages,
-							// default_new_group_comments,
-							// default_new_group_digest,
+							ps.setObject(i++, DateUtils.toString(item.getMembershipDate())); // membership_date,
+							ps.setObject(i++, DateUtils.toString(item.getMembershipEnd())); // membership_end
+							ps.setObject(i++, item.getCommunicationPreferences().getReceiveEmailFromChurch()); // recieve_email_from_church,
+							ps.setObject(i++, item.getCommunicationPreferences().getDefaultNewGroupMessages()); // default_new_group_messages,
+							ps.setObject(i++, item.getCommunicationPreferences().getDefaultNewGroupComments()); // default_new_group_comments,
+							ps.setObject(i++, item.getCommunicationPreferences().getDefaultNewGroupDigest()); // default_new_group_digest,
 							// profile_listed,
 							// mailing_address_privacy_level,
 							// home_address_privacy_level,

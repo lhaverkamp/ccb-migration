@@ -35,6 +35,6 @@ public class DateUtils {
 	}
 	
 	public static String toString(Date date, String pattern) {
-		return new SimpleDateFormat(pattern).format(date);
+		return date != null ? new SimpleDateFormat(pattern).format(date) : null;
 	}
 }
