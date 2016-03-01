@@ -29,6 +29,7 @@ public class PrivacySettings extends Api {
 		setMobilePhone(mobilePhone);
 		setEmergencyPhone(emergencyPhone);
 		setBirthday(birthday);
+		setAnniversary(anniversary);
 		setGender(gender);
 		setMartialStatus(martialStatus);
 		setUserDefinedFields(userDefinedFields);

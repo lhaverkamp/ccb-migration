@@ -15,7 +15,7 @@ public class UserDefinedField extends Api {
 	public UserDefinedField(String name, String label, String text) {
 		setName(name);
 		setLabel(label);
-		setSelection(selection);
+		setText(text);
 	}
 	
 	public UserDefinedField(String name, String label, Date date) {

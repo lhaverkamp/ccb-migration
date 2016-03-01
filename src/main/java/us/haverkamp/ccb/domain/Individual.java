@@ -69,9 +69,9 @@ public class Individual extends Api {
 	private Boolean newsletter;
 	private Boolean confirmed;
 	
+	private MembershipType membershipType;
 	private Date membershipDate;
 	private Date membershipEnd;
-	private String membershipType;
 	
 	private Boolean baptized;
 	private Boolean listed;
@@ -475,6 +475,14 @@ public class Individual extends Api {
 		this.confirmed = confirmed;
 	}
 
+	public MembershipType getMembershipType() {
+		return this.membershipType;
+	}
+
+	public void setMembershipType(MembershipType membershipType) {
+		this.membershipType = membershipType;
+	}
+
 	public Date getMembershipDate() {
 		return membershipDate;
 	}
@@ -489,14 +497,6 @@ public class Individual extends Api {
 
 	public void setMembershipEnd(Date membershipEnd) {
 		this.membershipEnd = membershipEnd;
-	}
-
-	public String getMembershipType() {
-		return membershipType;
-	}
-
-	public void setMembershipType(String membershipType) {
-		this.membershipType = membershipType;
 	}
 
 	public Boolean getBaptized() {

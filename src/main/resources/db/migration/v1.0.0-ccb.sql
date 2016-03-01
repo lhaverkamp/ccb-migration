@@ -35,6 +35,16 @@ CREATE TABLE IF NOT EXISTS family(
 	CONSTRAINT		pk_family_id			PRIMARY KEY(id)
 );
 
+-- membership_type
+CREATE TABLE IF NOT EXISTS membership_type(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_membership_type		PRIMARY KEY(id),
+	CONSTRAINT		uk_membership_type		UNIQUE(name)
+);
+
+-- TODO need to populate this table
 CREATE TABLE udf_text_field(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(100)			NOT NULL,
@@ -44,6 +54,7 @@ CREATE TABLE udf_text_field(
 	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
 );
 
+-- TODO need to populate this table
 CREATE TABLE udf_date_field(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(100)			NOT NULL,
@@ -53,6 +64,7 @@ CREATE TABLE udf_date_field(
 	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
 );
 
+-- TODO need to populate this table
 CREATE TABLE udf_pulldown_field(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(100)			NOT NULL,
@@ -62,13 +74,13 @@ CREATE TABLE udf_pulldown_field(
 	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
 );
 
-CREATE TABLE udf_pulldown_field_value(
+CREATE TABLE lookup_field_value(
 	type			VARCHAR(100)			NOT NULL,
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_udf_pulldown_field_value	PRIMARY KEY(type, id),
-	CONSTRAINT		uk_udf_pulldown_field_value UNIQUE(type, name)
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_lookup_field_value_id	PRIMARY KEY(type, id),
+	CONSTRAINT		uk_lookup_field_value_name	UNIQUE(type, name)
 );
 
 -- individual_profiles
@@ -185,7 +197,21 @@ CREATE TABLE IF NOT EXISTS individual(
 	udf_pulldown_5 INT(10),
 	udf_pulldown_6 INT(10),
 	CONSTRAINT		pk_individual_id		PRIMARY KEY(id),
-	CONSTRAINT		fk_family_id			FOREIGN KEY(family_id)		REFERENCES family(id)
+	CONSTRAINT		fk_family_id			FOREIGN KEY(family_id)		REFERENCES family(id),
+	CONSTRAINT		fk_membership_type_id	FOREIGN KEY(membership_type_id)	REFERENCES membership_type(id),
+	CONSTRAINT		fk_mailing_address_privacy_level_id	FOREIGN KEY(mailing_address_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_home_address_privacy_level_id	FOREIGN KEY(home_address_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_contact_phone_privacy_level_id	FOREIGN KEY(contact_phone_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_home_phone_privacy_level_id		FOREIGN KEY(home_phone_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_work_phone_privacy_level_id		FOREIGN KEY(work_phone_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_mobile_phone_privacy_level_id	FOREIGN KEY(mobile_phone_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_emergency_phone_privacy_level_id	FOREIGN KEY(emergency_phone_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_birthday_privacy_level_id		FOREIGN KEY(birthday_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_anniversary_privacy_level_id		FOREIGN KEY(anniversary_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_gender_privacy_level_id			FOREIGN KEY(gender_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_marital_status_privacy_level_id	FOREIGN KEY(marital_status_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_user_defined_fields_privacy_level_id FOREIGN KEY(user_defined_fields_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_allergies_privacy_level_id		FOREIGN KEY(allergies_privacy_level_id) REFERENCES privacy_level(id)
 );
 
 -- group_type_list

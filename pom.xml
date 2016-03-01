@@ -2,13 +2,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+	<!-- The Basics -->
   <groupId>us.haverkamp.ccb</groupId>
   <artifactId>ccb-migration</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-
-  <name>migration</name>
-  <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,9 +44,16 @@
 		<version>3.3.2</version>
 	</dependency>
   </dependencies>
-  
+
+	<!-- Build Settings -->  
   <build>
   	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-complier-plugin</artifactId>
+  			<version>3.5.1</version>
+  		</plugin>
+  		
   		<plugin>
   			<groupId>org.flywaydb</groupId>
   			<artifactId>flyway-maven-plugin</artifactId>
@@ -103,4 +108,9 @@
   		</plugin>
   	</plugins>
   </build>
+
+	<!-- More Project Information -->
+  <name>migration</name>
+  <url>https://github.com/lhaverkamp/ccb-migration</url>
+
 </project>

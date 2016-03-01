@@ -68,7 +68,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "anniversary,"
 			+ "baptized,"
 			+ "deceased,"
-			// TODO + "membership_type_id,"
+			+ "membership_type_id,"
 			+ "membership_date,"
 			+ "membership_end,"
 			+ "receive_email_from_church,"
@@ -118,7 +118,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_pulldown_4,"
 			+ "udf_pulldown_5,"
 			+ "udf_pulldown_6"
-			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 			+ "ON DUPLICATE KEY UPDATE "
 			+ "sync_id = ?, "
 			+ "other_id = ?, "
@@ -175,7 +175,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "anniversary = ?,"
 			+ "baptized = ?,"
 			+ "deceased = ?,"
-			// TODO + "membership_type_id = ?,"
+			+ "membership_type_id = ?,"
 			+ "membership_date = ?,"
 			+ "membership_end = ?,"
 			+ "receive_email_from_church = ?,"
@@ -302,7 +302,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setObject(i++, DateUtils.toString(item.getAnniversary())); // anniversary,
 							ps.setObject(i++, item.getBaptized()); // baptized
 							ps.setObject(i++, DateUtils.toString(item.getDeceased())); // deceased
-							// membership_type_id,
+							ps.setObject(i++, item.getMembershipType().getId()); // membership_type_id,
 							ps.setObject(i++, DateUtils.toString(item.getMembershipDate())); // membership_date,
 							ps.setObject(i++, DateUtils.toString(item.getMembershipEnd())); // membership_end
 							ps.setObject(i++, item.getCommunicationPreferences().getReceiveEmailFromChurch()); // receive_email_from_church,

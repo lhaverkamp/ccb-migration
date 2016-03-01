@@ -7,6 +7,7 @@ public class Factory {
 	private GroupDAO groupDAO;
 	private IndividualDAO individualDAO;
 	private LookupDAO lookupDAO;
+	private MembershipTypeDAO membershipTypeDAO;
 	
 	private Factory() {
 		// private for factory method
@@ -62,5 +63,13 @@ public class Factory {
 		}
 		
 		return this.lookupDAO;
+	}
+	
+	public MembershipTypeDAO getMembershipTypeDAO() {
+		if(this.membershipTypeDAO == null) {
+			this.membershipTypeDAO = new MembershipTypeDAO();
+		}
+		
+		return this.membershipTypeDAO;
 	}
 }

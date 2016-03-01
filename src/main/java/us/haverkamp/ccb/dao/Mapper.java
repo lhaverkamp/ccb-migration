@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
 
 import us.haverkamp.ccb.Constants;
 import us.haverkamp.ccb.domain.Address;
@@ -21,6 +24,7 @@ import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
+import us.haverkamp.ccb.domain.MembershipType;
 import us.haverkamp.ccb.domain.PrivacySettings;
 import us.haverkamp.ccb.domain.Selection;
 import us.haverkamp.ccb.domain.UserDefinedField;
@@ -248,7 +252,7 @@ public class Mapper {
 				item.setAnniversary(DateUtils.parseDate(element.getElementsByTagName(Constants.ANNIVERSARY).item(0)));
 				item.setBaptized(StringUtils.parseBoolean(element.getElementsByTagName(Constants.BAPTIZED).item(0)));
 				item.setDeceased(DateUtils.parseDate(element.getElementsByTagName(Constants.DECEASED).item(0)));
-				item.setMembershipType(StringUtils.parseString(element.getElementsByTagName(Constants.MEMBERSHIP_TYPE).item(0)));;
+				item.setMembershipType(getMembershipType(element.getElementsByTagName(Constants.MEMBERSHIP_TYPE).item(0)));;
 				item.setMembershipDate(DateUtils.parseDate(element.getElementsByTagName(Constants.MEMBERSHIP_DATE).item(0)));
 				item.setMembershipEnd(DateUtils.parseDate(element.getElementsByTagName(Constants.MEMBERSHIP_END).item(0)));
 				item.setCommunicationPreferences(getCommunicationPreferences(element));
@@ -326,6 +330,42 @@ public class Mapper {
 		}
 	}
 	
+	protected static MembershipType getMembershipType(Node node) {
+		final Element element = (Element) node;
+		
+		final MembershipType membershipType = new MembershipType(
+			StringUtils.parseLong(element.getAttribute(Constants.ID)),
+			element.getTextContent()
+		);
+		
+		return membershipType;
+	}
+	
+	public static List<MembershipType> getMembershipTypes(String xml) throws DataAccessException {
+		try {
+			final Document document = XmlUtils.getDocument(xml);
+			
+			final List<MembershipType> items = new ArrayList<MembershipType>();
+	
+			final NodeList nodes = document.getElementsByTagName(Constants.ITEM);
+			for(int i=0;i<nodes.getLength();i++) {
+				final Element element = (Element) nodes.item(i);
+				
+				final MembershipType item = new MembershipType(
+					Long.valueOf(element.getElementsByTagName(Constants.ID).item(0).getTextContent()),
+					element.getElementsByTagName(Constants.NAME).item(0).getTextContent()
+				);
+				item.setOrder(StringUtils.parseInt(element.getElementsByTagName(Constants.ORDER).item(0)));
+				
+				items.add(item);
+			}
+	
+			return items;
+		} catch(IOException | ParserConfigurationException | SAXException e) {
+			throw new DataAccessException(e);
+		}
+	}
+	
 	protected static Group getGroup(Node node) {
 		final Element element = (Element) node;
 		
@@ -375,19 +415,19 @@ public class Mapper {
 		
 		final PrivacySettings privacySettings = new PrivacySettings(
 			StringUtils.parseBoolean(element.getElementsByTagName(Constants.PROFILE_LISTED).item(0)),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.MAILING_ADDRESS).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.HOME_ADDRESS).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.CONTACT_PHONE).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.HOME_PHONE).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.WORK_PHONE).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.MOBILE_PHONE).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.EMERGENCY_PHONE).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.BIRTHDAY).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.ANNIVERSARY).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.GENDER).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.MARITAL_STATUS).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.USER_DEFINED_FIELDS).item(0)).getAttribute(Constants.ID)).intValue(),
-			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.ALLERGIES).item(0)).getAttribute(Constants.ID)).intValue()
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.MAILING_ADDRESS).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.HOME_ADDRESS).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.CONTACT_PHONE).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.HOME_PHONE).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.WORK_PHONE).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.MOBILE_PHONE).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.EMERGENCY_PHONE).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.BIRTHDAY).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.ANNIVERSARY).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.GENDER).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.MARITAL_STATUS).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.USER_DEFINED_FIELDS).item(0)).getAttribute(Constants.ID)),
+			StringUtils.parseInt(((Element) element.getElementsByTagName(Constants.ALLERGIES).item(0)).getAttribute(Constants.ID))
 		);
 		
 		return privacySettings;

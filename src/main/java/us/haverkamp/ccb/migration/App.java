@@ -10,7 +10,9 @@ import us.haverkamp.ccb.dao.Factory;
 import us.haverkamp.ccb.dao.FamilyDAO;
 import us.haverkamp.ccb.dao.IndividualDAO;
 import us.haverkamp.ccb.dao.LookupDAO;
+import us.haverkamp.ccb.dao.MembershipTypeDAO;
 import us.haverkamp.ccb.dao.NoDataFoundException;
+import us.haverkamp.ccb.dao.Sql;
 import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Individual;
@@ -18,25 +20,25 @@ import us.haverkamp.ccb.domain.Individual;
 public class App {
 	public void syncLookupTables() throws DataAccessException {
 		final LookupDAO dao = Factory.getInstance().getLookupDAO();
-		
 		// TODO ability
 		// TODO activity
 		// TODO age_bracket
 		// TODO church_service
-		// TODO department
+		dao.update(dao.getDepartments()); // department_list
 		// TODO event_grouping
 		// TODO gift
-		// TODO group_grouping
-		// TODO group_type
+		dao.update(dao.getAttendanceGroupings()); // group_grouping_list
+		dao.update(dao.getGroupTypes()); // group_type_list
 		// TODO how_joined_church
 		// TODO how_they_heard
 		// TODO meet_day
 		// TODO meet_time
-		// TODO membership_type
+		final MembershipTypeDAO mtdao = Factory.getInstance().getMembershipTypeDAO();
+		mtdao.update(mtdao.getMembershipTypes()); // membership_type_list
 		// TODO passion
 		// TODO reason_left_church
-		// TODO school
-		// TODO school_grade
+		dao.update(dao.getSchools()); // school_list
+		dao.update(dao.getSchoolGrades()); // school_grade_list
 		// TODO significant_event
 		// TODO spiritual_maturity
 		// TODO style
