@@ -14,15 +14,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
-
 import us.haverkamp.ccb.Constants;
 import us.haverkamp.ccb.domain.Address;
 import us.haverkamp.ccb.domain.Campus;
 import us.haverkamp.ccb.domain.CommunicationPreferences;
+import us.haverkamp.ccb.domain.Department;
 import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Group;
+import us.haverkamp.ccb.domain.GroupType;
 import us.haverkamp.ccb.domain.Individual;
 import us.haverkamp.ccb.domain.MembershipType;
 import us.haverkamp.ccb.domain.PrivacySettings;
@@ -36,35 +36,72 @@ public class Mapper {
 	protected static Address getAddress(Node node) {
 		final Element element = (Element) node;
 		
-		final Address address = new Address(
+		final Address item = new Address(
 			StringUtils.parseString(element.getElementsByTagName(Constants.STREET_ADDRESS).item(0)),
 			StringUtils.parseString(element.getElementsByTagName(Constants.CITY).item(0)),
 			StringUtils.parseString(element.getElementsByTagName(Constants.STATE).item(0)),
 			StringUtils.parseString(element.getElementsByTagName(Constants.ZIP).item(0))
 		);
 		
-		address.setCountry(StringUtils.parseString(element.getElementsByTagName(Constants.COUNTRY).item(0)));		
-		address.setLine1(StringUtils.parseString(element.getElementsByTagName(Constants.LINE_1).item(0)));		
-		address.setLine2(StringUtils.parseString(element.getElementsByTagName(Constants.LINE_2).item(0)));
-		
-		return address;
-	}
-	
-	protected static Campus getCampus(Node node) {
-		final Element element = (Element) node;
-		
-		final Campus item = new Campus(
-			Long.valueOf(element.getAttribute(Constants.ID)),
-			StringUtils.parseString(element)
-		);
+		item.setCountry(StringUtils.parseString(element.getElementsByTagName(Constants.COUNTRY).item(0)));		
+		item.setLine1(StringUtils.parseString(element.getElementsByTagName(Constants.LINE_1).item(0)));		
+		item.setLine2(StringUtils.parseString(element.getElementsByTagName(Constants.LINE_2).item(0)));
 		
 		return item;
 	}
 	
+	protected static Campus getCampus(Node node) {
+		return getCampus(node, true);
+	}
+	
+	protected static Campus getCampus(Node node, boolean all) {
+		final Element element = (Element) node;
+		
+		final Campus item = new Campus(Long.valueOf(element.getAttribute(Constants.ID)));
+		
+		if(all) {
+			item.setName(StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0))); // name
+		}
+		
+		return item;
+	}
+	
+	public static Campus getCampus(String xml) throws NoDataFoundException, DataAccessException {
+		final List<Campus> items = getCampuses(xml);
+		
+		if(items.size() != 1) {
+			throw new NoDataFoundException(items.size() + " campuses found");
+		}
+		
+		return items.get(0);
+	}
+	
+	public static List<Campus> getCampuses(String xml) throws NoDataFoundException, DataAccessException {
+		try {
+			final Document document = XmlUtils.getDocument(xml);
+			
+			final NodeList nodes = document.getElementsByTagName(Constants.CAMPUS);
+			if(nodes == null) {
+				throw new NoDataFoundException(
+					document.getElementsByTagName("message").item(0).getTextContent()
+				);
+			}
+			
+			final List<Campus> items = new ArrayList<Campus>();
+			for(int i=0;i<nodes.getLength();i++) {
+				items.add(Mapper.getCampus(nodes.item(i)));
+			}
+			
+			return items;
+		} catch(IOException | SAXException | ParserConfigurationException e) {
+			throw new DataAccessException(e);
+		}
+	}
+
 	protected static CommunicationPreferences getCommunicationPreferences(Node node) {
 		final Element element = (Element) node;
 		
-		final CommunicationPreferences communicationPreferences = new CommunicationPreferences(
+		final CommunicationPreferences item = new CommunicationPreferences(
 			StringUtils.parseBoolean(element.getElementsByTagName(Constants.RECEIVE_EMAIL_FROM_CHURCH).item(0)),
 			StringUtils.parseString(element.getElementsByTagName(Constants.DEFAULT_NEW_GROUP_MESSAGES).item(0)),
 			StringUtils.parseString(element.getElementsByTagName(Constants.DEFAULT_NEW_GROUP_COMMENTS).item(0)),
@@ -72,25 +109,37 @@ public class Mapper {
 			StringUtils.parseString(element.getElementsByTagName(Constants.DEFAULT_NEW_GROUP_SMS).item(0))
 		);
 		
-		return communicationPreferences;
+		return item;
+	}
+	
+	protected static Department getDepartment(Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		final Department item = new Department(
+			StringUtils.parseLong(element.getAttribute(Constants.ID)),
+			element.getTextContent()
+		);
+		
+		return item;
 	}
 
 	protected static Event getEvent(Node node) throws DataAccessException {
 		final Element element = (Element) node;
 		
 		try {
-			final Event event = new Event(Long.valueOf(element.getAttribute(Constants.ID)));
+			final Event item = new Event(Long.valueOf(element.getAttribute(Constants.ID)));
 			
-			event.setDate(DateUtils.parseTimestamp(element.getElementsByTagName("occurrence").item(0)));
-			event.setAttendees(Mapper.getIndividuals(element, Constants.ATTENDEE));
+			item.setDate(DateUtils.parseTimestamp(element.getElementsByTagName("occurrence").item(0)));
+			item.setAttendees(Mapper.getIndividuals(element, Constants.ATTENDEE));
 		
-			return event;
+			return item;
 		} catch(ParseException e) {
 			throw new DataAccessException(e);
 		}
 	}
 
 	public static Event getEvent(String xml) throws NoDataFoundException, DataAccessException {
+		// TODO refactor
 		try {
 			final Document document = XmlUtils.getDocument(xml);
 			
@@ -132,6 +181,17 @@ public class Mapper {
 		}
 	}
 	
+	protected static GroupType getGroupType(Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		final GroupType item = new GroupType(
+			StringUtils.parseLong(element.getAttribute(Constants.ID)),
+			element.getTextContent()
+		);
+		
+		return item;
+	}
+
 	protected static Family getFamily(Node node) throws DataAccessException {
 		return Mapper.getFamily(node, true);
 	}
@@ -155,13 +215,13 @@ public class Mapper {
 	}
 	
 	public static Family getFamily(String xml) throws NoDataFoundException, DataAccessException {
-		final List<Family> families = getFamilies(xml);
+		final List<Family> items = getFamilies(xml);
 		
-		if(families.size() != 1) {
-			throw new NoDataFoundException(families.size() + " families found");
+		if(items.size() != 1) {
+			throw new NoDataFoundException(items.size() + " families found");
 		}
 		
-		return families.get(0);
+		return items.get(0);
 	}
 	
 	public static List<Family> getFamilies(String xml) throws NoDataFoundException, DataAccessException {
@@ -186,12 +246,78 @@ public class Mapper {
 		}
 	}
 
+	protected static Group getGroup(Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		try {
+			final Group item = new Group(Long.valueOf(element.getAttribute(Constants.ID)));
+			
+			item.setName(StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0)));
+			item.setDescription(StringUtils.parseString(element.getElementsByTagName(Constants.DESCRIPTION).item(0)));
+			// TODO image
+			item.setCampus(getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false)); // campus
+			item.setMainLeader(getIndividual(element.getElementsByTagName(Constants.MAIN_LEADER).item(0), false)); // main_leader
+			NodeList nodes = element.getElementsByTagName(Constants.DIRECTOR);
+			if(nodes.getLength() == 1) {
+				item.setDirector(getIndividual(nodes.item(0), false)); // director
+			}
+			item.setGroupType(getGroupType(element.getElementsByTagName(Constants.GROUP_TYPE).item(0))); // group_type
+			nodes = element.getElementsByTagName(Constants.DEPARTMENT);
+			if(nodes.getLength() == 1) {
+				item.setDepartment(getDepartment(nodes.item(0))); // department
+			}
+			item.setCreator(getIndividual(element.getElementsByTagName(Constants.CREATOR).item(0), false)); // creator
+			item.setModifier(getIndividual(element.getElementsByTagName(Constants.MODIFIER).item(0), false)); // modifier
+			item.setCreated(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.CREATED).item(0))); // created
+			item.setModified(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.MODIFIED).item(0))); // modified
+			
+			return item;
+		} catch(ParseException e) {
+			throw new DataAccessException(e);
+		}
+	}
+
+	public static Group getGroup(String xml) throws NoDataFoundException, DataAccessException {
+		try {
+			final Document document = XmlUtils.getDocument(xml);
+			
+			final Node node = document.getElementsByTagName(Constants.GROUP).item(0);
+			if(node == null) {
+				throw new NoDataFoundException(
+					document.getElementsByTagName("message").item(0).getTextContent()
+				);
+			}
+			
+			return Mapper.getGroup(node);
+		} catch(IOException | ParserConfigurationException | SAXException e) {
+			throw new DataAccessException(e);
+		}
+	}
+
+	public static List<Group> getGroups(String xml) throws DataAccessException {
+		try {
+			final Document document = XmlUtils.getDocument(xml);
+			
+			final List<Group> items = new ArrayList<Group>();
+	
+			final NodeList nodes = document.getElementsByTagName(Constants.GROUP);
+			for(int i=0;i<nodes.getLength();i++) {
+				items.add(Mapper.getGroup(nodes.item(i)));
+			}
+	
+			return items;
+		} catch(IOException | ParserConfigurationException | SAXException e) {
+			throw new DataAccessException(e);
+		}
+	}
+
 	protected static Individual getIndividual(Node node) throws DataAccessException {
 		return Mapper.getIndividual(node, true);
 	}
 
 	protected static Individual getIndividual(Node node, boolean all) throws DataAccessException {
 		final Element element = (Element) node;
+		
 		try {
 			final Individual item = new Individual(Long.valueOf(element.getAttribute(Constants.ID)));
 			
@@ -199,7 +325,7 @@ public class Mapper {
 				item.setSyncId(StringUtils.parseLong(element.getElementsByTagName(Constants.SYNC_ID).item(0)));
 				item.setOtherId(StringUtils.parseString(element.getElementsByTagName(Constants.OTHER_ID).item(0)));
 				item.setGivingNumber(StringUtils.parseInt(element.getElementsByTagName(Constants.GIVING_NUMBER).item(0))); // TODO may need to be a string
-				item.setCampus(Mapper.getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0)));
+				item.setCampus(Mapper.getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false));
 				item.setFamily(Mapper.getFamily(element.getElementsByTagName(Constants.FAMILY).item(0), false));
 				// TODO family_image
 				item.setFamilyPosition(StringUtils.parseString(element.getElementsByTagName(Constants.FAMILY_POSITION).item(0)));
@@ -333,81 +459,12 @@ public class Mapper {
 	protected static MembershipType getMembershipType(Node node) {
 		final Element element = (Element) node;
 		
-		final MembershipType membershipType = new MembershipType(
+		final MembershipType item = new MembershipType(
 			StringUtils.parseLong(element.getAttribute(Constants.ID)),
 			element.getTextContent()
 		);
 		
-		return membershipType;
-	}
-	
-	public static List<MembershipType> getMembershipTypes(String xml) throws DataAccessException {
-		try {
-			final Document document = XmlUtils.getDocument(xml);
-			
-			final List<MembershipType> items = new ArrayList<MembershipType>();
-	
-			final NodeList nodes = document.getElementsByTagName(Constants.ITEM);
-			for(int i=0;i<nodes.getLength();i++) {
-				final Element element = (Element) nodes.item(i);
-				
-				final MembershipType item = new MembershipType(
-					Long.valueOf(element.getElementsByTagName(Constants.ID).item(0).getTextContent()),
-					element.getElementsByTagName(Constants.NAME).item(0).getTextContent()
-				);
-				item.setOrder(StringUtils.parseInt(element.getElementsByTagName(Constants.ORDER).item(0)));
-				
-				items.add(item);
-			}
-	
-			return items;
-		} catch(IOException | ParserConfigurationException | SAXException e) {
-			throw new DataAccessException(e);
-		}
-	}
-	
-	protected static Group getGroup(Node node) {
-		final Element element = (Element) node;
-		
-		final Group group = new Group(Long.valueOf(element.getAttribute(Constants.ID)));
-		group.setName(StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0)));
-		group.setDescription(StringUtils.parseString(element.getElementsByTagName(Constants.DESCRIPTION).item(0)));
-		
-		return group;
-	}
-	
-	public static Group getGroup(String xml) throws NoDataFoundException, DataAccessException {
-		try {
-			final Document document = XmlUtils.getDocument(xml);
-			
-			final Node node = document.getElementsByTagName(Constants.GROUP).item(0);
-			if(node == null) {
-				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
-				);
-			}
-			
-			return Mapper.getGroup(node);
-		} catch(IOException | ParserConfigurationException | SAXException e) {
-			throw new DataAccessException(e);
-		}
-	}
-	
-	public static List<Group> getGroups(String xml) throws DataAccessException {
-		try {
-			final Document document = XmlUtils.getDocument(xml);
-			
-			final List<Group> items = new ArrayList<Group>();
-	
-			final NodeList nodes = document.getElementsByTagName(Constants.GROUP);
-			for(int i=0;i<nodes.getLength();i++) {
-				items.add(Mapper.getGroup(nodes.item(i)));
-			}
-	
-			return items;
-		} catch(IOException | ParserConfigurationException | SAXException e) {
-			throw new DataAccessException(e);
-		}
+		return item;
 	}
 	
 	protected static PrivacySettings getPrivacySettings(Node node) {

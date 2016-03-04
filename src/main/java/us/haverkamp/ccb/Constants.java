@@ -110,4 +110,8 @@ public class Constants {
 	public static final String WORK = "work";
 	public static final String WORK_PHONE = "work_phone";
 	public static final String ZIP = "zip";
+	public static final String DEPARTMENT = "department";
+	public static final String DIRECTOR = "director";
+	public static final String GROUP_TYPE = "group_type";
+	public static final String MAIN_LEADER = "main_leader";
 }

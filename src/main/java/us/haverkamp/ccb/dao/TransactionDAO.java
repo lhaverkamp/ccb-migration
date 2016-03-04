@@ -6,17 +6,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.haverkamp.ccb.domain.Event;
+import us.haverkamp.ccb.domain.Transaction;
 
-public class EventDAO extends GenericDAO<Event> {
-	public static final String SQL_INSERT = "";
+public class TransactionDAO extends GenericDAO<Transaction> {
+	private static final String SQL_INSERT = "";
 	
-	public List<Event> findBy() throws DataAccessException {
+	public List<Transaction> findBy() {
 		// TODO auto-generated method stub
-		return new ArrayList<Event>();
+		return new ArrayList<Transaction>();
 	}
 	
-	public int[] update(List<Event> items) throws DataAccessException {
+	public int[] update(List<Transaction> items) throws DataAccessException {
 		try {
 			final Connection connection = getConnection();
 			
@@ -24,13 +24,13 @@ public class EventDAO extends GenericDAO<Event> {
 				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
 				
 				try {
-					for(Event item : items) {
+					for(Transaction item : items) {
 						int i = 1;
 						
-						ps.setLong(i++, item.getId());
+						// TODO ps.setLong(i++, item.getId());
 						
 						for(int y=0;y<2;y++) {
-							// TODO
+							// TODO auto-generated method stub
 						}
 						
 						ps.addBatch();
@@ -49,12 +49,15 @@ public class EventDAO extends GenericDAO<Event> {
 	}
 
 	@Override
-	protected Event getItem(String xml) throws DataAccessException {
-		return Mapper.getEvent(xml);
+	protected Transaction getItem(String xml) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	protected List<Event> getItems(String xml) throws DataAccessException {
-		return Mapper.getEvents(xml);
+	protected List<Transaction> getItems(String xml) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }

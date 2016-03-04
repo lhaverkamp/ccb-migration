@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
 
-import us.haverkamp.ccb.domain.MembershipType;
+import us.haverkamp.ccb.domain.LookupTable;
 import us.haverkamp.ccb.domain.Selection;
 
 public class LookupDAO extends GenericDAO<Selection> {
@@ -91,7 +91,7 @@ public class LookupDAO extends GenericDAO<Selection> {
 				final PreparedStatement ps = connection.prepareStatement(sql);
 				
 				try {
-					for(Selection field : fields) {
+					for(LookupTable field : fields) {
 						int i = 1;
 						
 						ps.setLong(i++, field.getId());

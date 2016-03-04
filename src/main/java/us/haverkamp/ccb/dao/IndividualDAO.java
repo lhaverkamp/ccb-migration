@@ -248,19 +248,19 @@ public class IndividualDAO extends GenericDAO<Individual> {
 						
 						for(int y=0;y<2;y++) { // set once for insert and once for update
 							ps.setObject(i++, item.getSyncId()); // sync_id
-							ps.setString(i++, item.getOtherId()); // other_id
+							ps.setObject(i++, item.getOtherId()); // other_id
 							ps.setObject(i++, item.getGivingNumber()); // giving_number
 							ps.setObject(i++, item.getCampus().getId()); // campus_id
 							ps.setObject(i++, item.getFamily().getId()); // family_id
 							// family_image, 
 							ps.setObject(i++, item.getFamilyPosition()); // family_position
-							ps.setString(i++, item.getFirstName()); // first_name
-							ps.setString(i++, item.getLastName()); // last_name
-							ps.setString(i++, item.getMiddleName()); // middle_name
-							ps.setString(i++, item.getLegalFirstName()); // legal_first_name,
-							ps.setString(i++, item.getFirstName());	// full_name,
-							ps.setString(i++, item.getPrefix()); // salutation,
-							ps.setString(i++,  item.getSuffix()); // suffix, 
+							ps.setObject(i++, item.getFirstName()); // first_name
+							ps.setObject(i++, item.getLastName()); // last_name
+							ps.setObject(i++, item.getMiddleName()); // middle_name
+							ps.setObject(i++, item.getLegalFirstName()); // legal_first_name,
+							ps.setObject(i++, item.getFirstName());	// full_name,
+							ps.setObject(i++, item.getPrefix()); // salutation,
+							ps.setObject(i++,  item.getSuffix()); // suffix, 
 							// image, 
 							ps.setObject(i++, item.getLogin()); // login, 
 							ps.setObject(i++, item.getEmail()); // email, 
@@ -324,8 +324,8 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setObject(i++, item.getPrivacySettings().getUserDefinedFields()); // user_defined_fields_privacy_level_id,
 							ps.setObject(i++, item.getPrivacySettings().getAllergies()); // allergies_privacy_level_id,
 							ps.setObject(i++, item.getActive()); // active,
-							ps.setObject(i++, item.getCreator().getId()); // creator
-							ps.setObject(i++, item.getModifier().getId()); // modifier
+							ps.setObject(i++, item.getCreator().getId()); // creator_id
+							ps.setObject(i++, item.getModifier().getId()); // modifier_id
 							ps.setString(i++, DateUtils.toString(item.getCreated(), DateUtils.TIMESTAMP)); //created
 							ps.setString(i++, DateUtils.toString(item.getModified(), DateUtils.TIMESTAMP)); // modified
 							ps.setObject(i++, item.getUserDefinedTextField(Constants.UDF_TEXT_1)); // udf_text_1,

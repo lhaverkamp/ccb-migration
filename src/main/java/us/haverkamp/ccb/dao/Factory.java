@@ -2,11 +2,13 @@ package us.haverkamp.ccb.dao;
 
 public class Factory {
 	private AttendanceDAO attendanceDAO;
+	private CampusDAO campusDAO;
 	private EventDAO eventDAO;
 	private FamilyDAO familyDAO;
 	private GroupDAO groupDAO;
 	private IndividualDAO individualDAO;
 	private LookupDAO lookupDAO;
+	private TransactionDAO transactionDAO;
 	
 	private Factory() {
 		// private for factory method
@@ -22,6 +24,14 @@ public class Factory {
 		}
 		
 		return this.attendanceDAO;
+	}
+	
+	public CampusDAO getCampusDAO() {
+		if(this.campusDAO == null) {
+			this.campusDAO = new CampusDAO();
+		}
+		
+		return this.campusDAO;
 	}
 	
 	public EventDAO getEventDAO() {
@@ -62,5 +72,13 @@ public class Factory {
 		}
 		
 		return this.lookupDAO;
+	}
+	
+	public TransactionDAO getTransactionDAO() {
+		if(this.transactionDAO == null) {
+			this.transactionDAO = new TransactionDAO();
+		}
+		
+		return this.transactionDAO;
 	}
 }

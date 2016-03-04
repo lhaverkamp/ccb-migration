@@ -5,16 +5,23 @@ import java.util.Date;
 import java.util.List;
 
 import us.haverkamp.ccb.dao.AttendanceDAO;
+import us.haverkamp.ccb.dao.CampusDAO;
 import us.haverkamp.ccb.dao.DataAccessException;
+import us.haverkamp.ccb.dao.EventDAO;
 import us.haverkamp.ccb.dao.Factory;
 import us.haverkamp.ccb.dao.FamilyDAO;
+import us.haverkamp.ccb.dao.GroupDAO;
 import us.haverkamp.ccb.dao.IndividualDAO;
 import us.haverkamp.ccb.dao.LookupDAO;
 import us.haverkamp.ccb.dao.NoDataFoundException;
 import us.haverkamp.ccb.dao.Table;
+import us.haverkamp.ccb.dao.TransactionDAO;
+import us.haverkamp.ccb.domain.Campus;
 import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
+import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
+import us.haverkamp.ccb.domain.Transaction;
 
 public class App {
 	public void syncLookupTables() throws DataAccessException {
@@ -54,15 +61,36 @@ public class App {
 	
 	public void syncFamilies() throws DataAccessException {
 		final FamilyDAO dao = Factory.getInstance().getFamilyDAO();
-		final List<Family> families = dao.findBy();
+		final List<Family> items = dao.findBy();
 		
-		dao.update(families);
+		dao.update(items);
 	}
 	public void syncIndividuals() throws DataAccessException {
         final IndividualDAO dao = Factory.getInstance().getIndividualDAO();
         final List<Individual> individuals = dao.findBy();
         
         dao.update(individuals);
+	}
+	
+	public void syncCampuses() throws DataAccessException {
+		final CampusDAO dao = Factory.getInstance().getCampusDAO();
+		final List<Campus> items = dao.findBy();
+		
+		dao.update(items);
+	}
+	
+	public void syncGroups() throws DataAccessException {
+		final GroupDAO dao = Factory.getInstance().getGroupDAO();
+		final List<Group> items = dao.findBy();
+		
+		dao.update(items);
+	}
+	
+	public void syncEvents() throws DataAccessException {
+		final EventDAO dao = Factory.getInstance().getEventDAO();
+		final List<Event> items = dao.findBy();
+		
+		dao.update(items);
 	}
 	
 	public void syncAttendance() throws DataAccessException {
@@ -90,14 +118,23 @@ public class App {
 		}
 	}
 	
+	public void syncTransactions() throws DataAccessException {
+		final TransactionDAO dao = Factory.getInstance().getTransactionDAO();
+		final List<Transaction> items = dao.findBy();
+		
+		dao.update(items);
+	}
+	
     public static void main( String[] args ) throws DataAccessException {
     	final App app = new App();
     	
+    	app.syncCampuses();
     	app.syncLookupTables();
     	app.syncFamilies();
     	app.syncIndividuals();
-    	//app.syncGroups();
-    	//app.syncAttendance(); // does Events
-    	//app.syncTransactions();
+    	app.syncGroups();
+    	// TODO app.syncEvents();
+    	// TODO app.syncAttendance();
+    	// TODO app.syncTransactions();
     }
 }
