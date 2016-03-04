@@ -10,9 +10,8 @@ import us.haverkamp.ccb.dao.Factory;
 import us.haverkamp.ccb.dao.FamilyDAO;
 import us.haverkamp.ccb.dao.IndividualDAO;
 import us.haverkamp.ccb.dao.LookupDAO;
-import us.haverkamp.ccb.dao.MembershipTypeDAO;
 import us.haverkamp.ccb.dao.NoDataFoundException;
-import us.haverkamp.ccb.dao.Sql;
+import us.haverkamp.ccb.dao.Table;
 import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Individual;
@@ -21,24 +20,22 @@ public class App {
 	public void syncLookupTables() throws DataAccessException {
 		final LookupDAO dao = Factory.getInstance().getLookupDAO();
 		// TODO ability
-		// TODO activity
 		// TODO age_bracket
+		// TODO area
 		// TODO church_service
-		dao.update(dao.getDepartments()); // department_list
-		// TODO event_grouping
+		dao.update(dao.getEventGroupings(), Table.EVENT_GROUPING); // event_grouping_list
 		// TODO gift
-		dao.update(dao.getAttendanceGroupings()); // group_grouping_list
-		dao.update(dao.getGroupTypes()); // group_type_list
-		// TODO how_joined_church
-		// TODO how_they_heard
+		dao.update(dao.getDepartments(), Table.DEPARTMENT); // group_grouping_list
+		dao.update(dao.getGroupTypes(), Table.GROUP_TYPE); // group_type_list
+		dao.update(dao.getHowJoinedChurch(), Table.HOW_JOINED_CHURCH); // how_joined_church_list
+		dao.update(dao.getHowTheyHeard(), Table.HOW_THEY_HEARD); // how_they_heard_list
 		// TODO meet_day
 		// TODO meet_time
-		final MembershipTypeDAO mtdao = Factory.getInstance().getMembershipTypeDAO();
-		mtdao.update(mtdao.getMembershipTypes()); // membership_type_list
+		dao.update(dao.getMembershipTypes(), Table.MEMBERSHIP_TYPE); // membership_type_list
 		// TODO passion
-		// TODO reason_left_church
-		dao.update(dao.getSchools()); // school_list
-		dao.update(dao.getSchoolGrades()); // school_grade_list
+		dao.update(dao.getReasonLeftChurch(), Table.REASON_LEFT_CHURCH); // reason_left_church_list
+		dao.update(dao.getSchools(), Table.SCHOOL); // school_list
+		dao.update(dao.getSchoolGrades(), Table.SCHOOL_GRADE); // school_grade_list
 		// TODO significant_event
 		// TODO spiritual_maturity
 		// TODO style
@@ -46,12 +43,12 @@ public class App {
 		// TODO udf_grp_pulldown_1
 		// TODO udf_grp_pulldown_2
 		// TODO udf_grp_pulldown_3
-		dao.update(dao.getUserDefinedPulldown1()); // udf_ind_pulldown_1_list
-		dao.update(dao.getUserDefinedPulldown2()); // udf_ind_pulldown_2_list
-		dao.update(dao.getUserDefinedPulldown3()); // udf_ind_pulldown_3_list
-		dao.update(dao.getUserDefinedPulldown4()); // udf_ind_pulldown_4_list
-		dao.update(dao.getUserDefinedPulldown5()); // udf_ind_pulldown_5_list
-		dao.update(dao.getUserDefinedPulldown6()); // udf_ind_pulldown_6_list
+		dao.update(dao.getUserDefinedPulldown1(), Table.UDF_IND_PULLDOWN_1); // udf_ind_pulldown_1_list
+		dao.update(dao.getUserDefinedPulldown2(), Table.UDF_IND_PULLDOWN_2); // udf_ind_pulldown_2_list
+		dao.update(dao.getUserDefinedPulldown3(), Table.UDF_IND_PULLDOWN_3); // udf_ind_pulldown_3_list
+		dao.update(dao.getUserDefinedPulldown4(), Table.UDF_IND_PULLDOWN_4); // udf_ind_pulldown_4_list
+		dao.update(dao.getUserDefinedPulldown5(), Table.UDF_IND_PULLDOWN_5); // udf_ind_pulldown_5_list
+		dao.update(dao.getUserDefinedPulldown6(), Table.UDF_IND_PULLDOWN_6); // udf_ind_pulldown_6_list
 		// TODO udf_resource_pulldown_1
 	}
 	

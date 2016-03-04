@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS privacy_level(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
-	CONSTRAINT		pk_privacy				PRIMARY KEY(id)
+	CONSTRAINT		pk_privacy_id			PRIMARY KEY(id)
 );
 INSERT INTO privacy_level(id, name) VALUES(1, 'Church Leadership Only') ON DUPLICATE KEY UPDATE name = 'Church Leadership Only';
 INSERT INTO privacy_level(id, name) VALUES(2, 'Friends Only') ON DUPLICATE KEY UPDATE name = 'Friends Only';
@@ -19,12 +19,49 @@ CREATE TABLE IF NOT EXISTS campus(
 	CONSTRAINT		uk_campus_name			UNIQUE(name)
 );
 
+-- event_grouping_list
+CREATE TABLE IF NOT EXISTS event_grouping(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_event_grouping_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_event_grouping_name	UNIQUE(name)
+);
+
 -- group_grouping_list
 CREATE TABLE IF NOT EXISTS department(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
 	CONSTRAINT		pk_department_id		PRIMARY KEY(id),
 	CONSTRAINT		uk_department_name		UNIQUE(name)
+);
+
+-- group_type_list
+CREATE TABLE IF NOT EXISTS group_type(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_group_type_id		PRIMARY KEY(id),
+	CONSTRAINT		uk_group_type_name		UNIQUE(name)
+);
+
+-- how_joined_church_list
+CREATE TABLE IF NOT EXISTS how_joined_church(
+	id				INT(10)						NOT NULL,
+	name			VARCHAR(50)					NOT NULL,
+	sort_order		INT(10)						NOT NULL,
+	CONSTRAINT		pk_how_joined_church_id		PRIMARY KEY(id),
+	CONSTRAINT		uk_how_joined_church_name	UNIQUE(name)
+);
+
+-- how_they_heard_list
+CREATE TABLE IF NOT EXISTS how_they_heard(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_how_they_heard_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_how_they_heard_name	UNIQUE(name)
 );
 
 -- family_list
@@ -35,13 +72,40 @@ CREATE TABLE IF NOT EXISTS family(
 	CONSTRAINT		pk_family_id			PRIMARY KEY(id)
 );
 
--- membership_type
+-- membership_type_list
 CREATE TABLE IF NOT EXISTS membership_type(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(100)			NOT NULL,
 	sort_order		INT(10)					NOT NULL,
-	CONSTRAINT		pk_membership_type		PRIMARY KEY(id),
-	CONSTRAINT		uk_membership_type		UNIQUE(name)
+	CONSTRAINT		pk_membership_type_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_membership_type_name	UNIQUE(name)
+);
+
+-- reason_left_church_list
+CREATE TABLE IF NOT EXISTS reason_left_church(
+	id				INT(10)						NOT NULL,
+	name			VARCHAR(50)					NOT NULL,
+	sort_order		INT(10)						NOT NULL,
+	CONSTRAINT		pk_reason_left_church_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_reason_left_church_name	UNIQUE(name)
+);
+
+-- school_list
+CREATE TABLE IF NOT EXISTS school(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_school_id			PRIMARY KEY(id),
+	CONSTRAINT		uk_school_name			UNIQUE(name)
+);
+
+-- school_grade_list
+CREATE TABLE IF NOT EXISTS school_grade(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(100)			NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_school_grade_id		PRIMARY KEY(id),
+	CONSTRAINT		uk_school_grade_name	UNIQUE(name)
 );
 
 -- TODO need to populate this table
@@ -74,13 +138,58 @@ CREATE TABLE udf_pulldown_field(
 	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
 );
 
-CREATE TABLE lookup_field_value(
-	type			VARCHAR(100)			NOT NULL,
+-- udf_ind_pulldown_1_list
+CREATE TABLE udf_ind_pulldown_1(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
 	sort_order		INT(10)					NOT NULL,
-	CONSTRAINT		pk_lookup_field_value_id	PRIMARY KEY(type, id),
-	CONSTRAINT		uk_lookup_field_value_name	UNIQUE(type, name)
+	CONSTRAINT		pk_udf_ind_pulldown_1_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_1_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_2_list
+CREATE TABLE udf_ind_pulldown_2(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_udf_ind_pulldown_2_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_2_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_3_list
+CREATE TABLE udf_ind_pulldown_3(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_udf_ind_pulldown_3_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_3_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_4_list
+CREATE TABLE udf_ind_pulldown_4(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_udf_ind_pulldown_4_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_4_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_5_list
+CREATE TABLE udf_ind_pulldown_5(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_udf_ind_pulldown_5_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_5_name	UNIQUE(name)
+);
+
+-- udf_ind_pulldown_6_list
+CREATE TABLE udf_ind_pulldown_6(
+	id				INT(10)					NOT NULL,
+	name			VARCHAR(50)				NOT NULL,
+	sort_order		INT(10)					NOT NULL,
+	CONSTRAINT		pk_udf_ind_pulldown_6_id	PRIMARY KEY(id),
+	CONSTRAINT		uk_udf_ind_pulldown_6_name	UNIQUE(name)
 );
 
 -- individual_profiles
@@ -168,8 +277,8 @@ CREATE TABLE IF NOT EXISTS individual(
 	user_defined_fields_privacy_level_id INT(10),
 	allergies_privacy_level_id INT(10),
 	active BOOLEAN,
-	creator INT(10)	NOT NULL,
-	modifier INT(10) NOT NULL,
+	creator_id INT(10) NOT NULL,
+	modifier_id INT(10) NOT NULL,
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
 	udf_text_1 VARCHAR(50),
@@ -190,12 +299,12 @@ CREATE TABLE IF NOT EXISTS individual(
 	udf_date_4 DATE,
 	udf_date_5 DATE,
 	udf_date_6 DATE,
-	udf_pulldown_1 INT(10),
-	udf_pulldown_2 INT(10),
-	udf_pulldown_3 INT(10),
-	udf_pulldown_4 INT(10),
-	udf_pulldown_5 INT(10),
-	udf_pulldown_6 INT(10),
+	udf_ind_pulldown_1_id INT(10),
+	udf_ind_pulldown_2_id INT(10),
+	udf_ind_pulldown_3_id INT(10),
+	udf_ind_pulldown_4_id INT(10),
+	udf_ind_pulldown_5_id INT(10),
+	udf_ind_pulldown_6_id INT(10),
 	CONSTRAINT		pk_individual_id		PRIMARY KEY(id),
 	CONSTRAINT		fk_family_id			FOREIGN KEY(family_id)		REFERENCES family(id),
 	CONSTRAINT		fk_membership_type_id	FOREIGN KEY(membership_type_id)	REFERENCES membership_type(id),
@@ -211,16 +320,13 @@ CREATE TABLE IF NOT EXISTS individual(
 	CONSTRAINT		fk_gender_privacy_level_id			FOREIGN KEY(gender_privacy_level_id) REFERENCES privacy_level(id),
 	CONSTRAINT		fk_marital_status_privacy_level_id	FOREIGN KEY(marital_status_privacy_level_id) REFERENCES privacy_level(id),
 	CONSTRAINT		fk_user_defined_fields_privacy_level_id FOREIGN KEY(user_defined_fields_privacy_level_id) REFERENCES privacy_level(id),
-	CONSTRAINT		fk_allergies_privacy_level_id		FOREIGN KEY(allergies_privacy_level_id) REFERENCES privacy_level(id)
-);
-
--- group_type_list
-CREATE TABLE IF NOT EXISTS group_type(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(100)			NOT NULL,
-	sort_order		INT(10),
-	CONSTRAINT		pk_group_type_id		PRIMARY KEY(id),
-	CONSTRAINT		uk_group_type_name		UNIQUE(name)
+	CONSTRAINT		fk_allergies_privacy_level_id		FOREIGN KEY(allergies_privacy_level_id) REFERENCES privacy_level(id),
+	CONSTRAINT		fk_udf_ind_pulldown_1				FOREIGN KEY(udf_ind_pulldown_1_id) REFERENCES udf_ind_pulldown_1(id),
+	CONSTRAINT		fk_udf_ind_pulldown_2				FOREIGN KEY(udf_ind_pulldown_2_id) REFERENCES udf_ind_pulldown_2(id),
+	CONSTRAINT		fk_udf_ind_pulldown_3				FOREIGN KEY(udf_ind_pulldown_3_id) REFERENCES udf_ind_pulldown_3(id),
+	CONSTRAINT		fk_udf_ind_pulldown_4				FOREIGN KEY(udf_ind_pulldown_4_id) REFERENCES udf_ind_pulldown_4(id),
+	CONSTRAINT		fk_udf_ind_pulldown_5				FOREIGN KEY(udf_ind_pulldown_5_id) REFERENCES udf_ind_pulldown_5(id),
+	CONSTRAINT		fk_udf_ind_pulldown_6				FOREIGN KEY(udf_ind_pulldown_6_id) REFERENCES udf_ind_pulldown_6(id)
 );
 
 -- group_profiles
@@ -242,9 +348,7 @@ CREATE TABLE IF NOT EXISTS `group`(
 	CONSTRAINT		uk_group_name			UNIQUE(name),
 	CONSTRAINT		fk_group_campus_id		FOREIGN KEY(campus_id)		REFERENCES campus(id),
 	CONSTRAINT		fk_group_main_leader_id	FOREIGN KEY(main_leader_id)	REFERENCES individual(id),
-	CONSTRAINT		fk_group_department_id	FOREIGN KEY(department_id)	REFERENCES department(id),
-	CONSTRAINT		fk_creator_id			FOREIGN KEY(creator_id)		REFERENCES individual(id),
-	CONSTRAINT		fk_modifier_id			FOREIGN KEY(modifier_id)	REFERENCES individual(id)
+	CONSTRAINT		fk_group_department_id	FOREIGN KEY(department_id)	REFERENCES department(id)
 );
 
 CREATE TABLE IF NOT EXISTS group_leader(

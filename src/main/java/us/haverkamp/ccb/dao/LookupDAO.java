@@ -3,6 +3,7 @@ package us.haverkamp.ccb.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.List;
 
 import us.haverkamp.ccb.domain.MembershipType;
@@ -10,10 +11,10 @@ import us.haverkamp.ccb.domain.Selection;
 
 public class LookupDAO extends GenericDAO<Selection> {
 	private static final String SQL_INSERT =
-			"INSERT INTO lookup_field_value(type, id, name, sort_order) "
-			+ "VALUES(?, ?, ?, ?) "
-			+ "ON DUPLICATE KEY "
-			+ "UPDATE name = ?, sort_order = ?";
+		"INSERT INTO {0}(id, name, sort_order) "
+		+ "VALUES(?, ?, ?) "
+		+ "ON DUPLICATE KEY "
+		+ "UPDATE name = ?, sort_order = ?";
 
 	private List<Selection> getSelections(String srv) throws DataAccessException {
 		final String xml = get(srv);
@@ -21,20 +22,32 @@ public class LookupDAO extends GenericDAO<Selection> {
 		return Mapper.getSelections(xml);
 	}
 	
-	public List<Selection> getAttendanceGroupings() throws DataAccessException {
-		return getSelections("attendance_groupings_list");
+	public List<Selection> getEventGroupings() throws DataAccessException {
+		return getSelections("event_grouping_list");
 	}
 	
 	public List<Selection> getDepartments() throws DataAccessException {
-		return getSelections("department_list");
+		return getSelections("group_grouping_list");
 	}
 	
 	public List<Selection> getGroupTypes() throws DataAccessException {
 		return getSelections("group_type_list");
 	}
 	
+	public List<Selection> getHowJoinedChurch() throws DataAccessException {
+		return getSelections("how_joined_church_list");
+	}
+	
+	public List<Selection> getHowTheyHeard() throws DataAccessException {
+		return getSelections("how_they_heard_list");
+	}
+	
 	public List<Selection> getMembershipTypes() throws DataAccessException {
 		return getSelections("membership_type_list");
+	}
+	
+	public List<Selection> getReasonLeftChurch() throws DataAccessException {
+		return getSelections("reason_left_church_list");
 	}
 	
 	public List<Selection> getSchools() throws DataAccessException {
@@ -69,22 +82,24 @@ public class LookupDAO extends GenericDAO<Selection> {
 		return getSelections("udf_ind_pulldown_6_list");
 	}
 	
-	public int[] update(List<Selection> fields) throws DataAccessException {
+	public int[] update(List<Selection> fields, String table) throws DataAccessException {
 		try {
 			final Connection connection = getConnection();
 			
 			try {
-				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
+				final String sql = MessageFormat.format(SQL_INSERT, table);
+				final PreparedStatement ps = connection.prepareStatement(sql);
 				
 				try {
 					for(Selection field : fields) {
-						ps.setString(1, field.getType());
-						ps.setLong(2, field.getId());
-						ps.setString(3, field.getName());
-						ps.setInt(4, field.getOrder());
+						int i = 1;
 						
-						ps.setString(5, field.getName());
-						ps.setInt(6, field.getOrder());
+						ps.setLong(i++, field.getId());
+						ps.setString(i++, field.getName());
+						ps.setInt(i++, field.getOrder());
+						
+						ps.setString(i++, field.getName());
+						ps.setInt(i++, field.getOrder());
 						
 						ps.addBatch();
 					}
