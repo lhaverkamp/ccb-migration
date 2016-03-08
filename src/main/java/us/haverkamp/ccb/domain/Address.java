@@ -1,6 +1,8 @@
 package us.haverkamp.ccb.domain;
 
 public class Address extends Api {
+	private String name;
+	
 	private String areaOfTown;
 	private String street;
 	private String city;
@@ -18,6 +20,14 @@ public class Address extends Api {
 		setCity(city);
 		setState(state);
 		setZip(zip);
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getAreaOfTown() {

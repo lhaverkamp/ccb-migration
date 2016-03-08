@@ -1,10 +1,7 @@
 package us.haverkamp.ccb.migration;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import us.haverkamp.ccb.dao.AttendanceDAO;
 import us.haverkamp.ccb.dao.CampusDAO;
 import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.dao.EventDAO;
@@ -13,7 +10,6 @@ import us.haverkamp.ccb.dao.FamilyDAO;
 import us.haverkamp.ccb.dao.GroupDAO;
 import us.haverkamp.ccb.dao.IndividualDAO;
 import us.haverkamp.ccb.dao.LookupDAO;
-import us.haverkamp.ccb.dao.NoDataFoundException;
 import us.haverkamp.ccb.dao.Table;
 import us.haverkamp.ccb.dao.TransactionDAO;
 import us.haverkamp.ccb.domain.Campus;
@@ -84,6 +80,9 @@ public class App {
 		final List<Group> items = dao.findBy();
 		
 		dao.update(items);
+		
+		// TODO group_leader
+		// TODO group_participant
 	}
 	
 	public void syncEvents() throws DataAccessException {
@@ -91,31 +90,8 @@ public class App {
 		final List<Event> items = dao.findBy();
 		
 		dao.update(items);
-	}
-	
-	public void syncAttendance() throws DataAccessException {
-		final AttendanceDAO dao = Factory.getInstance().getAttendanceDAO();
 		
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setWeekDate(
-			calendar.getWeekYear(),
-			calendar.get(Calendar.WEEK_OF_YEAR),
-			Calendar.SUNDAY
-		);
-		final Date endDate = calendar.getTime();
-		calendar.set(2015, 0, 1);
-		final Date startDate = calendar.getTime();
-
-		try {
-			final List<Event> events = dao.findBy(startDate, endDate);
-			System.out.println(events);
-			for(Event event : events) {
-				System.out.println(event);
-				dao.create(event);
-			}
-		} catch(NoDataFoundException e) {
-			System.out.println(e.getMessage());
-		}
+		// TODO attendance
 	}
 	
 	public void syncTransactions() throws DataAccessException {
@@ -133,8 +109,7 @@ public class App {
     	app.syncFamilies();
     	app.syncIndividuals();
     	app.syncGroups();
-    	// TODO app.syncEvents();
-    	// TODO app.syncAttendance();
+    	app.syncEvents();
     	// TODO app.syncTransactions();
     }
 }

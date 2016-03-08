@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import us.haverkamp.ccb.domain.Campus;
-import us.haverkamp.utils.DateUtils;
 
 public class CampusDAO extends GenericDAO<Campus> {
 	private static final String SQL_INSERT = 

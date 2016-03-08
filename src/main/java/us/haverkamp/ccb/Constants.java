@@ -114,4 +114,15 @@ public class Constants {
 	public static final String DIRECTOR = "director";
 	public static final String GROUP_TYPE = "group_type";
 	public static final String MAIN_LEADER = "main_leader";
+	public static final String APPROVAL_STATUS = "approval_status";
+	public static final String EVENT_GROUPING = "event_grouping";
+	public static final String LEADER_NOTES = "leader_notes";
+	public static final String LISTED = "listed";
+	public static final String LOCATION = "location";
+	public static final String ORGANIZER = "organizer";
+	public static final String PUBLIC_CALENDAR_LISTED = "public_calendar_listed";
+	public static final String RECURRENCE_DESCRIPTION = "recurrence_description";
+	public static final String START_DATETIME = "start_datetime";
+	public static final String END_DATETIME = "end_datetime";
+	public static final String TIMEZONE = "timezone";
 }

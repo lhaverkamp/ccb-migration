@@ -4,7 +4,7 @@ import org.w3c.dom.Node;
 
 public class StringUtils {
 	public static Boolean parseBoolean(Node n) {
-		return parseBoolean(n.getTextContent());
+		return n != null ? parseBoolean(n.getTextContent()) : null;
 	}
 	
 	public static Boolean parseBoolean(String s) {
@@ -12,7 +12,7 @@ public class StringUtils {
 	}
 	
 	public static Integer parseInt(Node n) {
-		return parseInt(n.getTextContent());
+		return n != null ? parseInt(n.getTextContent()) : null;
 	}
 	
 	public static Integer parseInt(String s) {
@@ -20,7 +20,7 @@ public class StringUtils {
 	}
 
 	public static Long parseLong(Node n) {
-		return parseLong(n.getTextContent());
+		return n != null ? parseLong(n.getTextContent()) : null;
 	}
 	
 	public static Long parseLong(String s) {
@@ -28,8 +28,10 @@ public class StringUtils {
 	}
 	
 	public static String parseString(Node n) {
-		final String s = n.getTextContent();
-		
+		return n != null ? parseString(n.getTextContent()) : null;
+	}
+	
+	private static String parseString(String s) {
 		return s != null && s.length() != 0 ? s : null;
 	}
 }

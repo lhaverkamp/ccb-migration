@@ -1,10 +1,17 @@
--- It appears there isn't an API call that will allow us to populate this 
--- information.  It is being hard-coded based upon how the values look in the 
--- application.
+-- The following tables do not appear to have an API call that will populate 
+-- this information.  It is being hard-coded based upon how the values are
+-- returnend in various API calls.
+CREATE TABLE IF NOT EXISTS approval_status(
+	id			INT(10)					NOT NULL,
+	name		VARCHAR(50)				NOT NULL,
+	CONSTRAINT 	pk_approval_status_id	PRIMARY KEY(id)
+);
+INSERT INTO approval_status(id, name) VALUES(1, 'Approved') ON DUPLICATE KEY UPDATE name = 'Approved';
+
 CREATE TABLE IF NOT EXISTS privacy_level(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(50)				NOT NULL,
-	CONSTRAINT		pk_privacy_id			PRIMARY KEY(id)
+	id				INT(10)			NOT NULL,
+	name			VARCHAR(50)		NOT NULL,
+	CONSTRAINT		pk_privacy_id	PRIMARY KEY(id)
 );
 INSERT INTO privacy_level(id, name) VALUES(1, 'Church Leadership Only') ON DUPLICATE KEY UPDATE name = 'Church Leadership Only';
 INSERT INTO privacy_level(id, name) VALUES(2, 'Friends Only') ON DUPLICATE KEY UPDATE name = 'Friends Only';
@@ -109,7 +116,7 @@ CREATE TABLE IF NOT EXISTS school_grade(
 );
 
 -- TODO need to populate this table
-CREATE TABLE udf_text_field(
+CREATE TABLE IF NOT EXISTS udf_text_field(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(100)			NOT NULL,
 	label			VARCHAR(100)			NOT NULL,
@@ -119,7 +126,7 @@ CREATE TABLE udf_text_field(
 );
 
 -- TODO need to populate this table
-CREATE TABLE udf_date_field(
+CREATE TABLE IF NOT EXISTS udf_date_field(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(100)			NOT NULL,
 	label			VARCHAR(100)			NOT NULL,
@@ -129,7 +136,7 @@ CREATE TABLE udf_date_field(
 );
 
 -- TODO need to populate this table
-CREATE TABLE udf_pulldown_field(
+CREATE TABLE IF NOT EXISTS udf_pulldown_field(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(100)			NOT NULL,
 	label			VARCHAR(100)			NOT NULL,
@@ -139,7 +146,7 @@ CREATE TABLE udf_pulldown_field(
 );
 
 -- udf_ind_pulldown_1_list
-CREATE TABLE udf_ind_pulldown_1(
+CREATE TABLE IF NOT EXISTS udf_ind_pulldown_1(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
 	sort_order		INT(10)					NOT NULL,
@@ -148,7 +155,7 @@ CREATE TABLE udf_ind_pulldown_1(
 );
 
 -- udf_ind_pulldown_2_list
-CREATE TABLE udf_ind_pulldown_2(
+CREATE TABLE IF NOT EXISTS udf_ind_pulldown_2(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
 	sort_order		INT(10)					NOT NULL,
@@ -157,7 +164,7 @@ CREATE TABLE udf_ind_pulldown_2(
 );
 
 -- udf_ind_pulldown_3_list
-CREATE TABLE udf_ind_pulldown_3(
+CREATE TABLE IF NOT EXISTS udf_ind_pulldown_3(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
 	sort_order		INT(10)					NOT NULL,
@@ -166,7 +173,7 @@ CREATE TABLE udf_ind_pulldown_3(
 );
 
 -- udf_ind_pulldown_4_list
-CREATE TABLE udf_ind_pulldown_4(
+CREATE TABLE IF NOT EXISTS udf_ind_pulldown_4(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
 	sort_order		INT(10)					NOT NULL,
@@ -175,7 +182,7 @@ CREATE TABLE udf_ind_pulldown_4(
 );
 
 -- udf_ind_pulldown_5_list
-CREATE TABLE udf_ind_pulldown_5(
+CREATE TABLE IF NOT EXISTS udf_ind_pulldown_5(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
 	sort_order		INT(10)					NOT NULL,
@@ -184,7 +191,7 @@ CREATE TABLE udf_ind_pulldown_5(
 );
 
 -- udf_ind_pulldown_6_list
-CREATE TABLE udf_ind_pulldown_6(
+CREATE TABLE IF NOT EXISTS udf_ind_pulldown_6(
 	id				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
 	sort_order		INT(10)					NOT NULL,
@@ -362,4 +369,50 @@ CREATE TABLE IF NOT EXISTS group_participant(
 	group_id		INT(10)					NOT NULL,
 	individual_id	INT(10)					NOT NULL,
 	CONSTRAINT pk_group_participant			PRIMARY KEY(group_id, individual_id)
+);
+
+-- event_profiles
+CREATE TABLE IF NOT EXISTS event(
+	id						INT(10)			NOT NULL,
+	name					VARCHAR(50)		NOT NULL,
+	description				TEXT,
+	leader_notes			TEXT,
+	start_datetime			TIMESTAMP		NOT NULL,
+	-- start_date
+	-- start_time
+	end_datetime			TIMESTAMP		NOT NULL,
+	-- end_date
+	-- end_time
+	timezone				VARCHAR(50)		NOT NULL,
+	recurrence_description	TEXT,
+	approval_status_id		INT(10),
+	-- exceptions
+	group_id				INT(10)			NOT NULL,
+	organizer_id			INT(10)			NOT NULL,
+	phone_contact			VARCHAR(50),
+	location_name			VARCHAR(50),
+	location_street			VARCHAR(100),
+	location_city			VARCHAR(50),
+	location_state			VARCHAR(10),
+	location_zip			VARCHAR(10),
+	location_line_1			VARCHAR(100),
+	location_line_2			VARCHAR(100),
+	-- registration
+	-- guest_list
+	-- resources
+	setup_start				TIMESTAMP,
+	setup_end				TIMESTAMP,
+	setup_notes				TEXT,
+	event_grouping_id		INT(10),
+	creator_id				INT(10)			NOT NULL,
+	modifier_id				INT(10)			NOT NULL,
+	listed					BOOLEAN			NOT NULL,
+	public_calendar_listed	BOOLEAN			NOT NULL,
+	created					TIMESTAMP		NOT NULL,
+	modified				TIMESTAMP		NOT NULL,
+	CONSTRAINT pk_event_id PRIMARY KEY (id),
+	CONSTRAINT fk_event_approval_status_id FOREIGN KEY (approval_status_id) REFERENCES approval_status(id),
+	CONSTRAINT fk_event_group_id FOREIGN KEY (group_id) REFERENCES `group`(id),
+	CONSTRAINT fk_event_organizer_id FOREIGN KEY (organizer_id) REFERENCES individual(id),
+	CONSTRAINT fk_event_event_grouping_id FOREIGN KEY (event_grouping_id) REFERENCES event_grouping(id)
 );

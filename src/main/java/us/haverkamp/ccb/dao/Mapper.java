@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,10 +15,12 @@ import org.xml.sax.SAXException;
 
 import us.haverkamp.ccb.Constants;
 import us.haverkamp.ccb.domain.Address;
+import us.haverkamp.ccb.domain.ApprovalStatus;
 import us.haverkamp.ccb.domain.Campus;
 import us.haverkamp.ccb.domain.CommunicationPreferences;
 import us.haverkamp.ccb.domain.Department;
 import us.haverkamp.ccb.domain.Event;
+import us.haverkamp.ccb.domain.EventGrouping;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.GroupType;
@@ -46,6 +47,19 @@ public class Mapper {
 		item.setCountry(StringUtils.parseString(element.getElementsByTagName(Constants.COUNTRY).item(0)));		
 		item.setLine1(StringUtils.parseString(element.getElementsByTagName(Constants.LINE_1).item(0)));		
 		item.setLine2(StringUtils.parseString(element.getElementsByTagName(Constants.LINE_2).item(0)));
+		
+		item.setName(StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0)));
+		
+		return item;
+	}
+	
+	protected static ApprovalStatus getApprovalStatus(Node node) {
+		final Element element = (Element) node;
+
+		final ApprovalStatus item = new ApprovalStatus(
+			Long.valueOf(element.getAttribute(Constants.ID)),
+			StringUtils.parseString(element)
+		);
 		
 		return item;
 	}
@@ -83,13 +97,13 @@ public class Mapper {
 			final NodeList nodes = document.getElementsByTagName(Constants.CAMPUS);
 			if(nodes == null) {
 				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
 				);
 			}
 			
 			final List<Campus> items = new ArrayList<Campus>();
 			for(int i=0;i<nodes.getLength();i++) {
-				items.add(Mapper.getCampus(nodes.item(i)));
+				items.add(getCampus(nodes.item(i)));
 			}
 			
 			return items;
@@ -117,7 +131,7 @@ public class Mapper {
 		
 		final Department item = new Department(
 			StringUtils.parseLong(element.getAttribute(Constants.ID)),
-			element.getTextContent()
+			StringUtils.parseString(element)
 		);
 		
 		return item;
@@ -127,11 +141,49 @@ public class Mapper {
 		final Element element = (Element) node;
 		
 		try {
-			final Event item = new Event(Long.valueOf(element.getAttribute(Constants.ID)));
+			final Event item = new Event(Long.valueOf(element.getAttribute(Constants.ID))); // id
 			
-			item.setDate(DateUtils.parseTimestamp(element.getElementsByTagName("occurrence").item(0)));
-			item.setAttendees(Mapper.getIndividuals(element, Constants.ATTENDEE));
-		
+			item.setName(StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0))); // name
+			item.setDescription(StringUtils.parseString(element.getElementsByTagName(Constants.DESCRIPTION).item(0))); // description
+			item.setLeaderNotes(StringUtils.parseString(element.getElementsByTagName(Constants.LEADER_NOTES).item(0)));// leader_notes
+			item.setStart(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.START_DATETIME).item(0))); // start_datetime
+			// start_date
+			// start_time
+			item.setEnd(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.END_DATETIME).item(0))); // end_datetime
+			// end_date
+			// end_time
+			item.setTimezone(StringUtils.parseString(element.getElementsByTagName(Constants.TIMEZONE).item(0))); // timezone
+			item.setRecurrenceDescription(StringUtils.parseString(element.getElementsByTagName(Constants.RECURRENCE_DESCRIPTION).item(0)));// recurrence_description
+			item.setApprovalStatus(getApprovalStatus(element.getElementsByTagName(Constants.APPROVAL_STATUS).item(0))); // approval_status
+			// exceptions
+				// exception
+			item.setGroup(getGroup(element.getElementsByTagName(Constants.GROUP).item(0), false)); // group
+			item.setOrganizer(getIndividual(element.getElementsByTagName(Constants.ORGANIZER).item(0), false)); // organizer
+			item.setPhone(StringUtils.parseString(element.getElementsByTagName(Constants.PHONE).item(0))); // phone
+			item.setLocation(getAddress(element.getElementsByTagName(Constants.LOCATION).item(0))); // location
+			// registration
+				// limit
+				// event_type id
+				// forms
+			// guest_list
+			// resources
+				// resource id
+					// name
+					// description
+					// status id
+					// resource_type
+			// setup
+				// start
+				// end
+				// notes
+			item.setEventGrouping(getEventGrouping(element.getElementsByTagName(Constants.EVENT_GROUPING).item(0))); // event_grouping
+			item.setCreator(getIndividual(element.getElementsByTagName(Constants.CREATOR).item(0), false)); // creator
+			item.setModifier(getIndividual(element.getElementsByTagName(Constants.MODIFIER).item(0), false)); // modifier
+			item.setListed(StringUtils.parseBoolean(element.getElementsByTagName(Constants.LISTED).item(0))); // listed
+			item.setPublicCalendarListed(StringUtils.parseBoolean(element.getElementsByTagName(Constants.PUBLIC_CALENDAR_LISTED).item(0)));// public_calendar_listed
+			item.setCreated(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.CREATED).item(0)));
+			item.setModified(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.MODIFIED).item(0)));
+			
 			return item;
 		} catch(ParseException e) {
 			throw new DataAccessException(e);
@@ -147,11 +199,11 @@ public class Mapper {
 			// TODO error handling
 			if(items == null || items.getLength() == 0) {
 				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
 				);
 			}
 			
-			return Mapper.getEvent(items.item(0));
+			return getEvent(items.item(0));
 		} catch(IOException | ParserConfigurationException | SAXException e) {
 			throw new DataAccessException(e);
 		}
@@ -164,7 +216,7 @@ public class Mapper {
 			final NodeList items = document.getElementsByTagName(Constants.EVENT);
 			if(items == null || items.getLength() == 0) {
 				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
 				);
 			}
 			
@@ -172,7 +224,7 @@ public class Mapper {
 			for(int i=0;i<items.getLength();i++) {
 				final Node node = items.item(i);
 				
-				events.add(Mapper.getEvent(node));
+				events.add(getEvent(node));
 			}
 			
 			return events;
@@ -181,19 +233,19 @@ public class Mapper {
 		}
 	}
 	
-	protected static GroupType getGroupType(Node node) throws DataAccessException {
+	protected static EventGrouping getEventGrouping(Node node) throws DataAccessException {
 		final Element element = (Element) node;
 		
-		final GroupType item = new GroupType(
+		final EventGrouping item = new EventGrouping(
 			StringUtils.parseLong(element.getAttribute(Constants.ID)),
-			element.getTextContent()
+			StringUtils.parseString(element)
 		);
 		
 		return item;
 	}
 
 	protected static Family getFamily(Node node) throws DataAccessException {
-		return Mapper.getFamily(node, true);
+		return getFamily(node, true);
 	}
 	
 	protected static Family getFamily(Node node, boolean all) throws DataAccessException {
@@ -231,13 +283,13 @@ public class Mapper {
 			final NodeList nodes = document.getElementsByTagName(Constants.FAMILY);
 			if(nodes == null) {
 				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
 				);
 			}
 			
 			final List<Family> items = new ArrayList<Family>();
 			for(int i=0;i<nodes.getLength();i++) {
-				items.add(Mapper.getFamily(nodes.item(i)));
+				items.add(getFamily(nodes.item(i)));
 			}
 			
 			return items;
@@ -245,31 +297,37 @@ public class Mapper {
 			throw new DataAccessException(e);
 		}
 	}
-
+	
 	protected static Group getGroup(Node node) throws DataAccessException {
+		return getGroup(node, true);
+	}
+
+	protected static Group getGroup(Node node, boolean all) throws DataAccessException {
 		final Element element = (Element) node;
 		
 		try {
 			final Group item = new Group(Long.valueOf(element.getAttribute(Constants.ID)));
 			
-			item.setName(StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0)));
-			item.setDescription(StringUtils.parseString(element.getElementsByTagName(Constants.DESCRIPTION).item(0)));
-			// TODO image
-			item.setCampus(getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false)); // campus
-			item.setMainLeader(getIndividual(element.getElementsByTagName(Constants.MAIN_LEADER).item(0), false)); // main_leader
-			NodeList nodes = element.getElementsByTagName(Constants.DIRECTOR);
-			if(nodes.getLength() == 1) {
-				item.setDirector(getIndividual(nodes.item(0), false)); // director
+			if(all) {
+				item.setName(StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0)));
+				item.setDescription(StringUtils.parseString(element.getElementsByTagName(Constants.DESCRIPTION).item(0)));
+				// TODO image
+				item.setCampus(getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false)); // campus
+				item.setMainLeader(getIndividual(element.getElementsByTagName(Constants.MAIN_LEADER).item(0), false)); // main_leader
+				NodeList nodes = element.getElementsByTagName(Constants.DIRECTOR);
+				if(nodes.getLength() == 1) {
+					item.setDirector(getIndividual(nodes.item(0), false)); // director
+				}
+				item.setGroupType(getGroupType(element.getElementsByTagName(Constants.GROUP_TYPE).item(0))); // group_type
+				nodes = element.getElementsByTagName(Constants.DEPARTMENT);
+				if(nodes.getLength() == 1) {
+					item.setDepartment(getDepartment(nodes.item(0))); // department
+				}
+				item.setCreator(getIndividual(element.getElementsByTagName(Constants.CREATOR).item(0), false)); // creator
+				item.setModifier(getIndividual(element.getElementsByTagName(Constants.MODIFIER).item(0), false)); // modifier
+				item.setCreated(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.CREATED).item(0))); // created
+				item.setModified(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.MODIFIED).item(0))); // modified
 			}
-			item.setGroupType(getGroupType(element.getElementsByTagName(Constants.GROUP_TYPE).item(0))); // group_type
-			nodes = element.getElementsByTagName(Constants.DEPARTMENT);
-			if(nodes.getLength() == 1) {
-				item.setDepartment(getDepartment(nodes.item(0))); // department
-			}
-			item.setCreator(getIndividual(element.getElementsByTagName(Constants.CREATOR).item(0), false)); // creator
-			item.setModifier(getIndividual(element.getElementsByTagName(Constants.MODIFIER).item(0), false)); // modifier
-			item.setCreated(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.CREATED).item(0))); // created
-			item.setModified(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.MODIFIED).item(0))); // modified
 			
 			return item;
 		} catch(ParseException e) {
@@ -284,11 +342,11 @@ public class Mapper {
 			final Node node = document.getElementsByTagName(Constants.GROUP).item(0);
 			if(node == null) {
 				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
 				);
 			}
 			
-			return Mapper.getGroup(node);
+			return getGroup(node);
 		} catch(IOException | ParserConfigurationException | SAXException e) {
 			throw new DataAccessException(e);
 		}
@@ -302,7 +360,7 @@ public class Mapper {
 	
 			final NodeList nodes = document.getElementsByTagName(Constants.GROUP);
 			for(int i=0;i<nodes.getLength();i++) {
-				items.add(Mapper.getGroup(nodes.item(i)));
+				items.add(getGroup(nodes.item(i)));
 			}
 	
 			return items;
@@ -311,8 +369,19 @@ public class Mapper {
 		}
 	}
 
+	protected static GroupType getGroupType(Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		final GroupType item = new GroupType(
+			StringUtils.parseLong(element.getAttribute(Constants.ID)),
+			StringUtils.parseString(element)
+		);
+		
+		return item;
+	}
+
 	protected static Individual getIndividual(Node node) throws DataAccessException {
-		return Mapper.getIndividual(node, true);
+		return getIndividual(node, true);
 	}
 
 	protected static Individual getIndividual(Node node, boolean all) throws DataAccessException {
@@ -325,8 +394,8 @@ public class Mapper {
 				item.setSyncId(StringUtils.parseLong(element.getElementsByTagName(Constants.SYNC_ID).item(0)));
 				item.setOtherId(StringUtils.parseString(element.getElementsByTagName(Constants.OTHER_ID).item(0)));
 				item.setGivingNumber(StringUtils.parseInt(element.getElementsByTagName(Constants.GIVING_NUMBER).item(0))); // TODO may need to be a string
-				item.setCampus(Mapper.getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false));
-				item.setFamily(Mapper.getFamily(element.getElementsByTagName(Constants.FAMILY).item(0), false));
+				item.setCampus(getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false));
+				item.setFamily(getFamily(element.getElementsByTagName(Constants.FAMILY).item(0), false));
 				// TODO family_image
 				item.setFamilyPosition(StringUtils.parseString(element.getElementsByTagName(Constants.FAMILY_POSITION).item(0)));
 				// TODO family_members
@@ -406,27 +475,16 @@ public class Mapper {
 			final Node node = document.getElementsByTagName(Constants.INDIVIDUAL).item(0);
 			if(node == null) {
 				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
 				);
 			}
 			
-			return Mapper.getIndividual(node);
+			return getIndividual(node);
 		} catch(IOException | ParserConfigurationException | SAXException e) {
 			throw new DataAccessException(e);
 		}
 	}
 	
-	private static List<Individual> getIndividuals(Element element, String node) throws DataAccessException {
-		final List<Individual> items = new ArrayList<Individual>();
-		
-		final NodeList nodes = element.getElementsByTagName(node);
-		for(int i=0;i<nodes.getLength();i++) {
-			items.add(Mapper.getIndividual(nodes.item(i), false));
-		}
-		
-		return items;
-	}
-
 	public static List<Individual> getIndividuals(String xml) throws DataAccessException {
 		try {
 			final Document document = XmlUtils.getDocument(xml);
@@ -434,7 +492,7 @@ public class Mapper {
 			NodeList nodes = document.getElementsByTagName(Constants.INDIVIDUALS);
 			if(nodes == null) {
 				throw new NoDataFoundException(
-					document.getElementsByTagName("message").item(0).getTextContent()
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
 				);
 			}
 			
@@ -446,7 +504,7 @@ public class Mapper {
 				final Element item = (Element) nodes.item(i);
 				
 				if(item.getParentNode().isSameNode(parent)) {
-					items.add(Mapper.getIndividual(item));
+					items.add(getIndividual(item));
 				}
 			}
 			
@@ -461,7 +519,7 @@ public class Mapper {
 		
 		final MembershipType item = new MembershipType(
 			StringUtils.parseLong(element.getAttribute(Constants.ID)),
-			element.getTextContent()
+			StringUtils.parseString(element)
 		);
 		
 		return item;
@@ -511,7 +569,7 @@ public class Mapper {
 			
 			final NodeList nodes = document.getElementsByTagName(Constants.ITEM);
 			for(int i=0;i<nodes.getLength();i++) {
-				items.add(Mapper.getSelection(nodes.item(i)));
+				items.add(getSelection(nodes.item(i)));
 			}
 			
 			return items;
