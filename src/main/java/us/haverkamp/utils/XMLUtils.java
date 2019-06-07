@@ -17,7 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public class XmlUtils {
+public class XMLUtils {
 	public static DocumentBuilder newDocumentBuilder() 
 			throws ParserConfigurationException {
 		final DocumentBuilderFactory documentBuilderFactory = 

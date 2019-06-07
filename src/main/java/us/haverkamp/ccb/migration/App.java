@@ -1,7 +1,9 @@
 package us.haverkamp.ccb.migration;
 
+import java.text.ParseException;
 import java.util.List;
 
+import us.haverkamp.ccb.dao.AttendanceDAO;
 import us.haverkamp.ccb.dao.CampusDAO;
 import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.dao.EventDAO;
@@ -17,11 +19,16 @@ import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.Individual;
-import us.haverkamp.ccb.domain.Transaction;
+import us.haverkamp.ccb.domain.Occurrence;
+import us.haverkamp.utils.DateUtils;
 
 public class App {
+	private int getType() {
+		return Factory.CSV;
+	}
+	
 	public void syncLookupTables() throws DataAccessException {
-		final LookupDAO dao = Factory.getInstance().getLookupDAO();
+		final LookupDAO dao = Factory.getInstance(getType()).getLookupDAO();
 		// TODO ability
 		// TODO age_bracket
 		// TODO area
@@ -42,7 +49,7 @@ public class App {
 		// TODO significant_event
 		// TODO spiritual_maturity
 		// TODO style
-		// TODO transaction_grouping
+		dao.update(dao.getTransactionGrouping(),  Table.TRANSACTION_GROUPING); // transaction_grouping
 		// TODO udf_grp_pulldown_1
 		// TODO udf_grp_pulldown_2
 		// TODO udf_grp_pulldown_3
@@ -56,27 +63,27 @@ public class App {
 	}
 	
 	public void syncFamilies() throws DataAccessException {
-		final FamilyDAO dao = Factory.getInstance().getFamilyDAO();
+		final FamilyDAO dao = Factory.getInstance(getType()).getFamilyDAO();
 		final List<Family> items = dao.findBy();
 		
 		dao.update(items);
 	}
 	public void syncIndividuals() throws DataAccessException {
-        final IndividualDAO dao = Factory.getInstance().getIndividualDAO();
+        final IndividualDAO dao = Factory.getInstance(getType()).getIndividualDAO();
         final List<Individual> individuals = dao.findBy();
         
         dao.update(individuals);
 	}
 	
 	public void syncCampuses() throws DataAccessException {
-		final CampusDAO dao = Factory.getInstance().getCampusDAO();
+		final CampusDAO dao = Factory.getInstance(getType()).getCampusDAO();
 		final List<Campus> items = dao.findBy();
 		
 		dao.update(items);
 	}
 	
 	public void syncGroups() throws DataAccessException {
-		final GroupDAO dao = Factory.getInstance().getGroupDAO();
+		final GroupDAO dao = Factory.getInstance(getType()).getGroupDAO();
 		final List<Group> items = dao.findBy();
 		
 		dao.update(items);
@@ -86,19 +93,37 @@ public class App {
 	}
 	
 	public void syncEvents() throws DataAccessException {
-		final EventDAO dao = Factory.getInstance().getEventDAO();
+		final EventDAO dao = Factory.getInstance(getType()).getEventDAO();
 		final List<Event> items = dao.findBy();
 		
 		dao.update(items);
 		
-		// TODO attendance
+		final AttendanceDAO dao2 = Factory.getInstance(getType()).getAttendanceDAO();
+		final List<Occurrence> items2 = dao2.findBy();
+		
+		dao2.update(items2);
 	}
 	
 	public void syncTransactions() throws DataAccessException {
-		final TransactionDAO dao = Factory.getInstance().getTransactionDAO();
-		final List<Transaction> items = dao.findBy();
+		final TransactionDAO dao = Factory.getInstance(getType()).getTransactionDAO();
 		
-		dao.update(items);
+		try {
+			dao.update(dao.findBy(DateUtils.parseDate("2007-01-01"), DateUtils.parseDate("2007-12-31")));
+			dao.update(dao.findBy(DateUtils.parseDate("2008-01-01"), DateUtils.parseDate("2008-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2009-01-01"), DateUtils.parseDate("2009-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2010-01-01"), DateUtils.parseDate("2010-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2011-01-01"), DateUtils.parseDate("2011-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2012-01-01"), DateUtils.parseDate("2012-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2013-01-01"), DateUtils.parseDate("2013-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2014-01-01"), DateUtils.parseDate("2014-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2015-01-01"), DateUtils.parseDate("2015-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2016-01-01"), DateUtils.parseDate("2016-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2017-01-01"), DateUtils.parseDate("2017-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2018-01-01"), DateUtils.parseDate("2018-12-31")), true);
+			dao.update(dao.findBy(DateUtils.parseDate("2019-01-01"), DateUtils.parseDate("2019-12-31")), true);
+		} catch(ParseException e) {
+			throw new DataAccessException(e);
+		}
 	}
 	
     public static void main( String[] args ) throws DataAccessException {
@@ -110,6 +135,6 @@ public class App {
     	app.syncIndividuals();
     	app.syncGroups();
     	app.syncEvents();
-    	// TODO app.syncTransactions();
+    	app.syncTransactions();
     }
 }

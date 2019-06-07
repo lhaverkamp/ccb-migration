@@ -22,7 +22,7 @@ INSERT INTO privacy_level(id, name) VALUES(4, 'Everybody') ON DUPLICATE KEY UPDA
 CREATE TABLE IF NOT EXISTS campus(
 	id 				INT(10)					NOT NULL,
 	name			VARCHAR(50)				NOT NULL,
-	CONSTRAINT		pk_campripus_id			PRIMARY KEY(id),
+	CONSTRAINT		pk_campus_id			PRIMARY KEY(id),
 	CONSTRAINT		uk_campus_name			UNIQUE(name)
 );
 
@@ -113,36 +113,6 @@ CREATE TABLE IF NOT EXISTS school_grade(
 	sort_order		INT(10)					NOT NULL,
 	CONSTRAINT		pk_school_grade_id		PRIMARY KEY(id),
 	CONSTRAINT		uk_school_grade_name	UNIQUE(name)
-);
-
--- TODO need to populate this table
-CREATE TABLE IF NOT EXISTS udf_text_field(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(100)			NOT NULL,
-	label			VARCHAR(100)			NOT NULL,
-	admin_only		BOOLEAN					DEFAULT FALSE,
-	CONSTRAINT		pk_udf_text_field_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
-);
-
--- TODO need to populate this table
-CREATE TABLE IF NOT EXISTS udf_date_field(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(100)			NOT NULL,
-	label			VARCHAR(100)			NOT NULL,
-	admin_only		BOOLEAN					DEFAULT FALSE,
-	CONSTRAINT		pk_udf_text_field_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
-);
-
--- TODO need to populate this table
-CREATE TABLE IF NOT EXISTS udf_pulldown_field(
-	id				INT(10)					NOT NULL,
-	name			VARCHAR(100)			NOT NULL,
-	label			VARCHAR(100)			NOT NULL,
-	admin_only		BOOLEAN					DEFAULT FALSE,
-	CONSTRAINT		pk_udf_text_field_id	PRIMARY KEY(id),
-	CONSTRAINT		uk_udf_text_field_name	UNIQUE(name)
 );
 
 -- udf_ind_pulldown_1_list
@@ -242,12 +212,12 @@ CREATE TABLE IF NOT EXISTS individual(
 	address_work_country	VARCHAR(20),
 	address_work_line_1	VARCHAR(100),
 	address_work_line_2	VARCHAR(100),
-	address_other_street	VARCHAR(100),
+	address_other_street	VARCHAR(1000),
 	address_other_city	VARCHAR(50),
 	address_other_state	VARCHAR(10),
 	address_other_zip		VARCHAR(10),
 	address_other_country	VARCHAR(20),
-	address_other_line_1	VARCHAR(100),
+	address_other_line_1	VARCHAR(1000),
 	address_other_line_2	VARCHAR(100),
 	phone_contact		VARCHAR(50),
 	phone_home			VARCHAR(50),
@@ -261,7 +231,7 @@ CREATE TABLE IF NOT EXISTS individual(
 	emergency_contact_name	VARCHAR(100),
 	anniversary		DATE,
 	baptized		BOOLEAN,
-	deceased		BOOLEAN,
+	deceased		DATE,
 	membership_type_id	INT(10),
 	membership_date	DATE,
 	membership_end	DATE,
@@ -391,7 +361,7 @@ CREATE TABLE IF NOT EXISTS event(
 	organizer_id			INT(10)			NOT NULL,
 	phone_contact			VARCHAR(50),
 	location_name			VARCHAR(50),
-	location_street			VARCHAR(100),
+	location_street			VARCHAR(200),
 	location_city			VARCHAR(50),
 	location_state			VARCHAR(10),
 	location_zip			VARCHAR(10),
@@ -413,6 +383,29 @@ CREATE TABLE IF NOT EXISTS event(
 	CONSTRAINT pk_event_id PRIMARY KEY (id),
 	CONSTRAINT fk_event_approval_status_id FOREIGN KEY (approval_status_id) REFERENCES approval_status(id),
 	CONSTRAINT fk_event_group_id FOREIGN KEY (group_id) REFERENCES `group`(id),
-	CONSTRAINT fk_event_organizer_id FOREIGN KEY (organizer_id) REFERENCES individual(id),
 	CONSTRAINT fk_event_event_grouping_id FOREIGN KEY (event_grouping_id) REFERENCES event_grouping(id)
 );
+--CONSTRAINT fk_event_organizer_id FOREIGN KEY (organizer_id) REFERENCES individual(id),
+
+-- attendance_profile
+CREATE TABLE event_occurrence(
+	event_id			INT(10)				NOT NULL,
+	occurrence			TIMESTAMP			NOT NULL,
+	did_not_meet		BOOLEAN				DEFAULT FALSE,
+	topic				VARCHAR(100),
+	notes				TEXT,
+	prayer_requests		TEXT,
+	info				TEXT,
+	head_count			INT(10),
+	CONSTRAINT pk_event_occurrence PRIMARY KEY (event_id, occurrence),
+	CONSTRAINT fk_event_occurrence_event_id FOREIGN KEY (event_id) REFERENCES event(id)
+);
+
+CREATE TABLE attendance(
+	event_id			INT(10)				NOT NULL,
+	occurrence			TIMESTAMP			NOT NULL,
+	attendee_id			INT(10)				NOT NULL,
+	CONSTRAINT pk_attendance PRIMARY KEY (event_id, occurrence, attendee_id),
+	CONSTRAINT pk_attendance_event_id FOREIGN KEY (event_id) REFERENCES event(id)
+);
+--	CONSTRAINT fk_attendance_attendee_id FOREIGN KEY (attendee_id) REFERENCES individual(id)

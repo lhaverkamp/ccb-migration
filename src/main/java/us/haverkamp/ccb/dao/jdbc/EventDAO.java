@@ -1,14 +1,16 @@
-package us.haverkamp.ccb.dao;
+package us.haverkamp.ccb.dao.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.domain.Event;
 import us.haverkamp.utils.DateUtils;
+import us.haverkamp.utils.SQLUtils;
 
-public class EventDAO extends GenericDAO<Event> {
+public class EventDAO extends us.haverkamp.ccb.dao.EventDAO {
 	public static final String SQL_INSERT = 
 		"INSERT INTO event("
 		+ "id, "
@@ -71,15 +73,9 @@ public class EventDAO extends GenericDAO<Event> {
 		+ "created = ?, "
 		+ "modified = ?";
 	
-	public List<Event> findBy() throws DataAccessException {
-		final String xml = get("event_profiles");
-				
-		return getItems(xml);
-	}
-	
 	public int[] update(List<Event> items) throws DataAccessException {
 		try {
-			final Connection connection = getConnection();
+			final Connection connection = SQLUtils.getConnection();
 			
 			try {
 				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
@@ -134,15 +130,5 @@ public class EventDAO extends GenericDAO<Event> {
 		} catch(SQLException e) {
 			throw new DataAccessException(e);
 		}
-	}
-
-	@Override
-	protected Event getItem(String xml) throws DataAccessException {
-		return Mapper.getEvent(xml);
-	}
-
-	@Override
-	protected List<Event> getItems(String xml) throws DataAccessException {
-		return Mapper.getEvents(xml);
 	}
 }

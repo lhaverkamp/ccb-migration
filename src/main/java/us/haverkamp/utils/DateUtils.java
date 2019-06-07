@@ -27,7 +27,7 @@ public class DateUtils {
 	}
 	
 	public static Date parseTimestamp(Node node) throws ParseException {
-		return parseDate(node.getTextContent());
+		return parseDate(node.getTextContent(), TIMESTAMP);
 	}
 	
 	public static String toString(Date date) {

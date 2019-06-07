@@ -10,6 +10,7 @@ public class Table {
 	public static final String REASON_LEFT_CHURCH = "reason_left_church";
 	public static final String SCHOOL = "school";
 	public static final String SCHOOL_GRADE = "school_grade";
+	public static final String TRANSACTION_GROUPING = "transaction_grouping";
 	public static final String UDF_IND_PULLDOWN_1 = "udf_ind_pulldown_1";
 	public static final String UDF_IND_PULLDOWN_2 = "udf_ind_pulldown_2";
 	public static final String UDF_IND_PULLDOWN_3 = "udf_ind_pulldown_3";

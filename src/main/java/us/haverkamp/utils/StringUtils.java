@@ -11,6 +11,22 @@ public class StringUtils {
 		return s != null ? Boolean.parseBoolean(s) : null;
 	}
 	
+	public static Double parseDouble(Node n) {
+		return n != null ? parseDouble(n.getTextContent()) : null;
+	}
+	
+	public static Double parseDouble(String s) {
+		return s != null && s.length() != 0 ? Double.parseDouble(s) : null;
+	}
+	
+	public static Float parseFloat(Node n) {
+		return n != null ? parseFloat(n.getTextContent()) : null;
+	}
+	
+	public static Float parseFloat(String s) {
+		return s != null && s.length() != 0 ? Float.parseFloat(s) : null;
+	}
+	
 	public static Integer parseInt(Node n) {
 		return n != null ? parseInt(n.getTextContent()) : null;
 	}

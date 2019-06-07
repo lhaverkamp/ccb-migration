@@ -1,4 +1,4 @@
-package us.haverkamp.ccb.dao;
+package us.haverkamp.ccb.dao.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,10 +6,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 import us.haverkamp.ccb.Constants;
+import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.domain.Individual;
 import us.haverkamp.utils.DateUtils;
+import us.haverkamp.utils.SQLUtils;
 
-public class IndividualDAO extends GenericDAO<Individual> {
+public class IndividualDAO extends us.haverkamp.ccb.dao.IndividualDAO { 
 	private static final String SQL_INSERT = 
 		"INSERT INTO individual("
 			+ "id, "
@@ -58,6 +60,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "address_other_line_2,"
 			+ "phone_contact,"
 			+ "phone_home,"
+			+ "phone_mobile,"
 			+ "phone_work,"
 			+ "phone_emergency,"
 			// TODO + "mobile_carrier_id,"
@@ -118,7 +121,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_ind_pulldown_4_id,"
 			+ "udf_ind_pulldown_5_id,"
 			+ "udf_ind_pulldown_6_id"
-			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			+ ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 			+ "ON DUPLICATE KEY UPDATE "
 			+ "sync_id = ?, "
 			+ "other_id = ?, "
@@ -165,6 +168,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "address_other_line_2 = ?,"
 			+ "phone_contact = ?,"
 			+ "phone_home = ?,"
+			+ "phone_mobile = ?,"
 			+ "phone_work = ?,"
 			+ "phone_emergency = ?,"
 			// TODO + "mobile_carrier_id = ?,"
@@ -227,15 +231,9 @@ public class IndividualDAO extends GenericDAO<Individual> {
 			+ "udf_ind_pulldown_6_id = ?"
 			;
 	
-	public List<Individual> findBy() throws DataAccessException {
-		final String xml = get("individual_profiles");
-		
-		return getItems(xml);
-	}
-	
 	public int[] update(List<Individual> items) throws DataAccessException {
 		try {
-			final Connection connection = getConnection();
+			final Connection connection = SQLUtils.getConnection();
 			
 			try {
 				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
@@ -260,7 +258,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setObject(i++, item.getLegalFirstName()); // legal_first_name,
 							ps.setObject(i++, item.getFirstName());	// full_name,
 							ps.setObject(i++, item.getPrefix()); // salutation,
-							ps.setObject(i++,  item.getSuffix()); // suffix, 
+							ps.setObject(i++, item.getSuffix()); // suffix, 
 							// image, 
 							ps.setObject(i++, item.getLogin()); // login, 
 							ps.setObject(i++, item.getEmail()); // email, 
@@ -292,6 +290,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setObject(i++, item.getOther().getLine2()); // address_other_line_2,
 							ps.setObject(i++, item.getContactPhone()); // phone_contact,
 							ps.setObject(i++, item.getHomePhone()); // phone_home,
+							ps.setObject(i++, item.getMobilePhone()); // phone_mobile
 							ps.setObject(i++, item.getWorkPhone()); // phone_work,
 							ps.setObject(i++, item.getEmergencyPhone()); // phone_emergency,
 							// mobile_carrier_id,
@@ -301,6 +300,7 @@ public class IndividualDAO extends GenericDAO<Individual> {
 							ps.setObject(i++, item.getEmergencyContact()); // emergency_contact_name,
 							ps.setObject(i++, DateUtils.toString(item.getAnniversary())); // anniversary,
 							ps.setObject(i++, item.getBaptized()); // baptized
+							if(item.getDeceased() != null) { System.out.println(item.getDeceased()); }
 							ps.setObject(i++, DateUtils.toString(item.getDeceased())); // deceased
 							ps.setObject(i++, item.getMembershipType().getId()); // membership_type_id,
 							ps.setObject(i++, DateUtils.toString(item.getMembershipDate())); // membership_date,
@@ -367,15 +367,5 @@ public class IndividualDAO extends GenericDAO<Individual> {
 		} catch(SQLException e) {
 			throw new DataAccessException(e);
 		}
-	}
-
-	@Override
-	protected Individual getItem(String xml) throws DataAccessException {
-		return Mapper.getIndividual(xml);
-	}
-
-	@Override
-	protected List<Individual> getItems(String xml) throws DataAccessException {
-		return Mapper.getIndividuals(xml);
 	}
 }

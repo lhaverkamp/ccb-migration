@@ -1,24 +1,20 @@
-package us.haverkamp.ccb.dao;
+package us.haverkamp.ccb.dao.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.domain.Transaction;
+import us.haverkamp.utils.SQLUtils;
 
-public class TransactionDAO extends GenericDAO<Transaction> {
+public class TransactionDAO extends us.haverkamp.ccb.dao.TransactionDAO {
 	private static final String SQL_INSERT = "";
-	
-	public List<Transaction> findBy() {
-		// TODO auto-generated method stub
-		return new ArrayList<Transaction>();
-	}
 	
 	public int[] update(List<Transaction> items) throws DataAccessException {
 		try {
-			final Connection connection = getConnection();
+			final Connection connection = SQLUtils.getConnection();
 			
 			try {
 				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
@@ -47,17 +43,8 @@ public class TransactionDAO extends GenericDAO<Transaction> {
 			throw new DataAccessException(e);
 		}
 	}
-
-	@Override
-	protected Transaction getItem(String xml) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public int[] update(List<Transaction> items, boolean append) throws DataAccessException {
+		return update(items);
 	}
-
-	@Override
-	protected List<Transaction> getItems(String xml) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

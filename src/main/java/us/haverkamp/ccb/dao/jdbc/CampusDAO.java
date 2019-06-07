@@ -1,13 +1,15 @@
-package us.haverkamp.ccb.dao;
+package us.haverkamp.ccb.dao.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.domain.Campus;
+import us.haverkamp.utils.SQLUtils;
 
-public class CampusDAO extends GenericDAO<Campus> {
+public class CampusDAO extends us.haverkamp.ccb.dao.CampusDAO {
 	private static final String SQL_INSERT = 
 		"INSERT INTO campus(id, name) "
 		+ "VALUES(?, ?) "
@@ -22,7 +24,7 @@ public class CampusDAO extends GenericDAO<Campus> {
 	
 	public int[] update(List<Campus> items) throws DataAccessException {
 		try {
-			final Connection connection = getConnection();
+			final Connection connection = SQLUtils.getConnection();
 			
 			try {
 				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
@@ -50,15 +52,5 @@ public class CampusDAO extends GenericDAO<Campus> {
 		} catch(SQLException e) {
 			throw new DataAccessException(e);
 		}
-	}
-
-	@Override
-	protected Campus getItem(String xml) throws DataAccessException {
-		return Mapper.getCampus(xml);
-	}
-
-	@Override
-	protected List<Campus> getItems(String xml) throws DataAccessException {
-		return Mapper.getCampuses(xml);
 	}
 }

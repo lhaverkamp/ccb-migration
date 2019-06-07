@@ -1,25 +1,21 @@
-package us.haverkamp.ccb.dao;
+package us.haverkamp.ccb.dao.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import us.haverkamp.ccb.dao.DataAccessException;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.utils.DateUtils;
+import us.haverkamp.utils.SQLUtils;
 
-public class FamilyDAO extends GenericDAO<Family> {
+public class FamilyDAO extends us.haverkamp.ccb.dao.FamilyDAO {
 	private static final String SQL_INSERT = "INSERT INTO family(id, name, modified) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE name = ?, modified = ?"; 
-	
-	public List<Family> findBy() throws DataAccessException {
-		final String xml = get("family_list");
-		
-		return getItems(xml);
-	}
 	
 	public int[] update(List<Family> items) throws DataAccessException {
 		try {
-			final Connection connection = getConnection();
+			final Connection connection = SQLUtils.getConnection();
 			
 			try {
 				final PreparedStatement ps = connection.prepareStatement(SQL_INSERT);
@@ -48,15 +44,5 @@ public class FamilyDAO extends GenericDAO<Family> {
 		} catch(SQLException e) {
 			throw new DataAccessException(e);
 		}
-	}
-
-	@Override
-	protected Family getItem(String xml) throws DataAccessException {
-		return Mapper.getFamily(xml);
-	}
-
-	@Override
-	protected List<Family> getItems(String xml) throws DataAccessException {
-		return Mapper.getFamilies(xml);
 	}
 }

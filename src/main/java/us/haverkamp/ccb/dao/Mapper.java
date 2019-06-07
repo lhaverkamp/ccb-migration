@@ -16,6 +16,8 @@ import org.xml.sax.SAXException;
 import us.haverkamp.ccb.Constants;
 import us.haverkamp.ccb.domain.Address;
 import us.haverkamp.ccb.domain.ApprovalStatus;
+import us.haverkamp.ccb.domain.Batch;
+import us.haverkamp.ccb.domain.COA;
 import us.haverkamp.ccb.domain.Campus;
 import us.haverkamp.ccb.domain.CommunicationPreferences;
 import us.haverkamp.ccb.domain.Department;
@@ -24,14 +26,17 @@ import us.haverkamp.ccb.domain.EventGrouping;
 import us.haverkamp.ccb.domain.Family;
 import us.haverkamp.ccb.domain.Group;
 import us.haverkamp.ccb.domain.GroupType;
+import us.haverkamp.ccb.domain.Grouping;
 import us.haverkamp.ccb.domain.Individual;
 import us.haverkamp.ccb.domain.MembershipType;
+import us.haverkamp.ccb.domain.Occurrence;
 import us.haverkamp.ccb.domain.PrivacySettings;
 import us.haverkamp.ccb.domain.Selection;
+import us.haverkamp.ccb.domain.Transaction;
 import us.haverkamp.ccb.domain.UserDefinedField;
 import us.haverkamp.utils.DateUtils;
 import us.haverkamp.utils.StringUtils;
-import us.haverkamp.utils.XmlUtils;
+import us.haverkamp.utils.XMLUtils;
 
 public class Mapper {
 	protected static Address getAddress(Node node) {
@@ -92,7 +97,7 @@ public class Mapper {
 	
 	public static List<Campus> getCampuses(String xml) throws NoDataFoundException, DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final NodeList nodes = document.getElementsByTagName(Constants.CAMPUS);
 			if(nodes == null) {
@@ -110,6 +115,17 @@ public class Mapper {
 		} catch(IOException | SAXException | ParserConfigurationException e) {
 			throw new DataAccessException(e);
 		}
+	}
+	
+	protected static COA getCOA(Node node) {
+		final Element element = (Element) node;
+		
+		final COA item = new COA(
+			StringUtils.parseLong(element.getAttribute(Constants.ID)), // id
+			StringUtils.parseString(element) // name
+		);
+		
+		return item;
 	}
 
 	protected static CommunicationPreferences getCommunicationPreferences(Node node) {
@@ -193,7 +209,7 @@ public class Mapper {
 	public static Event getEvent(String xml) throws NoDataFoundException, DataAccessException {
 		// TODO refactor
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final NodeList items = document.getElementsByTagName(Constants.EVENT);
 			// TODO error handling
@@ -211,7 +227,7 @@ public class Mapper {
 
 	public static List<Event> getEvents(String xml) throws DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final NodeList items = document.getElementsByTagName(Constants.EVENT);
 			if(items == null || items.getLength() == 0) {
@@ -278,7 +294,7 @@ public class Mapper {
 	
 	public static List<Family> getFamilies(String xml) throws NoDataFoundException, DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final NodeList nodes = document.getElementsByTagName(Constants.FAMILY);
 			if(nodes == null) {
@@ -337,7 +353,7 @@ public class Mapper {
 
 	public static Group getGroup(String xml) throws NoDataFoundException, DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final Node node = document.getElementsByTagName(Constants.GROUP).item(0);
 			if(node == null) {
@@ -354,7 +370,7 @@ public class Mapper {
 
 	public static List<Group> getGroups(String xml) throws DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final List<Group> items = new ArrayList<Group>();
 	
@@ -367,6 +383,17 @@ public class Mapper {
 		} catch(IOException | ParserConfigurationException | SAXException e) {
 			throw new DataAccessException(e);
 		}
+	}
+
+	protected static Grouping getGrouping(Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		final Grouping item = new Grouping(
+			StringUtils.parseLong(element.getAttribute(Constants.ID)),
+			StringUtils.parseString(element)
+		);
+		
+		return item;
 	}
 
 	protected static GroupType getGroupType(Node node) throws DataAccessException {
@@ -470,7 +497,7 @@ public class Mapper {
 	
 	public static Individual getIndividual(String xml) throws NoDataFoundException, DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final Node node = document.getElementsByTagName(Constants.INDIVIDUAL).item(0);
 			if(node == null) {
@@ -485,9 +512,19 @@ public class Mapper {
 		}
 	}
 	
+	protected static List<Individual> getIndividuals(NodeList nodes, boolean all) throws DataAccessException {
+		final List<Individual> items = new ArrayList<Individual>();
+		
+		for(int i=0;i<nodes.getLength();i++) {
+			items.add(getIndividual(nodes.item(i), all));
+		}
+			
+		return items;
+	}
+	
 	public static List<Individual> getIndividuals(String xml) throws DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			NodeList nodes = document.getElementsByTagName(Constants.INDIVIDUALS);
 			if(nodes == null) {
@@ -523,6 +560,70 @@ public class Mapper {
 		);
 		
 		return item;
+	}
+	
+	protected static Occurrence getOccurrence(Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		try {
+			final Occurrence item = new Occurrence(
+				Long.valueOf(element.getAttribute(Constants.ID)), // id
+				StringUtils.parseString(element.getElementsByTagName(Constants.NAME).item(0)), // name
+				DateUtils.parseTimestamp(element.getElementsByTagName(Constants.OCCURRENCE).item(0)) // occurrence
+			); // id
+			
+			item.setDidNotMeet(StringUtils.parseBoolean(element.getElementsByTagName(Constants.DID_NOT_MEET).item(0))); // did_not_meet
+			
+			item.setAttendees(getIndividuals(element.getElementsByTagName(Constants.ATTENDEE), false)); // attendees
+			
+			return item;
+		} catch(ParseException e) {
+			throw new DataAccessException(e);
+		}
+		
+	}
+	
+	public static Occurrence getOccurrence(String xml) throws NoDataFoundException, DataAccessException {
+		// TODO refactor
+		try {
+			final Document document = XMLUtils.getDocument(xml);
+			
+			final NodeList items = document.getElementsByTagName(Constants.EVENT);
+			// TODO error handling
+			if(items == null || items.getLength() == 0) {
+				throw new NoDataFoundException(
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
+				);
+			}
+			
+			return getOccurrence(items.item(0));
+		} catch(IOException | ParserConfigurationException | SAXException e) {
+			throw new DataAccessException(e);
+		}
+	}
+
+	public static List<Occurrence> getOccurrences(String xml) throws DataAccessException {
+		try {
+			final Document document = XMLUtils.getDocument(xml);
+			
+			final NodeList items = document.getElementsByTagName(Constants.EVENT);
+			if(items == null || items.getLength() == 0) {
+				throw new NoDataFoundException(
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
+				);
+			}
+			
+			final List<Occurrence> occurrences = new ArrayList<Occurrence>();
+			for(int i=0;i<items.getLength();i++) {
+				final Node node = items.item(i);
+				
+				occurrences.add(getOccurrence(node));
+			}
+			
+			return occurrences;
+		} catch(IOException | ParserConfigurationException | SAXException e) {
+			throw new DataAccessException(e);
+		}
 	}
 	
 	protected static PrivacySettings getPrivacySettings(Node node) {
@@ -563,7 +664,7 @@ public class Mapper {
 	
 	public static List<Selection> getSelections(String xml) throws DataAccessException {
 		try {
-			final Document document = XmlUtils.getDocument(xml);
+			final Document document = XMLUtils.getDocument(xml);
 			
 			final List<Selection> items = new ArrayList<Selection>();
 			
@@ -573,6 +674,102 @@ public class Mapper {
 			}
 			
 			return items;
+		} catch(IOException | ParserConfigurationException | SAXException e) {
+			throw new DataAccessException(e);
+		}
+	}
+	
+	protected static Transaction getTransaction(Batch batch, Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		try {
+			final Transaction item = new Transaction(batch, Long.valueOf(element.getAttribute(Constants.ID))); // id
+			item.setCampus(getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false)); // campus
+			item.setIndividual(getIndividual(element.getElementsByTagName(Constants.INDIVIDUAL).item(0), false)); // individual
+			item.setDate(DateUtils.parseDate(element.getElementsByTagName(Constants.DATE).item(0))); // date
+			item.setGrouping(getGrouping(element.getElementsByTagName(Constants.GROUPING).item(0))); // grouping
+			item.setPaymentType(StringUtils.parseString(element.getElementsByTagName(Constants.PAYMENT_TYPE).item(0))); // payment_type
+			item.setPaymentType(StringUtils.parseString(element.getElementsByTagName(Constants.CHECK_NUMBER).item(0))); // check_number
+			
+			item.setCOA(getCOA(element.getElementsByTagName(Constants.COA).item(0))); // coa
+			item.setAmount(StringUtils.parseFloat(element.getElementsByTagName(Constants.AMOUNT).item(0))); // amount
+			item.setTaxDeductible(StringUtils.parseBoolean(element.getElementsByTagName(Constants.TAX_DEDUCTIBLE).item(0))); // tax_deductible
+			item.setNotes(StringUtils.parseString(element.getElementsByTagName(Constants.NOTE).item(0))); // note
+	
+			item.setCreator(getIndividual(element.getElementsByTagName(Constants.CREATOR).item(0), false)); // creator
+			item.setModifier(getIndividual(element.getElementsByTagName(Constants.MODIFIER).item(0), false)); // modifier
+			item.setCreated(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.CREATED).item(0))); // created
+			item.setModified(DateUtils.parseTimestamp(element.getElementsByTagName(Constants.MODIFIED).item(0))); // modified
+			
+			return item;
+		} catch(ParseException e) {
+			throw new DataAccessException(e);
+		}
+	}
+	
+	protected static List<Transaction> getBatch(Node node) throws DataAccessException {
+		final Element element = (Element) node;
+		
+		try {
+			final Batch item = new Batch(Long.valueOf(element.getAttribute(Constants.ID))); // id
+			item.setCampus(getCampus(element.getElementsByTagName(Constants.CAMPUS).item(0), false)); // campus
+			item.setPostDate(DateUtils.parseDate(element.getElementsByTagName(Constants.POST_DATE).item(0))); // post_date
+			item.setBeginDate(DateUtils.parseDate(element.getElementsByTagName(Constants.POST_DATE).item(0))); // post_date
+			item.setEndDate(DateUtils.parseDate(element.getElementsByTagName(Constants.POST_DATE).item(0))); // post_date
+			item.setInAccountingPackage(StringUtils.parseBoolean(element.getElementsByTagName(Constants.IN_ACCOUNTING_PACKAGE).item(0))); // in_accounting_package
+			item.setStatus(StringUtils.parseString(element.getElementsByTagName(Constants.STATUS).item(0))); // status
+			item.setSource(StringUtils.parseString(element.getElementsByTagName(Constants.SOURCE).item(0))); // source
+			
+			// TODO verify that the correct node is being pulled
+			item.setCreator(getIndividual(element.getElementsByTagName(Constants.CREATOR).item(0), false)); // creator
+			item.setModifier(getIndividual(element.getElementsByTagName(Constants.MODIFIER).item(0), false)); // modifier
+			item.setCreated(DateUtils.parseDate(element.getElementsByTagName(Constants.CREATED).item(0))); // created
+			item.setModified(DateUtils.parseDate(element.getElementsByTagName(Constants.MODIFIED).item(0))); // modified
+			
+			final List<Transaction> transactions = new ArrayList<Transaction>();
+			
+			final NodeList nodes = element.getElementsByTagName(Constants.TRANSACTION);
+			for(int i=0;i<nodes.getLength();i++) {
+				transactions.add(getTransaction(item, nodes.item(i)));
+			}
+			
+			return transactions;
+		} catch(ParseException e) {
+			throw new DataAccessException(e);
+		}
+	}
+	
+	public static Transaction getTransaction(String xml) throws DataAccessException {
+		final List<Transaction> items = getTransactions(xml);
+		
+		if(items.size() != 1) {
+			throw new NoDataFoundException(items.size() + " transactions found");
+		}
+		
+		return items.get(0);
+		
+	}
+	
+	public static List<Transaction> getTransactions(String xml) throws DataAccessException {
+		try {
+			final Document document = XMLUtils.getDocument(xml);
+			
+			final NodeList items = document.getElementsByTagName(Constants.BATCH);
+			if(items == null || items.getLength() == 0) {
+				throw new NoDataFoundException(
+					StringUtils.parseString(document.getElementsByTagName("message").item(0))
+				);
+			}
+			
+			final List<Transaction> transactions = new ArrayList<Transaction>();
+			
+			for(int i=0;i<items.getLength();i++) {
+				final Node node = items.item(i);
+				
+				transactions.addAll(getBatch(node));
+			}
+			
+			return transactions;
 		} catch(IOException | ParserConfigurationException | SAXException e) {
 			throw new DataAccessException(e);
 		}
