@@ -1,84 +1,33 @@
 package us.haverkamp.ccb.dao;
 
-public class Factory {
-	private AttendanceDAO attendanceDAO;
-	private CampusDAO campusDAO;
-	private EventDAO eventDAO;
-	private FamilyDAO familyDAO;
-	private GroupDAO groupDAO;
-	private IndividualDAO individualDAO;
-	private LookupDAO lookupDAO;
-	private TransactionDAO transactionDAO;
+public abstract class Factory {
+	public static final int CSV = 1;
+	public static final int JDBC = 2;
 	
-	private Factory() {
-		// private for factory method
-	}
-	
-	public static Factory getInstance() {
-		return new Factory();
-	}
-	
-	public AttendanceDAO getAttendanceDAO() {
-		if(this.attendanceDAO == null) {
-			this.attendanceDAO = new AttendanceDAO();
+	public static Factory getInstance(int factory) {
+		switch(factory) {
+		case CSV:
+			return us.haverkamp.ccb.dao.csv.Factory.getInstance();
+		case JDBC:
+			return us.haverkamp.ccb.dao.jdbc.Factory.getInstance();
+		default:
+			throw new IllegalArgumentException("factory not defined");
 		}
-		
-		return this.attendanceDAO;
 	}
 	
-	public CampusDAO getCampusDAO() {
-		if(this.campusDAO == null) {
-			this.campusDAO = new CampusDAO();
-		}
-		
-		return this.campusDAO;
-	}
+	public abstract AttendanceDAO getAttendanceDAO();
 	
-	public EventDAO getEventDAO() {
-		if(this.eventDAO == null) {
-			this.eventDAO = new EventDAO();
-		}
-		
-		return this.eventDAO;
-	}
+	public abstract CampusDAO getCampusDAO();
 	
-	public FamilyDAO getFamilyDAO() {
-		if(this.familyDAO == null) {
-			this.familyDAO = new FamilyDAO();
-		}
-		
-		return this.familyDAO;
-	}
+	public abstract EventDAO getEventDAO();
 	
-	public GroupDAO getGroupDAO() {
-		if(this.groupDAO == null) {
-			this.groupDAO = new GroupDAO();
-		}
-		
-		return this.groupDAO;
-	}
+	public abstract FamilyDAO getFamilyDAO();
 	
-	public IndividualDAO getIndividualDAO() {
-		if(this.individualDAO == null) {
-			this.individualDAO = new IndividualDAO();
-		}
-		
-		return this.individualDAO;
-	}
+	public abstract GroupDAO getGroupDAO();
+	
+	public abstract IndividualDAO getIndividualDAO();
 
-	public LookupDAO getLookupDAO() {
-		if(this.lookupDAO == null) {
-			this.lookupDAO = new LookupDAO();
-		}
-		
-		return this.lookupDAO;
-	}
+	public abstract LookupDAO getLookupDAO();
 	
-	public TransactionDAO getTransactionDAO() {
-		if(this.transactionDAO == null) {
-			this.transactionDAO = new TransactionDAO();
-		}
-		
-		return this.transactionDAO;
-	}
+	public abstract TransactionDAO getTransactionDAO();
 }
